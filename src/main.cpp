@@ -2,12 +2,12 @@
 
 #include <iostream>
 
-#include "../include/ResourceManager.hpp"
-#include "../include/VertexBuffer.hpp"
-#include "../include/VertexArray.hpp"
-#include "../include/IndexBuffer.hpp"
-#include "../include/Shader.hpp"
-#include "../include/Renderer.hpp"
+#include "ResourceManager.hpp"
+#include "VertexBuffer.hpp"
+#include "VertexArray.hpp"
+#include "IndexBuffer.hpp"
+#include "Shader.hpp"
+#include "Renderer.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -98,8 +98,7 @@ int main(void) {
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-	} 
+	}
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();

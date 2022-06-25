@@ -2,3 +2,5 @@ build
 .vscode
 .root
 .projectile
+compile_commands.json
+.cache

@@ -1,4 +1,4 @@
-#include "../include/ResourceManager.hpp"
+#include "ResourceManager.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>

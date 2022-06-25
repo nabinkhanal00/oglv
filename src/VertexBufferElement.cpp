@@ -1,4 +1,4 @@
-#include "../include/VertexBufferElement.hpp"
+#include "VertexBufferElement.hpp"
 
 unsigned int VertexBufferElement::GetSizeOfType(unsigned int type) {
 	switch (type) {

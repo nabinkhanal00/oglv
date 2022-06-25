@@ -1,4 +1,4 @@
-#include "../include/VertexArray.hpp"
+#include "VertexArray.hpp"
 
 #define INT2VOIDP(i) (void *)(uintptr_t)(i)
 

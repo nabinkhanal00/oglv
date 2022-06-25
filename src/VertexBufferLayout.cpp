@@ -1,4 +1,4 @@
-#include "../include/VertexBufferLayout.hpp"
+#include "VertexBufferLayout.hpp"
 
 VertexBufferLayout::VertexBufferLayout() : m_Stride(0) {}
 

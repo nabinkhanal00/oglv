@@ -1,4 +1,4 @@
-#include "../include/Renderer.hpp"
+#include "Renderer.hpp"
 
 void Renderer::Clear() const { glClear(GL_COLOR_BUFFER_BIT); }
 
