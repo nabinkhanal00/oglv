@@ -9,6 +9,10 @@
 #include "Shader.hpp"
 #include "Renderer.hpp"
 
+#include "imgui.h"
+#include "imgui_impl_opengl3.h"
+#include "imgui_impl_glfw.h"
+
 #include <GLFW/glfw3.h>
 
 const unsigned int WIDTH = 728;
@@ -89,17 +93,37 @@ int main(void) {
 
 	Renderer renderer;
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO &io = ImGui::GetIO();
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init();
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+
 	while (glfwWindowShouldClose(window) == false) {
 
 		renderer.Clear();
-
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 		renderer.Draw(va, ib, shader, GL_TRIANGLES);
+		// render your GUI
+		ImGui::Begin("window");
+		ImGui::Button("Hello!");
+		ImGui::End();
 
+		// Render dear imgui into screen
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 
