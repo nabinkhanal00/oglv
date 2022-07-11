@@ -8,6 +8,11 @@
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
 #include "Renderer.hpp"
+#include "Angel.hpp"
+
+#include "imgui.h"
+#include "imgui_impl_opengl3.h"
+#include "imgui_impl_glfw.h"
 
 #include <GLFW/glfw3.h>
 
@@ -64,43 +69,20 @@ int main(void) {
 	if (!window)
 		return -1;
 
-	float vertices[] = {
-	    0.5f,  0.5f,  0.0f, // top right
-	    0.5f,  -0.5f, 0.0f, // bottom right
-	    -0.5f, -0.5f, 0.0f, // bottom left
-	    -0.5f, 0.5f,  0.0f  // top left
-	};
-
-	unsigned int indices[] = {0, 1, 2, 2, 3, 0};
-	VertexArray va;
-	VertexBuffer vb(vertices, 4 * 3 * sizeof(float));
-	IndexBuffer ib(indices, 6);
-
-	VertexBufferLayout layout;
-	layout.AddFloat(3);
-
-	va.AddBuffer(vb, layout);
-
-	Shader shader =
-	    ResourceManager::LoadShader("res/shaders/basic-vertex.glsl",
-	                                "res/shaders/basic-fragment.glsl", "basic");
-
-	shader.Use();
-
 	Renderer renderer;
+
+	Angel a(WIDTH, HEIGHT);
 
 	while (glfwWindowShouldClose(window) == false) {
 
-		renderer.Clear();
-
-		renderer.Draw(va, ib, shader, GL_TRIANGLES);
-
-		// Swap buffers
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		a.enable();
+		a.drawAxes();
+		a.disable();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 
 	return 0;

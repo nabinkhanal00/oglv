@@ -1,0 +1,26 @@
+* Graphics Project: OpenGL Visualization
+
+** Chapter 1 : Basic Shapes Drawing
+
+*** Line Drawing
+
+*** Circle Drawing
+
+*** Ellipse Drawing
+
+** Chapter 2 : Starting with OpenGL
+
+*** Triangle Without Shader(simple colors) 
+
+*** Shaders (change colors)
+
+*** Textures ()
+
+*** Transformations : Rotation, Translation, Scaling
+
+*** Camera
+
+*** Lighting
+
+
+** Final Demonstration: A simple raytracer (probably)
