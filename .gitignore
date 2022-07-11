@@ -3,6 +3,4 @@ build
 .root
 .projectile
 imgui.ini
-compile_flags.txt
-compile_commands.json
 .cache
