@@ -1,2 +1,3 @@
--I
-./include
+-I./include
+-I./lib/glad
+-I./lib/imgui
