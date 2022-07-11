@@ -8,6 +8,7 @@
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
 #include "Renderer.hpp"
+#include "Angel.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
@@ -68,63 +69,20 @@ int main(void) {
 	if (!window)
 		return -1;
 
-	float vertices[] = {
-	    0.5f,  0.5f,  0.0f, // top right
-	    0.5f,  -0.5f, 0.0f, // bottom right
-	    -0.5f, -0.5f, 0.0f, // bottom left
-	    -0.5f, 0.5f,  0.0f  // top left
-	};
-
-	unsigned int indices[] = {0, 1, 2, 2, 3, 0};
-	VertexArray va;
-	VertexBuffer vb(vertices, 4 * 3 * sizeof(float));
-	IndexBuffer ib(indices, 6);
-
-	VertexBufferLayout layout;
-	layout.AddFloat(3);
-
-	va.AddBuffer(vb, layout);
-
-	Shader shader =
-	    ResourceManager::LoadShader("res/shaders/basic-vertex.glsl",
-	                                "res/shaders/basic-fragment.glsl", "basic");
-
-	shader.Use();
-
 	Renderer renderer;
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO &io = ImGui::GetIO();
-	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init();
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
+	Angel a(WIDTH, HEIGHT);
 
 	while (glfwWindowShouldClose(window) == false) {
 
-		renderer.Clear();
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		renderer.Draw(va, ib, shader, GL_TRIANGLES);
-		// render your GUI
-		ImGui::Begin("window");
-		ImGui::Button("Hello!");
-		ImGui::End();
-
-		// Render dear imgui into screen
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		// Swap buffers
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		a.enable();
+		a.putPixel(0, 0, 5);
+		a.disable();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 
 	return 0;
