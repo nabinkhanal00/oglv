@@ -52,7 +52,8 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath) {
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
 }
-void Shader::Use() const { glUseProgram(ID); }
+void Shader::Bind() const { glUseProgram(ID); }
+void Shader::Unbind() const { glUseProgram(0); }
 
 void Shader::CheckCompileErrors(GLuint shader, std::string type) {
 	int success;

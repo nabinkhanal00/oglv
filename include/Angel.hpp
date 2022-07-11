@@ -21,10 +21,6 @@ class Angel {
 	void putPixel(int x, int y, int width = 1,
 	              color c = {1.0f, 1.0f, 1.0f, 1.0f}) const;
 
-
-	void line(int x1, int y1, int x2, int y2,
-	          color c = {1.0f, 1.0f, 1.0f, 1.0f}, int thickness = 1);
-
 	void drawAxes(color c = {1.0f, 1.0f, 1.0f, 1.0f});
 	void enable();
 	void disable();
@@ -34,6 +30,6 @@ class Angel {
 	VertexArray m_va;
 	Shader m_shader;
 	color m_color;
-	unsigned int m_width;
-	unsigned int m_height;
+	int m_width;
+	int m_height;
 };

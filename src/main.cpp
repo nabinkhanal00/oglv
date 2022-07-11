@@ -78,7 +78,7 @@ int main(void) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		a.enable();
-		a.putPixel(0, 0, 5);
+		a.drawAxes();
 		a.disable();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
