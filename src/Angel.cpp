@@ -12,7 +12,6 @@ const float vertices[] = {
 Angel::Angel(unsigned int width, unsigned int height)
     : m_width(width), m_height(height), m_vb(vertices, 6 * 3 * sizeof(float)) {
 	VertexBufferLayout layout;
-	std::cout << "HEllo Angel" << std::endl;
 	layout.AddFloat(3);
 	m_va.AddBuffer(m_vb, layout);
 	m_shader =

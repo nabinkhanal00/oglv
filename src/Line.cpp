@@ -5,7 +5,7 @@
 
 Line::Line(int x0, int y0, int xl, int yl, unsigned int t,
            unsigned int windowWidth, unsigned int windowHeight)
-    : angel(windowWidth, windowHeight), thickness(t) {
+    : angel(windowWidth, windowHeight), thickness(t), frameCount(20) {
 	int delx = std::abs(xl - x0);
 	int dely = std::abs(yl - y0);
 	int a = 0, b = 0;
@@ -50,18 +50,20 @@ void Line::draw() {
 }
 void Line::animate() {
 	static int count = 0;
-	static int i = 1;
-	if (count >= 20 && i < points.size()) {
-		i++;
-		count = 0;
-	} else {
-		count++;
-	}
+	static int i = 0;
 	angel.enable();
 	for (int cur = 0; cur < i; cur++) {
 		angel.putPixel(points[cur].x, points[cur].y, thickness);
 	}
 	angel.disable();
+	if (i < points.size()) {
+		if (count >= frameCount) {
+			i++;
+			count = 0;
+		} else {
+			count++;
+		}
+	}
 }
 
 void Line::translate(int x, int y) {}
