@@ -8,6 +8,7 @@ class Line : public Shape2D {
 	std::vector<oglm::vec2<int>> points;
 	Angel angel;
 	unsigned int thickness;
+	unsigned int frameCount;
 
   public:
 	Line(int x1, int y1, int x2, int y2, unsigned int thickness,
