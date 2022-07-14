@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Line.hpp"
 #include "ResourceManager.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
@@ -69,17 +70,12 @@ int main(void) {
 	if (!window)
 		return -1;
 
-	Renderer renderer;
-
-	Angel a(WIDTH, HEIGHT);
-
+	Line l(0, 0, 200, 200, 5, WIDTH, HEIGHT);
 	while (glfwWindowShouldClose(window) == false) {
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		a.enable();
-		a.drawAxes();
-		a.disable();
+		l.animate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

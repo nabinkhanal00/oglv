@@ -1,4 +1,5 @@
 #include "Angel.hpp"
+#include "ResourceManager.hpp"
 
 const float vertices[] = {
     -1.0f, -1.0f, 0.0f, // bottom left
@@ -11,10 +12,12 @@ const float vertices[] = {
 Angel::Angel(unsigned int width, unsigned int height)
     : m_width(width), m_height(height), m_vb(vertices, 6 * 3 * sizeof(float)) {
 	VertexBufferLayout layout;
+	std::cout << "HEllo Angel" << std::endl;
 	layout.AddFloat(3);
 	m_va.AddBuffer(m_vb, layout);
-	m_shader = Shader("res/shaders/pixel/vertex.glsl",
-	                  "res/shaders/pixel/fragment.glsl");
+	m_shader =
+	    ResourceManager::LoadShader("res/shaders/pixel/vertex.glsl",
+	                                "res/shaders/pixel/fragment.glsl", "pixel");
 }
 
 void Angel::enable() {
