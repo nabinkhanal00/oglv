@@ -1,6 +1,6 @@
 #pragma once
 
-#include "oglm/oglm.hpp"
+#include "oglm.hpp"
 
 class Shape3D {
   public:
