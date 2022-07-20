@@ -66,7 +66,7 @@ void Line::animate() {
 	                thickness);
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
-			if (int(count / 10) % 2 == 0) {
+			if (int(count / 10+4) % 2 == 0) {
 				Angel::putPixel(points[i].x, points[i].y, thickness,
 				                Color(1.0f, 0.0f, 1.0f, 1.0f));
 			} else {

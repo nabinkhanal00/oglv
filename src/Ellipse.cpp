@@ -3,7 +3,7 @@
 #include "Line.hpp"
 #include <iostream>
 Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
-    : thickness(t), frameCount(20) {
+    : thickness(t), frameCount(60) {
     centerX = x0;
     centerY = y0;
     majX = rx;
@@ -18,35 +18,34 @@ Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
                      (0.25 * rx * rx);
     dx = 2 * ry * ry * x;
     dy = 2 * rx * rx * y;
+    int falseX{x}, falseY{y};
  
     // For region 1
-    while (dx < dy)
+    while (dx <= dy)
     {
         points.push_back(oglm::vec2<int>(x,y));
+        false_points.push_back(oglm::vec2<int>(falseX,falseY));
  
-        // Print points based on 4-way symmetry
-        // cout << x + xc << " , " << y + yc << endl;
-        // cout << -x + xc << " , " << y + yc << endl;
-        // cout << x + xc << " , " << -y + yc << endl;
-        // cout << -x + xc << " , " << -y + yc << endl;
  
         // Checking and updating value of
         // decision parameter based on algorithm
         if (d1 < 0)
         {
-            x++;
-            // x+=thickness;
-            dx = dx + (2 * ry * ry);
+            falseY = y -  thickness; 
+            x+=thickness;
+            falseX = x;
+
+            dx = 2 * ry * ry * x;
             d1 = d1 + dx + (ry * ry);
         }
         else
         {
-            x++;
-            // x+=thickness;
-            y--;
-            // y-=thickness;
-            dx = dx + (2 * ry * ry);
-            dy = dy - (2 * rx * rx);
+            x+=thickness;
+            falseX = x;
+            falseY = y;
+            y-=thickness;
+            dx = 2 * ry * ry * x;
+            dy = 2 * rx * rx * y;
             d1 = d1 + dx - dy + (ry * ry);
         }
     }
@@ -61,29 +60,30 @@ Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
     {
  
         points.push_back(oglm::vec2<int>(x,y));
-        // Print points based on 4-way symmetry
-        // cout << x + xc << " , " << y + yc << endl;
-        // cout << -x + xc << " , " << y + yc << endl;
-        // cout << x + xc << " , " << -y + yc << endl;
-        // cout << -x + xc << " , " << -y + yc << endl;
- 
         // Checking and updating parameter
         // value based on algorithm
-        if (d2 > 0)
+        if (d2 >0)
         {
-            y--;
-            // y-=thickness;
-            dy = dy - (2 * rx * rx);
+            // y--;
+            falseX = x+ thickness;
+            y-=thickness;
+            falseY = y;
+            // dy = dy - (2 * rx * rx);
+            dy = 2 * rx * rx * y;
             d2 = d2 + (rx * rx) - dy;
         }
         else
         {
-            y--;
-            // y-=thickness;
-            x++;
-            // x += thickness;
-            dx = dx + (2 * ry * ry);
-            dy = dy - (2 * rx * rx);
+            // y--;
+            y-=thickness;
+            falseY = y;
+            // x++;
+            falseX = x;
+            x += thickness;
+            // dx = dx + (2 * ry * ry);
+            dx = 2 * ry * ry * x;
+            // dy = dy - (2 * rx * rx);
+            dy = 2 * rx * rx * y;
             d2 = d2 + dx - dy + (rx * rx);
         }
     }
@@ -102,7 +102,9 @@ void Ellipse::draw() {
 void Ellipse::animate() {
     static int count = 0;
     static int i = 0;
-    for (int cur = 0; cur < i; cur++) {
+    static int stuck = 0;
+    int cur;
+    for (cur = 0; cur < i; cur++) {
         Angel::putPixel(points[cur].x + centerX, points[cur].y + centerY,
                         thickness);
     }
@@ -119,12 +121,48 @@ void Ellipse::animate() {
         Angel::putPixel(-points[cur].x + centerX, -points[cur].y + centerY,
                         thickness);
     }
+	if ((i + 1) < points.size()) {
+		if (stuck > 30) {
+			if (int(count / 10+4) % 2 == 0) {
+				Angel::putPixel(points[i].x, points[i].y, thickness,
+				                Color(1.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(-points[i].x, points[i].y, thickness,
+				                Color(1.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(points[i].x, -points[i].y, thickness,
+				                Color(1.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(-points[i].x, -points[i].y, thickness,
+				                Color(1.0f, 0.0f, 1.0f, 1.0f));
+			} else {
+				Angel::putPixel(false_points[i].x, false_points[i].y, thickness,
+				                Color(0.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(-false_points[i].x, false_points[i].y, thickness,
+				                Color(0.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(false_points[i].x, -false_points[i].y, thickness,
+				                Color(0.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(-false_points[i].x, -false_points[i].y, thickness,
+				                Color(0.0f, 0.0f, 1.0f, 1.0f));
+			}
+		} else {
+			if (cur > 0) {
+				Angel::putPixel(points[cur - 1].x, points[cur - 1].y, thickness,
+				                Color(1.0f, 0.0f, 0.0f, 1.0f));
+				Angel::putPixel(-points[cur - 1].x, points[cur - 1].y, thickness,
+				                Color(1.0f, 0.0f, 0.0f, 1.0f));
+				Angel::putPixel(points[cur - 1].x, -points[cur - 1].y, thickness,
+				                Color(1.0f, 0.0f, 0.0f, 1.0f));
+				Angel::putPixel(-points[cur - 1].x, -points[cur - 1].y, thickness,
+				                Color(1.0f, 0.0f, 0.0f, 1.0f));
+			}
+		}
+	}
     if (i < points.size()) {
         if (count >= frameCount) {
             i++;
             count = 0;
+            stuck = 0;
         } else {
             count++;
+            stuck++;
         }
     }
 };

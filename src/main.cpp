@@ -79,12 +79,13 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
-	Circle c(0, 0, 300, 5);
+	Ellipse e(0,0,150,100,10);
+	Line l(0,0,200,200,10);
 	while (glfwWindowShouldClose(window) == false) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		Angel::drawAxes({1.0f, 1.0f, 1.0f, 1.0f}, true);
-		c.animate();
+		e.animate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
