@@ -7,17 +7,17 @@
 Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
 	points.push_back(oglm::vec3<int>(0.0f, 0.0f, 0.0f));
 	points.push_back(oglm::vec3<int>(100.0f, 0.0f, 0.0f));
-	points.push_back(oglm::vec3<int>(0.0f, 100.0f, 0.0f));
 	points.push_back(oglm::vec3<int>(100.0f, 100.0f, 0.0f));
+	points.push_back(oglm::vec3<int>(0.0f, 100.0f, 0.0f));
 	points.push_back(oglm::vec3<int>(0.0f, 0.0f, 100.0f));
 	points.push_back(oglm::vec3<int>(100.0f, 0.0f, 100.0f));
-	points.push_back(oglm::vec3<int>(0.0f, 100.0f, 100.0f));
 	points.push_back(oglm::vec3<int>(100.0f, 100.0f, 100.0f));
+	points.push_back(oglm::vec3<int>(0.0f, 100.0f, 100.0f));
 
 	indices.push_back(oglm::vec2<int>(0, 1));
 	indices.push_back(oglm::vec2<int>(1, 2));
 	indices.push_back(oglm::vec2<int>(2, 3));
-	indices.push_back(oglm::vec2<int>(1, 3));
+	indices.push_back(oglm::vec2<int>(0, 3));
 
 	indices.push_back(oglm::vec2<int>(0, 4));
 	indices.push_back(oglm::vec2<int>(1, 5));
