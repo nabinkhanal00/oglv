@@ -34,7 +34,7 @@ void Cube::animate() {}
 
 void Cube::draw() {
 	for (auto &i : indices) {
-		Line l(points[i.x].x, points[i.x].x, points[i.y].x, points[i.y].y);
+		Line l(points[i.x].x, points[i.x].y, points[i.y].x, points[i.y].y);
 		l.draw();
 	}
 }
