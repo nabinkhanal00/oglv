@@ -9,18 +9,12 @@ unsigned int Angel::m_ID = 0;
 void Angel::init(unsigned int width, unsigned int height) {
 
 	const float vertices[] = {
-	    -1.0f, -1.0f,
-	    0.0f, // bottom left
-	    1.0f,  -1.0f,
-	    0.0f, // bottom right
-	    1.0f,  1.0f,
-	    0.0f, // top right
-	    1.0f,  1.0f,
-	    0.0f, // top right
-	    -1.0f, 1.0f,
-	    0.0f, // top left
-	    -1.0f, -1.0f,
-	    0.0f, // bottom left
+	    -1.0f, -1.0f, 0.0f, // bottom left
+	    1.0f,  -1.0f, 0.0f, // bottom right
+	    1.0f,  1.0f,  0.0f, // top right
+	    1.0f,  1.0f,  0.0f, // top right
+	    -1.0f, 1.0f,  0.0f, // top left
+	    -1.0f, -1.0f, 0.0f, // bottom left
 	};
 
 	unsigned int VAO;
@@ -53,7 +47,10 @@ void Angel::disable() {
 }
 
 unsigned int Angel::getWidth() { return m_width; }
+void Angel::setWidth(unsigned int width) { m_width = width; }
+
 unsigned int Angel::getHeight() { return m_height; }
+void Angel::setHeight(unsigned int height) { m_height = height; }
 
 void Angel::putPixel(int x, int y, int thickness, Color c) {
 	enable();
