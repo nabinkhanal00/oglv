@@ -41,20 +41,16 @@ Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
 void Line::draw() {
 	Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-	Angel::enable();
 	for (auto &i : points) {
 		Angel::putPixel(i.x, i.y, thickness);
 	}
-	Angel::disable();
 }
 void Line::animate() {
 	static int count = 0;
 	static int i = 0;
-	Angel::enable();
 	for (int cur = 0; cur < i; cur++) {
 		Angel::putPixel(points[cur].x, points[cur].y, thickness);
 	}
-	Angel::disable();
 	if (i < points.size()) {
 		if (count >= frameCount) {
 			i++;

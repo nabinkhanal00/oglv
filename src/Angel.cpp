@@ -53,6 +53,7 @@ void Angel::disable() {
 }
 
 void Angel::putPixel(int x, int y, int thickness, Color c) {
+	enable();
 	ResourceManager::GetShader("pixel").SetVec4("inColor",
 	                                            glm::vec4(c.r, c.g, c.b, c.a));
 	x += m_width / 2;
@@ -61,6 +62,7 @@ void Angel::putPixel(int x, int y, int thickness, Color c) {
 	glScissor(x, y, thickness, thickness);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisable(GL_SCISSOR_TEST);
+	disable();
 }
 
 void Angel::drawAxes(Color c) {
