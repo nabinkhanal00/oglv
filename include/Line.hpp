@@ -1,16 +1,17 @@
 #pragma once
 
-#include "Shape2D.hpp"
 #include "Angel.hpp"
+#include "oglm.hpp"
 #include <vector>
-class Line : public Shape2D {
+class Line {
   private:
 	std::vector<oglm::vec2<int>> points;
+	std::vector<oglm::vec2<int>> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
 
   public:
-	Line(int x1, int y1, int x2, int y2, unsigned int thickness);
+	Line(int x1, int y1, int x2, int y2, unsigned int thickness = 1);
 	void draw();
 	void animate();
 	void translate(int x, int y);

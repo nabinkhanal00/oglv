@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Shape2D.hpp"
 #include "Angel.hpp"
+#include "oglm.hpp"
 #include <vector>
-class Circle : public Shape2D {
+class Circle {
   private:
 	std::vector<oglm::vec2<int>> points;
 	unsigned int thickness;
