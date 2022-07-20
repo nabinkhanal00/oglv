@@ -69,7 +69,7 @@ int main(void) {
 	GLFWwindow *window = InitWindow();
 	if (!window)
 		return -1;
-
+	Angel::init(WIDTH, HEIGHT);
 	Line l(0, 0, 200, 200, 5, WIDTH, HEIGHT);
 	while (glfwWindowShouldClose(window) == false) {
 

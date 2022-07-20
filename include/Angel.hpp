@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Color.hpp"
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
 #include "VertexArray.hpp"
@@ -9,39 +10,20 @@
 
 class Angel {
   public:
-	struct color {
-		float r;
-		float g;
-		float b;
-		float a;
-		color(float red, float green, float blue, float alpha) {
-			r = red;
-			g = green;
-			b = blue;
-			a = alpha;
-		}
-		color() {
-			r = 1.0f;
-			g = 1.0f;
-			b = 1.0f;
-			a = 1.0f;
-		}
-	};
+	Angel();
 
-	Angel(unsigned int width, unsigned int height);
+	static void init(unsigned int width, unsigned int height);
 
-	void putPixel(int x, int y, int width = 1,
-	              color c = {1.0f, 1.0f, 1.0f, 1.0f}) const;
+	static void putPixel(int x, int y, int width = 1,
+	                     Color c = {1.0f, 1.0f, 1.0f, 1.0f});
 
-	void drawAxes(color c = {1.0f, 1.0f, 1.0f, 1.0f});
-	void enable();
-	void disable();
+	static void drawAxes(Color c = {1.0f, 1.0f, 1.0f, 1.0f});
+	static void enable();
+	static void disable();
 
   private:
-	VertexBuffer m_vb;
-	VertexArray m_va;
-	Shader m_shader;
-	color m_color;
-	int m_width;
-	int m_height;
+	static unsigned int m_ID;
+	static Color m_color;
+	static int m_width;
+	static int m_height;
 };

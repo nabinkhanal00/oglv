@@ -5,7 +5,7 @@
 
 Line::Line(int x0, int y0, int xl, int yl, unsigned int t,
            unsigned int windowWidth, unsigned int windowHeight)
-    : angel(windowWidth, windowHeight), thickness(t), frameCount(20) {
+    : thickness(t), frameCount(20) {
 	int delx = std::abs(xl - x0);
 	int dely = std::abs(yl - y0);
 	int a = 0, b = 0;
@@ -40,22 +40,22 @@ Line::Line(int x0, int y0, int xl, int yl, unsigned int t,
 }
 
 void Line::draw() {
-	Angel::color c(1.0f, 1.0f, 1.0f, 1.0f);
+	Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-	angel.enable();
+	Angel::enable();
 	for (auto &i : points) {
-		angel.putPixel(i.x, i.y, thickness);
+		Angel::putPixel(i.x, i.y, thickness);
 	}
-	angel.disable();
+	Angel::disable();
 }
 void Line::animate() {
 	static int count = 0;
 	static int i = 0;
-	angel.enable();
+	Angel::enable();
 	for (int cur = 0; cur < i; cur++) {
-		angel.putPixel(points[cur].x, points[cur].y, thickness);
+		Angel::putPixel(points[cur].x, points[cur].y, thickness);
 	}
-	angel.disable();
+	Angel::disable();
 	if (i < points.size()) {
 		if (count >= frameCount) {
 			i++;
