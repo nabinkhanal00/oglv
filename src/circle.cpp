@@ -1,3 +1,4 @@
+#include "Line.hpp"
 #include "Circle.hpp"
 #include "Color.hpp"
 #include "Shape2D.hpp"
@@ -37,6 +38,10 @@ void Circle::draw() {
 void Circle::animate() {
     static int count = 0;
     static int i = 0;
+    Line l1(-Angel::getWidth(), -Angel::getHeight(),Angel::getWidth(), Angel::getHeight(),1);
+    l1.draw();
+    Line l2(-Angel::getWidth(), Angel::getHeight(),Angel::getWidth(), -Angel::getHeight(),1);
+    l2.draw();
     for (int cur = 0; cur < i; cur++) {
         Angel::putPixel(points[cur].x + centerX, points[cur].y + centerY,
                        thickness);
