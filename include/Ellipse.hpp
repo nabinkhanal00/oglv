@@ -1,9 +1,8 @@
 #pragma once
-
-#include "Shape2D.hpp"
+#include "oglm.hpp"
 #include "Angel.hpp"
 #include <vector>
-class Ellipse : public Shape2D {
+class Ellipse {
   private:
 	std::vector<oglm::vec2<int>> points;
 	unsigned int thickness;

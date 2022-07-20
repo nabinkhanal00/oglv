@@ -1,25 +1,29 @@
 #include "Line.hpp"
 #include "Angel.hpp"
-#include "Shape2D.hpp"
 #include <iostream>
 
 Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
-    : thickness(t), frameCount(20) {
+    : thickness(t), frameCount(60) {
 	int delx = std::abs(xl - x0);
 	int dely = std::abs(yl - y0);
 	int a = 0, b = 0;
 	int p = 0;
 	a = ((xl - x0) > 0) ? thickness : -thickness;
 	b = ((yl - y0) > 0) ? thickness : -thickness;
+	int tempx = x0, tempy = y0;
 	if (delx > dely) {
 		p = 2 * dely - delx;
 		for (int i = 0; i <= delx; i += thickness) {
 			points.push_back(oglm::vec2<int>(x0, y0));
+			false_points.push_back(oglm::vec2<int>(tempx, tempy));
 			x0 += a;
-			if (p <= 0)
+			tempx += a;
+			if (p <= 0) {
 				p += 2 * dely;
-			else {
+				tempy = y0 + b;
+			} else {
 				p += 2 * dely - 2 * delx;
+				tempy = y0;
 				y0 += b;
 			}
 		}
@@ -27,11 +31,15 @@ Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
 		p = 2 * delx - dely;
 		for (int i = 0; i <= dely; i += thickness) {
 			points.push_back(oglm::vec2<int>(x0, y0));
+			false_points.push_back(oglm::vec2<int>(tempx, tempy));
 			y0 += b;
-			if (p <= 0)
+			tempy += b;
+			if (p <= 0) {
+				tempx = x0 + a;
 				p += 2 * delx;
-			else {
+			} else {
 				p += 2 * delx - 2 * dely;
+				tempx = x0;
 				x0 += a;
 			}
 		}
@@ -48,15 +56,38 @@ void Line::draw() {
 void Line::animate() {
 	static int count = 0;
 	static int i = 0;
-	for (int cur = 0; cur < i; cur++) {
+	static int stuck = 0;
+
+	int cur;
+	for (cur = 0; cur < i; cur++) {
 		Angel::putPixel(points[cur].x, points[cur].y, thickness);
+	}
+	Angel::putPixel(points[points.size() - 1].x, points[points.size() - 1].y,
+	                thickness);
+	if ((i + 1) < points.size()) {
+		if (stuck > 30) {
+			if (int(count / 10) % 2 == 0) {
+				Angel::putPixel(points[i].x, points[i].y, thickness,
+				                Color(1.0f, 0.0f, 1.0f, 1.0f));
+			} else {
+				Angel::putPixel(false_points[i].x, false_points[i].y, thickness,
+				                Color(0.0f, 0.0f, 1.0f, 1.0f));
+			}
+		} else {
+			if (cur > 0) {
+				Angel::putPixel(points[cur - 1].x, points[cur - 1].y, thickness,
+				                Color(1.0f, 0.0f, 0.0f, 1.0f));
+			}
+		}
 	}
 	if (i < points.size()) {
 		if (count >= frameCount) {
+			stuck = 0;
 			i++;
 			count = 0;
 		} else {
 			count++;
+			stuck++;
 		}
 	}
 }
