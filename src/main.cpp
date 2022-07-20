@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Line.hpp"
+#include "Circle.hpp"
 #include "ResourceManager.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
@@ -70,13 +71,12 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
-	Line l(0, 0, 200, 200, 5);
+	Circle c(0, 0, 300, 10);
 	while (glfwWindowShouldClose(window) == false) {
-
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		Angel::drawAxes();
-		l.animate();
+		c.animate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

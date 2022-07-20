@@ -1,6 +1,6 @@
-#include "Shape2D.hpp"
 #include "Line.hpp"
 #include "Angel.hpp"
+#include "Shape2D.hpp"
 #include <iostream>
 
 Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
@@ -60,7 +60,6 @@ void Line::animate() {
 		}
 	}
 }
-
 void Line::translate(int x, int y) {}
 void Line::translate(oglm::vec2<int> factor) {}
 void Line::rotate(int radians, int x, int y) {}
