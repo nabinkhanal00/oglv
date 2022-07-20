@@ -1,18 +1,15 @@
 #pragma once
 
 #include "Shape2D.hpp"
-#include "Angel.hpp"
-#include "Line.hpp"
 #include <vector>
 class Cube : public Shape2D {
   private:
-	std::vector<Line> lines;
-	Angel angel;
+//	std::vector<Line> lines;
 	unsigned int thickness;
 	unsigned int frameCount;
 
   public:
-	Cube(unsigned int thickness, unsigned int windowWidth, unsigned int windowHeight);
+	Cube(unsigned int thickness);
 	void draw();
 	void animate();
 	void translate(int x, int y);
@@ -26,4 +23,7 @@ class Cube : public Shape2D {
 	void reset();
 	void increaseSpeed(int speed);
 	void decreaseSpeed(int speed);
+
+	~Cube();
+
 };

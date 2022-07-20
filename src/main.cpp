@@ -70,14 +70,15 @@ int main(void) {
 	GLFWwindow *window = InitWindow();
 	if (!window)
 		return -1;
-
-	//Line l(0, 0, 200, 200, 5, WIDTH, HEIGHT);
-	Cube c();
+	Angel::init(WIDTH, HEIGHT);
+	// Line l(0, 0, 200, 200, 5);
+	Cube c(2);
 	while (glfwWindowShouldClose(window) == false) {
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		c.animate();
+		Angel::drawAxes();
+//		c.animate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

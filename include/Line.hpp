@@ -6,13 +6,11 @@
 class Line : public Shape2D {
   private:
 	std::vector<oglm::vec2<int>> points;
-	Angel angel;
 	unsigned int thickness;
 	unsigned int frameCount;
 
   public:
-	Line(int x1, int y1, int x2, int y2, unsigned int thickness,
-	     unsigned int windowWidth, unsigned int windowHeight);
+	Line(int x1, int y1, int x2, int y2, unsigned int thickness);
 	void draw();
 	void animate();
 	void translate(int x, int y);

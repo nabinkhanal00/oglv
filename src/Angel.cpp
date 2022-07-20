@@ -1,45 +1,71 @@
 #include "Angel.hpp"
 #include "ResourceManager.hpp"
 
-const float vertices[] = {
-    -1.0f, -1.0f, 0.0f, // bottom left
-    1.0f,  -1.0f, 0.0f, // bottom right
-    1.0f,  1.0f,  0.0f, // top right
-    1.0f,  1.0f,  0.0f, // top right
-    -1.0f, 1.0f,  0.0f, // top left
-    -1.0f, -1.0f, 0.0f, // bottom left
-};
-Angel::Angel(unsigned int width, unsigned int height)
-    : m_width(width), m_height(height), m_vb(vertices, 6 * 3 * sizeof(float)) {
-	VertexBufferLayout layout;
-	layout.AddFloat(3);
-	m_va.AddBuffer(m_vb, layout);
-	m_shader =
-	    ResourceManager::LoadShader("res/shaders/pixel/vertex.glsl",
-	                                "res/shaders/pixel/fragment.glsl", "pixel");
+int Angel::m_width = 1280;
+int Angel::m_height = 720;
+
+unsigned int Angel::m_ID = 0;
+
+void Angel::init(unsigned int width, unsigned int height) {
+
+	const float vertices[] = {
+	    -1.0f, -1.0f,
+	    0.0f, // bottom left
+	    1.0f,  -1.0f,
+	    0.0f, // bottom right
+	    1.0f,  1.0f,
+	    0.0f, // top right
+	    1.0f,  1.0f,
+	    0.0f, // top right
+	    -1.0f, 1.0f,
+	    0.0f, // top left
+	    -1.0f, -1.0f,
+	    0.0f, // bottom left
+	};
+
+	unsigned int VAO;
+	unsigned int VBO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+	                      (void *)0);
+	m_ID = VAO;
+	m_width = width;
+	m_height = height;
+	glBindVertexArray(0);
+	ResourceManager::LoadShader("res/shaders/pixel/vertex.glsl",
+	                            "res/shaders/pixel/fragment.glsl", "pixel");
 }
 
 void Angel::enable() {
-	m_shader.Bind();
-	m_va.Bind();
+	glBindVertexArray(m_ID);
+	ResourceManager::GetShader("pixel").Bind();
 }
 
 void Angel::disable() {
-	m_shader.Unbind();
-	m_va.Unbind();
+	ResourceManager::GetShader("pixel").Unbind();
+	glBindVertexArray(0);
 }
 
-void Angel::putPixel(int x, int y, int thickness, color c) const {
-	m_shader.SetVec4("inColor", glm::vec4(c.r, c.g, c.b, c.a));
+void Angel::putPixel(int x, int y, int thickness, Color c) {
+	enable();
+	ResourceManager::GetShader("pixel").SetVec4("inColor",
+	                                            glm::vec4(c.r, c.g, c.b, c.a));
 	x += m_width / 2;
 	y += m_height / 2;
 	glEnable(GL_SCISSOR_TEST);
 	glScissor(x, y, thickness, thickness);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisable(GL_SCISSOR_TEST);
+	disable();
 }
 
-void Angel::drawAxes(color c) {
+void Angel::drawAxes(Color c) {
 	for (int i = -m_height / 2; i <= m_height / 2; i++) {
 		putPixel(0, i, 1, c);
 	}
