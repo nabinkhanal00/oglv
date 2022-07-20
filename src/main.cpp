@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Line.hpp"
+#include "Cube.hpp"
 #include "ResourceManager.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
@@ -70,12 +71,13 @@ int main(void) {
 	if (!window)
 		return -1;
 
-	Line l(0, 0, 200, 200, 5, WIDTH, HEIGHT);
+	//Line l(0, 0, 200, 200, 5, WIDTH, HEIGHT);
+	Cube c();
 	while (glfwWindowShouldClose(window) == false) {
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		l.animate();
+		c.animate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

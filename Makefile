@@ -3,7 +3,7 @@ BUILD_DIR := build
 INCLUDE_DIR := include
 INCLUDE_FLAGS := -I$(INCLUDE_DIR) -Ilib/glad -Ilib/imgui -Ilib/oglm
 CC := g++
-CFLAGS := -lglfw -lGL
+CFLAGS := -lglfw -lGL -ldl
 
 EXECUTABLE := main
 
