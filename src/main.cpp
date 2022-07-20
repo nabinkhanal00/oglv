@@ -3,12 +3,8 @@
 #include <iostream>
 
 #include "Line.hpp"
-<<<<<<< HEAD
-#include "Point3D.hpp"
-=======
 #include "Ellipse.hpp"
 #include "Circle.hpp"
->>>>>>> ae5cb7f15118a8651642327e0d576b72ed03b5d8
 #include "ResourceManager.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"

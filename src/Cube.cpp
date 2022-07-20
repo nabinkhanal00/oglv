@@ -1,4 +1,4 @@
-#include "Shape2D.hpp"
+// #include "Shape2D.hpp"
 #include "Angel.hpp"
 #include "Cube.hpp"
 #include "Line.hpp"
