@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "Line.hpp"
-#include "Cube.hpp"
+#include "Point3D.hpp"
 #include "ResourceManager.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
@@ -72,13 +72,15 @@ int main(void) {
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
 	// Line l(0, 0, 200, 200, 5);
-	Cube c(2);
+	Point3D p(20, 25, -10);
+	Point3D p1(50, 50, 10);
 	while (glfwWindowShouldClose(window) == false) {
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		Angel::drawAxes();
-//		c.animate();
+		p.draw();
+		p1.draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
