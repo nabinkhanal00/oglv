@@ -3,9 +3,11 @@
 #include "Shape3D.hpp"
 #include "Line.hpp"
 #include <vector>
+
 class Cube {
   private:
 	std::vector<oglm::vec3<int>> points;
+	std::vector<oglm::vec2<int>> indices;
 	unsigned int thickness;
 	unsigned int frameCount;
 
@@ -25,5 +27,4 @@ class Cube {
 	void increaseSpeed(int speed);
 	void decreaseSpeed(int speed);
 	~Cube();
-
 };
