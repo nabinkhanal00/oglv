@@ -3,8 +3,7 @@
 #include "Angel.hpp"
 #include <iostream>
 
-Line::Line(int x0, int y0, int xl, int yl, unsigned int t,
-           unsigned int windowWidth, unsigned int windowHeight)
+Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
     : thickness(t), frameCount(20) {
 	int delx = std::abs(xl - x0);
 	int dely = std::abs(yl - y0);
