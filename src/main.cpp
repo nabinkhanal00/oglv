@@ -21,6 +21,13 @@
 const unsigned int WIDTH = 728;
 const unsigned int HEIGHT = 728;
 
+void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
+                               unsigned int height) {
+
+	Angel::setHeight(height);
+	Angel::setWidth(width);
+	glViewport(0, 0, width, height);
+}
 GLFWwindow *InitWindow() {
 	// Initialise GLFW
 	if (!glfwInit()) {
