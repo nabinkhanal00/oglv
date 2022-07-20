@@ -20,6 +20,8 @@ class Angel {
 	static void drawAxes(Color c = {1.0f, 1.0f, 1.0f, 1.0f});
 	static void enable();
 	static void disable();
+	static unsigned int getWidth();
+	static unsigned int getHeight();
 
   private:
 	static unsigned int m_ID;

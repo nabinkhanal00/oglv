@@ -52,6 +52,9 @@ void Angel::disable() {
 	glBindVertexArray(0);
 }
 
+unsigned int Angel::getWidth() { return m_width; }
+unsigned int Angel::getHeight() { return m_height; }
+
 void Angel::putPixel(int x, int y, int thickness, Color c) {
 	enable();
 	ResourceManager::GetShader("pixel").SetVec4("inColor",
