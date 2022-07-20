@@ -6,6 +6,7 @@
 class Circle {
   private:
 	std::vector<oglm::vec2<int>> points;
+	std::vector<oglm::vec2<int>> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
 	int centerX;
