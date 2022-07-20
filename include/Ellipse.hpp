@@ -1,17 +1,19 @@
 #pragma once
-
-#include "Angel.hpp"
 #include "oglm.hpp"
+#include "Angel.hpp"
 #include <vector>
-class Line {
+class Ellipse {
   private:
 	std::vector<oglm::vec2<int>> points;
-	std::vector<oglm::vec2<int>> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
+	int centerX;
+	int centerY;
+	int majX;
+	int majY;
 
   public:
-	Line(int x1, int y1, int x2, int y2, unsigned int thickness = 1);
+	Ellipse(int x0, int y0,int a, int b, unsigned int thickness);
 	void draw();
 	void animate();
 	void translate(int x, int y);

@@ -3,7 +3,12 @@
 #include <iostream>
 
 #include "Line.hpp"
+<<<<<<< HEAD
 #include "Point3D.hpp"
+=======
+#include "Ellipse.hpp"
+#include "Circle.hpp"
+>>>>>>> ae5cb7f15118a8651642327e0d576b72ed03b5d8
 #include "ResourceManager.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
@@ -21,6 +26,13 @@
 const unsigned int WIDTH = 728;
 const unsigned int HEIGHT = 728;
 
+void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
+                               unsigned int height) {
+
+	Angel::setHeight(height);
+	Angel::setWidth(width);
+	glViewport(0, 0, width, height);
+}
 GLFWwindow *InitWindow() {
 	// Initialise GLFW
 	if (!glfwInit()) {
@@ -71,16 +83,12 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
-	// Line l(0, 0, 200, 200, 5);
-	Point3D p(20, 25, -10);
-	Point3D p1(50, 50, 10);
+	Circle c(0, 0, 300, 5);
 	while (glfwWindowShouldClose(window) == false) {
-
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		Angel::drawAxes();
-		p.draw();
-		p1.draw();
+		Angel::drawAxes({1.0f, 1.0f, 1.0f, 1.0f}, true);
+		c.animate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
