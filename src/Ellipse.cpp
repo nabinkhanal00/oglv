@@ -1,7 +1,6 @@
 #include "Ellipse.hpp"
 #include "Color.hpp"
 #include "Line.hpp"
-#include "Shape2D.hpp"
 #include <iostream>
 Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
     : thickness(t), frameCount(20) {
