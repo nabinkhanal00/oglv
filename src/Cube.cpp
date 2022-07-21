@@ -58,6 +58,7 @@ void Cube::translate(oglm::vec3<int> factor) {
 void Cube::rotate(float degree, float x, float y, float z) {}
 void Cube::rotate(float degree, oglm::vec3<float> factor) {
 	oglm::mat4<float> rot_mat = oglm::rotate(degree, factor);
+	rot_mat = oglm::perspective((float)M_PI_2, 1.0f, 0.1f, 100.0f) * rot_mat;
 	for (auto &i : points) {
 		oglm::vec4<float> v(i.x, i.y, i.z, 1);
 		v = rot_mat * v;

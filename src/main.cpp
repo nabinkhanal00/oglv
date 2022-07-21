@@ -83,13 +83,11 @@ int main(void) {
 	Angel::init(WIDTH, HEIGHT);
 	Cube c(1, 1);
 	// Line l(100,-100,-100,-100,1);
-	// c.translate(oglm::vec3<int>(100,0,0));
-	float degree = 2.0f;
+	c.rotate(40.0f, oglm::normalize(oglm::vec3<float>(1.0f, 0.0f, 0.0f)));
 	while (glfwWindowShouldClose(window) == false) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		c.rotate(degree, oglm::vec3<float>(0, 1, 0));
-		Angel::drawAxes({1.0f, 1.0f, 1.0f, 1.0f}, true);
+		// Angel::drawAxes({1.0f, 1.0f, 1.0f, 1.0f}, false);
 		c.draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
