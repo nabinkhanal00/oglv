@@ -17,10 +17,10 @@ class Cube {
 	void animate();
 	void translate(int x, int y, int z);
 	void translate(oglm::vec3<int> factor);
-	void rotate(int radians, int x, int y, int z);
-	void rotate(int radians, oglm::vec3<int> factor);
-	void scale(int x, int y, int z);
-	void scale(oglm::vec3<int> factor);
+	void rotate(float angle, float x, float y, float z);
+	void rotate(float angle, oglm::vec3<float> factor);
+	void scale(float x, float y, float z);
+	void scale(oglm::vec3<float> factor);
 	bool isCompleted();
 	void pause();
 	void reset();

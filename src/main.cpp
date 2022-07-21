@@ -1,5 +1,6 @@
 // Include GLFW
 
+#include <glm/trigonometric.hpp>
 #include <iostream>
 
 #include "Cube.hpp"
@@ -81,15 +82,14 @@ int main(void) {
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
 	Cube c(1, 1);
-	Line l(100,-100,-100,-100,1);
+	// Line l(100,-100,-100,-100,1);
 	// c.translate(oglm::vec3<int>(100,0,0));
-	c.rotate(30,oglm::vec3<int>(100,100,100));
+	float degree = 2.0f;
 	while (glfwWindowShouldClose(window) == false) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		c.rotate(degree, oglm::vec3<float>(0, 1, 0));
 		Angel::drawAxes({1.0f, 1.0f, 1.0f, 1.0f}, true);
-
-		l.draw();
 		c.draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
