@@ -5,14 +5,14 @@
 #include <iostream>
 
 Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
-	points.push_back(oglm::vec3<int>(0.0f, 0.0f, 0.0f));
-	points.push_back(oglm::vec3<int>(100.0f, 0.0f, 0.0f));
-	points.push_back(oglm::vec3<int>(100.0f, 100.0f, 0.0f));
-	points.push_back(oglm::vec3<int>(0.0f, 100.0f, 0.0f));
-	points.push_back(oglm::vec3<int>(0.0f, 0.0f, 100.0f));
-	points.push_back(oglm::vec3<int>(100.0f, 0.0f, 100.0f));
+	points.push_back(oglm::vec3<int>(-100.0f, -100.0f, -100.0f));
+	points.push_back(oglm::vec3<int>(100.0f, -100.0f, -100.0f));
+	points.push_back(oglm::vec3<int>(100.0f, 100.0f, -100.0f));
+	points.push_back(oglm::vec3<int>(-100.0f, 100.0f, -100.0f));
+	points.push_back(oglm::vec3<int>(-100.0f, -100.0f, 100.0f));
+	points.push_back(oglm::vec3<int>(100.0f, -100.0f, 100.0f));
 	points.push_back(oglm::vec3<int>(100.0f, 100.0f, 100.0f));
-	points.push_back(oglm::vec3<int>(0.0f, 100.0f, 100.0f));
+	points.push_back(oglm::vec3<int>(-100.0f, 100.0f, 100.0f));
 
 	indices.push_back(oglm::vec2<int>(0, 1));
 	indices.push_back(oglm::vec2<int>(1, 2));
@@ -39,11 +39,32 @@ void Cube::draw() {
 	}
 }
 void Cube::translate(int x, int y, int z) {}
-void Cube::translate(oglm::vec3<int> factor) {}
+void Cube::translate(oglm::vec3<int> factor) {
+	oglm::mat4<int> trans_mat = oglm::translate(factor);
+	for (auto &i : points) {
+		oglm::vec4<int> v(i.x, i.y, i.z, 1);
+		v= trans_mat * v;
+		i = oglm::vec3<int>(v.x, v.y, v.z);
+	}
+}
 void Cube::rotate(int radians, int x, int y, int z) {}
-void Cube::rotate(int radians, oglm::vec3<int> factor) {}
+void Cube::rotate(int radians, oglm::vec3<int> factor) {
+	oglm::mat4<int> rot_mat = oglm::rotate(radians, factor);
+	for (auto &i : points) {
+		oglm::vec4<int> v(i.x, i.y, i.z, 1);
+		v= rot_mat * v;
+		i = oglm::vec3<int>(v.x, v.y, v.z);
+	}
+}
 void Cube::scale(int x, int y, int z) {}
-void Cube::scale(oglm::vec3<int> factor) {}
+void Cube::scale(oglm::vec3<int> factor) {
+	oglm::mat4<int> scale_mat = oglm::scale(factor);
+	for (auto &i : points) {
+		oglm::vec4<int> v(i.x, i.y, i.z, 1);
+		v= scale_mat * v;
+		i = oglm::vec3<int>(v.x, v.y, v.z);
+	}
+}
 bool Cube::isCompleted() { return false; }
 void Cube::pause() {}
 void Cube::reset() {}

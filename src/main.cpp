@@ -81,10 +81,15 @@ int main(void) {
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
 	Cube c(1, 1);
+	Line l(100,-100,-100,-100,1);
+	// c.translate(oglm::vec3<int>(100,0,0));
+	c.rotate(30,oglm::vec3<int>(100,100,100));
 	while (glfwWindowShouldClose(window) == false) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		Angel::drawAxes({1.0f, 1.0f, 1.0f, 1.0f}, true);
+
+		l.draw();
 		c.draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
