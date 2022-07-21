@@ -2,6 +2,7 @@
 #include "Angel.hpp"
 #include "Cube.hpp"
 #include "Line.hpp"
+#include "transform.hpp"
 #include <iostream>
 
 Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
@@ -57,11 +58,14 @@ void Cube::translate(oglm::vec3<int> factor) {
 
 void Cube::rotate(float degree, float x, float y, float z) {}
 void Cube::rotate(float degree, oglm::vec3<float> factor) {
-	oglm::mat4<float> rot_mat = oglm::rotate(degree, factor);
+	// oglm::mat4<float> rot_mat = oglm::rotate(degree, factor);
+	oglm::mat4<float> pers_mat = oglm::perspective(0.1f, 1.0f, 0.1f, 100.0f);
+	// rot_mat= rot_mat*pers_mat;  
 	for (auto &i : points) {
 		oglm::vec4<float> v(i.x, i.y, i.z, 1);
-		v = rot_mat * v;
-		i = oglm::vec3<int>(round(v.x), round(v.y), round(v.z));
+		v = pers_mat * v;
+		std::cout<<v.w<<std::endl;
+		i = oglm::vec3<int>(round(v.x/(float)v.w), round(v.y/(float)v.w), round(v.z/(float)v.w));
 	}
 }
 
