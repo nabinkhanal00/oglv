@@ -33,38 +33,48 @@ Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
 void Cube::animate() {}
 
 void Cube::draw() {
+	static int num = 0;
 	for (auto &i : indices) {
 		Line l(points[i.x].x, points[i.x].y, points[i.y].x, points[i.y].y);
 		l.draw();
+		if (num == 0) {
+			std::cout << points[i.x] << "\t" << points[i.y] << std::endl;
+		}
 	}
+	if (num == 0)
+		num = 1;
 }
+
 void Cube::translate(int x, int y, int z) {}
 void Cube::translate(oglm::vec3<int> factor) {
 	oglm::mat4<int> trans_mat = oglm::translate(factor);
 	for (auto &i : points) {
 		oglm::vec4<int> v(i.x, i.y, i.z, 1);
-		v= trans_mat * v;
+		v = trans_mat * v;
 		i = oglm::vec3<int>(v.x, v.y, v.z);
 	}
 }
-void Cube::rotate(int radians, int x, int y, int z) {}
-void Cube::rotate(int radians, oglm::vec3<int> factor) {
-	oglm::mat4<int> rot_mat = oglm::rotate(radians, factor);
+
+void Cube::rotate(float degree, float x, float y, float z) {}
+void Cube::rotate(float degree, oglm::vec3<float> factor) {
+	oglm::mat4<float> rot_mat = oglm::rotate(degree, factor);
 	for (auto &i : points) {
-		oglm::vec4<int> v(i.x, i.y, i.z, 1);
-		v= rot_mat * v;
-		i = oglm::vec3<int>(v.x, v.y, v.z);
+		oglm::vec4<float> v(i.x, i.y, i.z, 1);
+		v = rot_mat * v;
+		i = oglm::vec3<int>(round(v.x), round(v.y), round(v.z));
 	}
 }
-void Cube::scale(int x, int y, int z) {}
-void Cube::scale(oglm::vec3<int> factor) {
-	oglm::mat4<int> scale_mat = oglm::scale(factor);
+
+void Cube::scale(float x, float y, float z) {}
+void Cube::scale(oglm::vec3<float> factor) {
+	oglm::mat4<float> scale_mat = oglm::scale(factor);
 	for (auto &i : points) {
-		oglm::vec4<int> v(i.x, i.y, i.z, 1);
-		v= scale_mat * v;
-		i = oglm::vec3<int>(v.x, v.y, v.z);
+		oglm::vec4<float> v(i.x, i.y, i.z, 1);
+		v = scale_mat * v;
+		i = oglm::vec3<int>(round(v.x), round(v.y), round(v.z));
 	}
 }
+
 bool Cube::isCompleted() { return false; }
 void Cube::pause() {}
 void Cube::reset() {}
