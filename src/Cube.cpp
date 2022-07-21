@@ -3,16 +3,17 @@
 #include "Cube.hpp"
 #include "Line.hpp"
 #include <iostream>
+#include <glm/gtc/matrix_transform.hpp>
 
 Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
-	points.push_back(oglm::vec3i(-100.0f, -100.0f, -100.0f));
-	points.push_back(oglm::vec3i(100.0f, -100.0f, -100.0f));
-	points.push_back(oglm::vec3i(100.0f, 100.0f, -100.0f));
-	points.push_back(oglm::vec3i(-100.0f, 100.0f, -100.0f));
-	points.push_back(oglm::vec3i(-100.0f, -100.0f, 100.0f));
-	points.push_back(oglm::vec3i(100.0f, -100.0f, 100.0f));
-	points.push_back(oglm::vec3i(100.0f, 100.0f, 100.0f));
-	points.push_back(oglm::vec3i(-100.0f, 100.0f, 100.0f));
+	points.push_back(oglm::vec3(-0.5f, -0.5f, -0.5f));
+	points.push_back(oglm::vec3(0.5f, -0.5f, -0.5f));
+	points.push_back(oglm::vec3(0.5f, 0.5f, -0.5f));
+	points.push_back(oglm::vec3(-0.5f, 0.5f, -0.5f));
+	points.push_back(oglm::vec3(-0.5f, -0.5f, 0.5f));
+	points.push_back(oglm::vec3(0.5f, -0.5f, 0.5f));
+	points.push_back(oglm::vec3(0.5f, 0.5f, 0.5f));
+	points.push_back(oglm::vec3(-0.5f, 0.5f, 0.5f));
 
 	indices.push_back(oglm::vec2i(0, 1));
 	indices.push_back(oglm::vec2i(1, 2));
@@ -45,25 +46,33 @@ void Cube::draw() {
 		num = 1;
 }
 
-void Cube::translate(int x, int y, int z) {}
-void Cube::translate(oglm::vec3i factor) {
-	oglm::mat4<int> trans_mat = oglm::translate(factor);
+void Cube::translate(float x, float y, float z) {}
+
+void Cube::translate(oglm::vec3f factor) {
+	oglm::mat4<float> trans_mat = oglm::translate(factor);
 	for (auto &i : points) {
-		oglm::vec4i v(i.x, i.y, i.z, 1);
+		oglm::vec4f v(i.x, i.y, i.z, 1);
 		v = trans_mat * v;
-		i = oglm::vec3i(v.x, v.y, v.z);
+		i = oglm::vec3f(v.x, v.y, v.z);
 	}
 }
 
 void Cube::rotate(float degree, float x, float y, float z) {}
 void Cube::rotate(float degree, oglm::vec3 factor) {
-	oglm::mat4<float> rot_mat = oglm::rotate(degree, factor);
-	rot_mat = oglm::perspective((float)M_PI_2, 1.0f, 0.1f, 100.0f) * rot_mat;
+	glm::mat4 scal = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(45.0f),
+	                            glm::normalize(glm::vec3(0.0f, 1.0f, 1.0f)));
+	glm::mat4 trans =
+	    glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	glm::mat4 look =
+	    glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+	                glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 pers_mat = glm::perspective((float)M_PI_2, 1.0f, 0.1f, 100.0f);
 	for (auto &i : points) {
-		oglm::vec4 v(i.x, i.y, i.z, 1);
-		v = rot_mat * v;
-		i = oglm::vec3i(round(v.x / (float)v.w), round(v.y / (float)v.w),
-		                round(v.z / (float)v.w));
+		glm::vec4 v(i.x, i.y, i.z, 1);
+		v = pers_mat * look * trans * rot * scal * v;
+		v /= v.w;
+		i = oglm::vec3(v.x, v.y, v.z);
 	}
 }
 
@@ -73,7 +82,7 @@ void Cube::scale(oglm::vec3 factor) {
 	for (auto &i : points) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = scale_mat * v;
-		i = oglm::vec3i(round(v.x), round(v.y), round(v.z));
+		i = oglm::vec3f((v.x), (v.y), (v.z));
 	}
 }
 

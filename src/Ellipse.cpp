@@ -2,13 +2,15 @@
 #include "Color.hpp"
 #include "Line.hpp"
 #include <iostream>
-Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
+Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
     : thickness(t), frameCount(60) {
 	centerX = x0;
 	centerY = y0;
-	majX = rx;
-	majY = ry;
-	float dx, dy, d1, d2;
+	majX = rX;
+	majY = rY;
+	int rx = rX * Angel::getWidth() / 2;
+	int ry = rX * Angel::getHeight() / 2;
+	int dx, dy, d1, d2;
 	int x, y;
 	x = 0;
 	y = ry;
@@ -21,8 +23,8 @@ Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
 
 	// For region 1
 	while (dx <= dy) {
-		points.push_back(oglm::vec2i(x, y));
-		false_points.push_back(oglm::vec2i(falseX, falseY));
+		points.push_back(Angel::demap(x, y));
+		false_points.push_back(Angel::demap(falseX, falseY));
 
 		// Checking and updating value of
 		// decision parameter based on algorithm
@@ -51,7 +53,8 @@ Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
 	// Plotting points of region 2
 	while (y >= 0) {
 
-		points.push_back(oglm::vec2i(x, y));
+		points.push_back(Angel::demap(x, y));
+		false_points.push_back(Angel::demap(falseX, falseY));
 		// Checking and updating parameter
 		// value based on algorithm
 		if (d2 > 0) {
@@ -155,14 +158,14 @@ void Ellipse::animate() {
 		}
 	}
 };
-void Ellipse::translate(int x, int y){};
-void Ellipse::translate(oglm::vec2i factor){};
-void Ellipse::rotate(int radians, int x, int y){};
-void Ellipse::rotate(int radians, oglm::vec2i factor){};
-void Ellipse::scale(int x, int y){};
-void Ellipse::scale(oglm::vec2i factor){};
+void Ellipse::translate(float x, float y){};
+void Ellipse::translate(oglm::vec2 factor){};
+void Ellipse::rotate(float radians, float x, float y){};
+void Ellipse::rotate(float radians, oglm::vec2 factor){};
+void Ellipse::scale(float x, float y){};
+void Ellipse::scale(oglm::vec2 factor){};
 bool Ellipse::isCompleted() { return true; };
 void Ellipse::pause(){};
 void Ellipse::reset(){};
-void Ellipse::increaseSpeed(int speed){};
-void Ellipse::decreaseSpeed(int speed){};
+void Ellipse::increaseSpeed(float speed){};
+void Ellipse::decreaseSpeed(float speed){};

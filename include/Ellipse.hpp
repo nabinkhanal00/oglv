@@ -4,28 +4,28 @@
 #include <vector>
 class Ellipse {
   private:
-	std::vector<oglm::vec2i> points;
-	std::vector<oglm::vec2i> false_points;
+	std::vector<oglm::vec2> points;
+	std::vector<oglm::vec2> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
-	int centerX;
-	int centerY;
-	int majX;
-	int majY;
+	float centerX;
+	float centerY;
+	float majX;
+	float majY;
 
   public:
-	Ellipse(int x0, int y0, int a, int b, unsigned int thickness);
+	Ellipse(float x0, float y0, float a, float b, unsigned int thickness);
 	void draw();
 	void animate();
-	void translate(int x, int y);
-	void translate(oglm::vec2i factor);
-	void rotate(int radians, int x, int y);
-	void rotate(int radians, oglm::vec2i factor);
-	void scale(int x, int y);
-	void scale(oglm::vec2i factor);
+	void translate(float x, float y);
+	void translate(oglm::vec2 factor);
+	void rotate(float radians, float x, float y);
+	void rotate(float radians, oglm::vec2 factor);
+	void scale(float x, float y);
+	void scale(oglm::vec2 factor);
 	bool isCompleted();
 	void pause();
 	void reset();
-	void increaseSpeed(int speed);
-	void decreaseSpeed(int speed);
+	void increaseSpeed(float speed);
+	void decreaseSpeed(float speed);
 };

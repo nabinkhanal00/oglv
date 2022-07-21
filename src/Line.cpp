@@ -2,8 +2,15 @@
 #include "Angel.hpp"
 #include <iostream>
 
-Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
+Line::Line(float xa, float ya, float xb, float yb, unsigned int t)
     : thickness(t), frameCount(60) {
+	auto point0 = Angel::map(xa, ya);
+	auto point1 = Angel::map(xb, yb);
+	int x0 = point0.x;
+	int y0 = point0.y;
+	int xl = point1.x;
+	int yl = point1.y;
+
 	int delx = std::abs(xl - x0);
 	int dely = std::abs(yl - y0);
 	int a = 0, b = 0;
@@ -14,8 +21,8 @@ Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
 	if (delx > dely) {
 		p = 2 * dely - delx;
 		for (int i = 0; i <= delx; i += thickness) {
-			points.push_back(oglm::vec2i(x0, y0));
-			false_points.push_back(oglm::vec2i(tempx, tempy));
+			points.push_back(Angel::demap(x0, y0));
+			false_points.push_back(Angel::demap(tempx, tempy));
 			x0 += a;
 			tempx += a;
 			if (p <= 0) {
@@ -30,8 +37,8 @@ Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
 	} else {
 		p = 2 * delx - dely;
 		for (int i = 0; i <= dely; i += thickness) {
-			points.push_back(oglm::vec2i(x0, y0));
-			false_points.push_back(oglm::vec2i(tempx, tempy));
+			points.push_back(Angel::demap(x0, y0));
+			false_points.push_back(Angel::demap(tempx, tempy));
 			y0 += b;
 			tempy += b;
 			if (p <= 0) {
@@ -47,8 +54,6 @@ Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
 }
 
 void Line::draw() {
-	Color(1.0f, 1.0f, 1.0f, 1.0f);
-
 	for (auto &i : points) {
 		Angel::putPixel(i.x, i.y, thickness);
 	}
@@ -91,14 +96,14 @@ void Line::animate() {
 		}
 	}
 }
-void Line::translate(int x, int y) {}
-void Line::translate(oglm::vec2i factor) {}
-void Line::rotate(int radians, int x, int y) {}
-void Line::rotate(int radians, oglm::vec2i factor) {}
-void Line::scale(int x, int y) {}
-void Line::scale(oglm::vec2i factor) {}
+void Line::translate(float x, float y) {}
+void Line::translate(oglm::vec2 factor) {}
+void Line::rotate(float radians, float x, float y) {}
+void Line::rotate(float radians, oglm::vec2 factor) {}
+void Line::scale(float x, float y) {}
+void Line::scale(oglm::vec2 factor) {}
 bool Line::isCompleted() { return false; }
 void Line::pause() {}
 void Line::reset() {}
-void Line::increaseSpeed(int speed) {}
-void Line::decreaseSpeed(int speed) {}
+void Line::increaseSpeed(float speed) {}
+void Line::decreaseSpeed(float speed) {}

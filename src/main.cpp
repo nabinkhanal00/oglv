@@ -3,10 +3,10 @@
 #include <glm/trigonometric.hpp>
 #include <iostream>
 
-#include "Cube.hpp"
-#include "Line.hpp"
 #include "Ellipse.hpp"
 #include "Circle.hpp"
+#include "Cube.hpp"
+#include "Line.hpp"
 #include "ResourceManager.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
@@ -81,13 +81,12 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
-	Cube c(1, 1);
-	// Line l(100,-100,-100,-100,1);
-	c.rotate(40.0f, oglm::normalize(oglm::vec3(1.0f, 0.0f, 0.0f)));
+	// Cube c(1, 5);
+	// c.rotate(45.0f, oglm::normalize(oglm::vec3(1.0f, 0.0f, 0.0f)));
+	Ellipse c(0.0f, 0.0f, 0.1f, 0.1f, 2);
 	while (glfwWindowShouldClose(window) == false) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		// Angel::drawAxes({1.0f, 1.0f, 1.0f, 1.0f}, false);
 		c.draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
