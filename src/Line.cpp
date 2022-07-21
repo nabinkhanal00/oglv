@@ -14,8 +14,8 @@ Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
 	if (delx > dely) {
 		p = 2 * dely - delx;
 		for (int i = 0; i <= delx; i += thickness) {
-			points.push_back(oglm::vec2<int>(x0, y0));
-			false_points.push_back(oglm::vec2<int>(tempx, tempy));
+			points.push_back(oglm::vec2i(x0, y0));
+			false_points.push_back(oglm::vec2i(tempx, tempy));
 			x0 += a;
 			tempx += a;
 			if (p <= 0) {
@@ -30,8 +30,8 @@ Line::Line(int x0, int y0, int xl, int yl, unsigned int t)
 	} else {
 		p = 2 * delx - dely;
 		for (int i = 0; i <= dely; i += thickness) {
-			points.push_back(oglm::vec2<int>(x0, y0));
-			false_points.push_back(oglm::vec2<int>(tempx, tempy));
+			points.push_back(oglm::vec2i(x0, y0));
+			false_points.push_back(oglm::vec2i(tempx, tempy));
 			y0 += b;
 			tempy += b;
 			if (p <= 0) {
@@ -66,7 +66,7 @@ void Line::animate() {
 	                thickness);
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
-			if (int(count / 10+4) % 2 == 0) {
+			if (int(count / 10 + 4) % 2 == 0) {
 				Angel::putPixel(points[i].x, points[i].y, thickness,
 				                Color(1.0f, 0.0f, 1.0f, 1.0f));
 			} else {
@@ -92,11 +92,11 @@ void Line::animate() {
 	}
 }
 void Line::translate(int x, int y) {}
-void Line::translate(oglm::vec2<int> factor) {}
+void Line::translate(oglm::vec2i factor) {}
 void Line::rotate(int radians, int x, int y) {}
-void Line::rotate(int radians, oglm::vec2<int> factor) {}
+void Line::rotate(int radians, oglm::vec2i factor) {}
 void Line::scale(int x, int y) {}
-void Line::scale(oglm::vec2<int> factor) {}
+void Line::scale(oglm::vec2i factor) {}
 bool Line::isCompleted() { return false; }
 void Line::pause() {}
 void Line::reset() {}

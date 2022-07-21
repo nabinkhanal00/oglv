@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Shape3D.hpp"
 #include "Line.hpp"
 #include <vector>
 
 class Cube {
   private:
-	std::vector<oglm::vec3<int>> points;
-	std::vector<oglm::vec2<int>> indices;
+	std::vector<oglm::vec3i> points;
+	std::vector<oglm::vec2i> indices;
 	unsigned int thickness;
 	unsigned int frameCount;
 
@@ -16,11 +15,11 @@ class Cube {
 	void draw();
 	void animate();
 	void translate(int x, int y, int z);
-	void translate(oglm::vec3<int> factor);
+	void translate(oglm::vec3i factor);
 	void rotate(float angle, float x, float y, float z);
-	void rotate(float angle, oglm::vec3<float> factor);
+	void rotate(float angle, oglm::vec3 factor);
 	void scale(float x, float y, float z);
-	void scale(oglm::vec3<float> factor);
+	void scale(oglm::vec3 factor);
 	bool isCompleted();
 	void pause();
 	void reset();

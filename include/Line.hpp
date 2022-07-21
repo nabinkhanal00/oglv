@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Angel.hpp"
 #include "oglm.hpp"
+#include "Angel.hpp"
 #include <vector>
 class Line {
   private:
-	std::vector<oglm::vec2<int>> points;
-	std::vector<oglm::vec2<int>> false_points;
+	std::vector<oglm::vec2i> points;
+	std::vector<oglm::vec2i> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
 
@@ -15,11 +15,11 @@ class Line {
 	void draw();
 	void animate();
 	void translate(int x, int y);
-	void translate(oglm::vec2<int> factor);
+	void translate(oglm::vec2i factor);
 	void rotate(int radians, int x, int y);
-	void rotate(int radians, oglm::vec2<int> factor);
+	void rotate(int radians, oglm::vec2i factor);
 	void scale(int x, int y);
-	void scale(oglm::vec2<int> factor);
+	void scale(oglm::vec2i factor);
 	bool isCompleted();
 	void pause();
 	void reset();

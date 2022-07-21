@@ -11,8 +11,8 @@ Circle::Circle(int x0, int y0, int r, unsigned int t)
 	int p = 1 - r;
 	int tempx = x, tempy = y;
 	while (y >= x) {
-		points.push_back(oglm::vec2<int>(x, y));
-		false_points.push_back(oglm::vec2<int>(tempx, tempy));
+		points.push_back(oglm::vec2i(x, y));
+		false_points.push_back(oglm::vec2i(tempx, tempy));
 		bool visited = false;
 		if (p >= 0) {
 			tempy = y;
@@ -244,11 +244,11 @@ void Circle::animate() {
 	}
 };
 void Circle::translate(int x, int y){};
-void Circle::translate(oglm::vec2<int> factor){};
+void Circle::translate(oglm::vec2i factor){};
 void Circle::rotate(int radians, int x, int y){};
-void Circle::rotate(int radians, oglm::vec2<int> factor){};
+void Circle::rotate(int radians, oglm::vec2i factor){};
 void Circle::scale(int x, int y){};
-void Circle::scale(oglm::vec2<int> factor){};
+void Circle::scale(oglm::vec2i factor){};
 bool Circle::isCompleted() { return true; };
 void Circle::pause(){};
 void Circle::reset(){};
