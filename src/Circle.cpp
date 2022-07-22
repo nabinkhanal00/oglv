@@ -2,17 +2,21 @@
 #include "Circle.hpp"
 #include "Color.hpp"
 #include <iostream>
-Circle::Circle(int x0, int y0, int r, unsigned int t)
+Circle::Circle(float x0, float y0, float r, unsigned int t)
     : thickness(t), frameCount(60) {
 	centerX = x0;
 	centerY = y0;
 	radius = r;
-	int x = 0, y = r;
-	int p = 1 - r;
+	oglm::vec2i center = Angel::map(x0, y0);
+	int rd = round(r * Angel::getWidth());
+	int x = 0;
+	int y = rd;
+	std::cout << "X:" << x << " Y:" << y << " Radius: " << rd << std::endl;
+	int p = 1 - rd;
 	int tempx = x, tempy = y;
 	while (y >= x) {
-		points.push_back(oglm::vec2<int>(x, y));
-		false_points.push_back(oglm::vec2<int>(tempx, tempy));
+		points.push_back(Angel::demap(x, y));
+		false_points.push_back(Angel::demap(tempx, tempy));
 		bool visited = false;
 		if (p >= 0) {
 			tempy = y;
@@ -48,12 +52,12 @@ void Circle::animate() {
 	static int i = 0;
 	static int stuck = 0;
 	int cur;
-	Line l1(-Angel::getWidth(), -Angel::getHeight(), Angel::getWidth(),
-	        Angel::getHeight(), 1);
-	l1.draw();
-	Line l2(-Angel::getWidth(), Angel::getHeight(), Angel::getWidth(),
-	        -Angel::getHeight(), 1);
-	l2.draw();
+	// Line l1(-Angel::getWidth(), -Angel::getHeight(), Angel::getWidth(),
+	//         Angel::getHeight(), 1);
+	// l1.draw();
+	// Line l2(-Angel::getWidth(), Angel::getHeight(), Angel::getWidth(),
+	//         -Angel::getHeight(), 1);
+	// l2.draw();
 	for (cur = 0; cur < i; cur++) {
 		Angel::putPixel(points[cur].x + centerX, points[cur].y + centerY,
 		                thickness);
@@ -243,14 +247,14 @@ void Circle::animate() {
 		}
 	}
 };
-void Circle::translate(int x, int y){};
-void Circle::translate(oglm::vec2<int> factor){};
-void Circle::rotate(int radians, int x, int y){};
-void Circle::rotate(int radians, oglm::vec2<int> factor){};
-void Circle::scale(int x, int y){};
-void Circle::scale(oglm::vec2<int> factor){};
+void Circle::translate(float x, float y){};
+void Circle::translate(oglm::vec2 factor){};
+void Circle::rotate(float radians, float x, float y){};
+void Circle::rotate(float radians, oglm::vec2 factor){};
+void Circle::scale(float x, float y){};
+void Circle::scale(oglm::vec2 factor){};
 bool Circle::isCompleted() { return true; };
 void Circle::pause(){};
 void Circle::reset(){};
-void Circle::increaseSpeed(int speed){};
-void Circle::decreaseSpeed(int speed){};
+void Circle::increaseSpeed(float speed){};
+void Circle::decreaseSpeed(float speed){};
