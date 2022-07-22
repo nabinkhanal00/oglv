@@ -81,6 +81,20 @@ void Angel::putPixel(float x, float y, int thickness, Color c) {
 	ResourceManager::GetShader("pixel").SetVec4("inColor",
 	                                            glm::vec4(c.r, c.g, c.b, c.a));
 	oglm::vec2i point = map(x, y);
+	std::cout << point.x << " " << point.y << " " << std::endl;
+	// if (point.x < (getWidth() / 2)){
+	// 	std::cout<<"hello"<<std::endl;
+	// 	point.x = point.x + getWidth() / 2;
+	// }
+	// else{
+	// 	point.x = point.x - getWidth() / 2;
+	// }
+	// if(point.y < (getHeight() / 2)){
+	// 	point.y = point.y + getHeight() / 2;
+	// }
+	// else{
+	// 	point.y = point.y - getHeight() / 2;
+	// }
 	glEnable(GL_SCISSOR_TEST);
 	glScissor(point.x, point.y, thickness, thickness);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

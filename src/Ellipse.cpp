@@ -8,10 +8,12 @@ Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
 	centerY = y0;
 	majX = rX;
 	majY = rY;
-	int rx = rX * Angel::getWidth() / 2;
-	int ry = rX * Angel::getHeight() / 2;
-	int dx, dy, d1, d2;
-	int x, y;
+	// int rx = rX * Angel::getWidth() / 2;
+	// int ry = rX * Angel::getHeight() / 2;
+	float rx = rX;
+	float ry = rY;
+	float dx, dy, d1, d2;
+	float x, y;
 	x = 0;
 	y = ry;
 
@@ -19,7 +21,7 @@ Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
 	d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
 	dx = 2 * ry * ry * x;
 	dy = 2 * rx * rx * y;
-	int falseX{x}, falseY{y};
+	float falseX{x}, falseY{y};
 
 	// For region 1
 	while (dx <= dy) {
@@ -84,9 +86,13 @@ Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
 void Ellipse::draw() {
 
 	for (auto &i : points) {
+        // std::cout<<i.x<<" "<<i.y<<" "<<std::endl;
 		Angel::putPixel(i.x + centerX, i.y + centerY, thickness);
+        // std::cout<<-i.x<<" "<<i.y<<" "<<std::endl;
 		Angel::putPixel(-i.x + centerX, i.y + centerY, thickness);
+        // std::cout<<i.x<<" "<<-i.y<<" "<<std::endl;
 		Angel::putPixel(i.x + centerX, -i.y + centerY, thickness);
+        // std::cout<<-i.x<<" "<<-i.y<<" "<<std::endl;
 		Angel::putPixel(-i.x + centerX, -i.y + centerY, thickness);
 	}
 }
