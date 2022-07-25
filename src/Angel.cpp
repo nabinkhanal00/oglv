@@ -1,10 +1,14 @@
 #include "Angel.hpp"
 #include "Line.hpp"
 #include "ResourceManager.hpp"
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 int Angel::m_width = 1280;
 int Angel::m_height = 720;
 
+glm::mat4 Angel::view = {};
+glm::mat4 Angel::pers = {};
 unsigned int Angel::m_ID = 0;
 
 void Angel::init(unsigned int width, unsigned int height) {
@@ -93,4 +97,10 @@ void Angel::drawAxes(Color c, bool octant) {
 		putPixel(0, i, 1, c);
 		putPixel(i, 0, 1, c);
 	}
+}
+void Angel::set_perspective(float fov, float aspect, float near, float far) {
+	pers = glm::perspective(fov, aspect, near, far);
+}
+void Angel::set_view(const glm::vec3 &eye, const glm::vec3& towards , const glm::vec3 &up){
+	view = glm::lookAt(eye, towards, up);
 }

@@ -20,7 +20,7 @@
 
 #include <GLFW/glfw3.h>
 
-const unsigned int WIDTH = 1268;
+const unsigned int WIDTH = 720;
 const unsigned int HEIGHT = 720;
 
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
@@ -81,12 +81,13 @@ int main(void) {
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
 	Cube c(1, 5);
-	c.rotate(45.0f, oglm::normalize(oglm::vec3(1.0f, 0.0f, 0.0f)));
-	// Ellipse c(0.0f, 0.0f, 0.6f, 0.2f, 2);
+	// Ellipse c(0.0f, 0.0f, 0.6f, 0.8f, 2);
 	// Circle c(0.0f, 0.0f, 0.5f, 5);
 	while (glfwWindowShouldClose(window) == false) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		Angel::drawAxes();
+		c.rotate(45.0f, oglm::normalize(oglm::vec3(1.0f, 0.0f, 0.0f)));
 		c.draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
