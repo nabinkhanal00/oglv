@@ -8,8 +8,12 @@ Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
 	centerY = y0;
 	majX = rX;
 	majY = rY;
-	int rx = rX * Angel::getWidth() / 2;
-	int ry = rX * Angel::getHeight() / 2;
+
+	int offsetX = Angel::getWidth() / 2;
+	int offsetY = Angel::getHeight() / 2;
+
+	int rx = rX * offsetX;
+	int ry = rX * offsetY;
 	int dx, dy, d1, d2;
 	int x, y;
 	x = 0;
@@ -23,8 +27,9 @@ Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
 
 	// For region 1
 	while (dx <= dy) {
-		points.push_back(Angel::demap(x, y));
-		false_points.push_back(Angel::demap(falseX, falseY));
+		points.push_back(Angel::demap(x + offsetX, y + offsetY));
+		false_points.push_back(
+		    Angel::demap(falseX + offsetX, falseY + offsetY));
 
 		// Checking and updating value of
 		// decision parameter based on algorithm
@@ -53,8 +58,9 @@ Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
 	// Plotting points of region 2
 	while (y >= 0) {
 
-		points.push_back(Angel::demap(x, y));
-		false_points.push_back(Angel::demap(falseX, falseY));
+		points.push_back(Angel::demap(x + offsetX, y + offsetY));
+		false_points.push_back(
+		    Angel::demap(falseX + offsetX, falseY + offsetY));
 		// Checking and updating parameter
 		// value based on algorithm
 		if (d2 > 0) {

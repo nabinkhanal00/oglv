@@ -7,16 +7,17 @@ Circle::Circle(float x0, float y0, float r, unsigned int t)
 	centerX = x0;
 	centerY = y0;
 	radius = r;
-	oglm::vec2i center = Angel::map(x0, y0);
-	int rd = round(r * Angel::getWidth());
+	int rd = round(r * Angel::getWidth() / 2);
+
+	int offsetX = Angel::getWidth() / 2;
+	int offsetY = Angel::getHeight() / 2;
 	int x = 0;
 	int y = rd;
-	std::cout << "X:" << x << " Y:" << y << " Radius: " << rd << std::endl;
 	int p = 1 - rd;
 	int tempx = x, tempy = y;
 	while (y >= x) {
-		points.push_back(Angel::demap(x, y));
-		false_points.push_back(Angel::demap(tempx, tempy));
+		points.push_back(Angel::demap(x + offsetX, y + offsetY));
+		false_points.push_back(Angel::demap(tempx + offsetX, tempy + offsetY));
 		bool visited = false;
 		if (p >= 0) {
 			tempy = y;
