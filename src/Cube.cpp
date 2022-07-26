@@ -32,26 +32,46 @@ Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
 	indices.push_back(oglm::vec2i(5, 6));
 	indices.push_back(oglm::vec2i(6, 7));
 	indices.push_back(oglm::vec2i(7, 4));
+	// initializing depth buffer
+	for (size_t i = 0; i <= Angel::getWidth(); i++) {
+		for (size_t j = 0; j <= Angel::getHeight(); j++) {
+			std::string key = std::to_string(i) + ',' + std::to_string(j);
+			depth_buffer[key] = 0.0f;
+		}
+	}
 }
 
 void Cube::animate() {}
 
 void Cube::draw() {
-	Angel::set_perspective((float)M_PI_2, Angel::getWidth() / (float)Angel::getHeight(), 0.1, 100.0f);
-	Angel::set_view(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3(0.0f, 1.0f, 0.0f));
+	Angel::set_perspective((float)M_PI_2,
+	                       Angel::getWidth() / (float)Angel::getHeight(), 0.1,
+	                       100.0f);
+	Angel::set_view(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+	                glm::vec3(0.0f, 1.0f, 0.0f));
 	for (auto &i : drawing_points) {
 		glm::vec4 v(i.x, i.y, i.z, 1);
-		v = Angel::pers *Angel::view* v;
+		v = Angel::pers * Angel::view * v;
 		v /= v.w;
 		i = oglm::vec3(v.x, v.y, v.z);
 	}
 	static int num = 0;
 	for (auto &i : indices) {
-		Line l(drawing_points[i.x].x, drawing_points[i.x].y, drawing_points[i.y].x, drawing_points[i.y].y);
-		l.draw();
-		// if (num == 0) {
-		// 	std::cout << points[i.x] << "\t" << points[i.y] << std::endl;
-		// }
+		oglm::vec2i x0y0 = Angel::map(drawing_points[i.x].x,drawing_points[i.x].y);
+		oglm::vec2i x1y1 = Angel::map(drawing_points[i.y].x,drawing_points[i.y].y);
+		std::string key = std::to_string(x0y0.x) + ',' +
+		                  std::to_string(x0y0.y);
+		float z = drawing_points[i.x].x;
+		std::string key2 = std::to_string(x1y1.x) + ',' +
+		                   std::to_string(x1y1.y);
+		float z2 = drawing_points[i.y].x;
+		if (z >= depth_buffer[key] && z2 >= depth_buffer[key2]) {
+			depth_buffer[key] = z;
+			depth_buffer[key2] = z2;
+			Line l(drawing_points[i.x].x, drawing_points[i.x].y,
+			       drawing_points[i.y].x, drawing_points[i.y].y);
+			l.draw();
+		}
 	}
 	if (num == 0)
 		num = 1;
@@ -73,13 +93,13 @@ void Cube::rotate(float degree, float x, float y, float z) {}
 void Cube::rotate(float degree, oglm::vec3 factor) {
 	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
 	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 0.0f));
-	oglm::mat4<float> rot = oglm::rotate(glfwGetTime()*30.0f,oglm::vec3(0.0f, 1.0f, 0.0f));
+	oglm::mat4<float> rot = oglm::rotate(30.0f, oglm::vec3(1.0f, 0.0f, 0.0f));
 	// for(unsigned int i = 0; i < points.size(); i++)
- //  	  {
+	//  	  {
 	// 	oglm::vec4 v(points[i].x, points[i].y, points[i].z, 1);
 	// 	v = trans * rot * scal * v;
 	// 	drawing_points[i] = oglm::vec3(v.x, v.y, v.z);
- //  	  }
+	//  	  }
 	for (auto &i : points) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = trans * rot * scal * v;

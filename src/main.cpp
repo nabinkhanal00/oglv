@@ -80,7 +80,7 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
-	Cube c(1, 5);
+	Cube c(1, 10);
 	// Ellipse c(0.0f, 0.0f, 0.6f, 0.8f, 2);
 	// Circle c(0.0f, 0.0f, 0.5f, 5);
 	while (glfwWindowShouldClose(window) == false) {

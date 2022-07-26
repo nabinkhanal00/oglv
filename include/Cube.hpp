@@ -2,11 +2,13 @@
 
 #include "Line.hpp"
 #include <vector>
+#include <map>
 
 class Cube {
   private:
 	std::vector<oglm::vec3> points;
 	std::vector<oglm::vec3> drawing_points;
+  std::map<std::string,float> depth_buffer;
 	std::vector<oglm::vec2i> indices;
 	unsigned int thickness;
 	unsigned int frameCount;
