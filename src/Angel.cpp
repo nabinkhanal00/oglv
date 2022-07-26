@@ -1,15 +1,53 @@
 #include "Angel.hpp"
 #include "Line.hpp"
 #include "ResourceManager.hpp"
+#include "VertexBuffer.hpp"
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
 int Angel::m_width = 1280;
 int Angel::m_height = 720;
 
-glm::mat4 Angel::view = {};
-glm::mat4 Angel::pers = {};
+oglm::mat4<float> Angel::view;
+oglm::mat4<float> Angel::pers;
+std::map<std::string, float> Angel::depth_buffer;
+std::vector<oglm::vec3> Angel::vertexBuffer;
 unsigned int Angel::m_ID = 0;
+
+void Angel::draw() {
+	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
+	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 0.0f));
+	oglm::mat4<float> rot = oglm::rotate(0.0f, oglm::vec3(0.0f, 0.0f, 0.0f));
+
+	set_perspective((float)M_PI_2, getWidth() / (float)getHeight(), 0.1,
+	                100.0f);
+	set_view(oglm::vec3(0.0f, 0.0f, 4.0f), oglm::vec3(0.0f, 0.0f, 0.0f),
+	         oglm::vec3(0.0f, 1.0f, 0.0f));
+	for (auto &i : vertexBuffer) {
+		oglm::vec4 v(i.x, i.y, i.z, 1);
+		v = pers * view * trans * rot * scal * v;
+		v /= v.w;
+		i = oglm::vec3(v.x, v.y, v.z);
+	}
+	for (size_t i = 0; i < vertexBuffer.size() - 2; i = i + 2) {
+		float x0 = vertexBuffer[i].x;
+		float y0 = vertexBuffer[i].y;
+		float z0 = vertexBuffer[i].z;
+		float x1 = vertexBuffer[i + 1].x;
+		float y1 = vertexBuffer[i + 1].y;
+		float z1 = vertexBuffer[i + 1].z;
+
+		oglm::vec2i x0y0 = Angel::map(x0, y0);
+		oglm::vec2i x1y1 = Angel::map(x1, y1);
+		std::string key = std::to_string(x0y0.x) + ',' + std::to_string(x0y0.y);
+		std::string key2 =
+		    std::to_string(x1y1.x) + ',' + std::to_string(x1y1.y);
+		Line l(x0, y0, x1, y1);
+		l.draw();
+		// if (z0 >= depth_buffer[key] && z1 >= depth_buffer[key2]) {
+		// }
+	}
+}
 
 void Angel::init(unsigned int width, unsigned int height) {
 
@@ -40,7 +78,16 @@ void Angel::init(unsigned int width, unsigned int height) {
 	ResourceManager::LoadShader("res/shaders/pixel/vertex.glsl",
 	                            "res/shaders/pixel/fragment.glsl", "pixel");
 }
-
+void Angel::init_depth_buffer() {
+	// iniatilizing depth buffer
+	depth_buffer.clear();
+	for (size_t i = 0; i <= Angel::getWidth(); i++) {
+		for (size_t j = 0; j <= Angel::getHeight(); j++) {
+			std::string key = std::to_string(i) + ',' + std::to_string(j);
+			depth_buffer[key] = 0.0f;
+		}
+	}
+}
 void Angel::enable() {
 	glBindVertexArray(m_ID);
 	ResourceManager::GetShader("pixel").Bind();
@@ -99,8 +146,9 @@ void Angel::drawAxes(Color c, bool octant) {
 	}
 }
 void Angel::set_perspective(float fov, float aspect, float near, float far) {
-	pers = glm::perspective(fov, aspect, near, far);
+	pers = oglm::perspective(fov, aspect, near, far);
 }
-void Angel::set_view(const glm::vec3 &eye, const glm::vec3& towards , const glm::vec3 &up){
-	view = glm::lookAt(eye, towards, up);
+void Angel::set_view(const oglm::vec3 &eye, const oglm::vec3 &towards,
+                     const oglm::vec3 &up) {
+	view = oglm::lookAt(eye, towards, up);
 }

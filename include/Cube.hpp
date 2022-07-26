@@ -15,7 +15,7 @@ class Cube {
 
   public:
 	Cube(unsigned int length, unsigned int thickness);
-	void draw();
+	void load();
 	void animate();
 	void translate(float x, float y, float z);
 	void translate(oglm::vec3f factor);

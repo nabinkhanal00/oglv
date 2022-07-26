@@ -81,14 +81,13 @@ int main(void) {
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
 	Cube c(1, 10);
-	// Ellipse c(0.0f, 0.0f, 0.6f, 0.8f, 2);
-	// Circle c(0.0f, 0.0f, 0.5f, 5);
 	while (glfwWindowShouldClose(window) == false) {
+		Angel::init_depth_buffer();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		c.load();
 		Angel::drawAxes();
-		c.rotate(45.0f, oglm::normalize(oglm::vec3(1.0f, 0.0f, 0.0f)));
-		c.draw();
+		Angel::draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
