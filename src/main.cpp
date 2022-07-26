@@ -81,13 +81,14 @@ int main(void) {
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
 	Cube c(1, 10);
+	c.load();
 	while (glfwWindowShouldClose(window) == false) {
 		Angel::init_depth_buffer();
+		Angel::current_buffer.clear();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		c.load();
-		Angel::drawAxes();
 		Angel::draw();
+		Angel::drawAxes();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

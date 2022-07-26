@@ -17,6 +17,7 @@ class Cube {
 	Cube(unsigned int length, unsigned int thickness);
 	void load();
 	void animate();
+	void rasterize();
 	void translate(float x, float y, float z);
 	void translate(oglm::vec3f factor);
 	void rotate(float angle, float x, float y, float z);

@@ -20,6 +20,7 @@ class Angel {
 
 	static void init(unsigned int width, unsigned int height);
 	static void init_depth_buffer();
+	static std::vector<oglm::vec3> current_buffer;
 
 	static void putPixel(float x, float y, int width = 4,
 	                     Color c = {1.0f, 1.0f, 1.0f, 1.0f});

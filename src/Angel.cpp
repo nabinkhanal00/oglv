@@ -2,12 +2,13 @@
 #include "Line.hpp"
 #include "ResourceManager.hpp"
 #include "VertexBuffer.hpp"
+#include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
 int Angel::m_width = 1280;
 int Angel::m_height = 720;
-
+std::vector<oglm::vec3> Angel::current_buffer;
 oglm::mat4<float> Angel::view;
 oglm::mat4<float> Angel::pers;
 std::map<std::string, float> Angel::depth_buffer;
@@ -17,35 +18,35 @@ unsigned int Angel::m_ID = 0;
 void Angel::draw() {
 	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
 	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 0.0f));
-	oglm::mat4<float> rot = oglm::rotate(0.0f, oglm::vec3(0.0f, 0.0f, 0.0f));
+	oglm::mat4<float> rot = oglm::rotate(glfwGetTime()*30.0f, oglm::vec3(0.0f, 1.0f, 0.0f));
 
 	set_perspective((float)M_PI_2, getWidth() / (float)getHeight(), 0.1,
 	                100.0f);
-	set_view(oglm::vec3(0.0f, 0.0f, 4.0f), oglm::vec3(0.0f, 0.0f, 0.0f),
+	set_view(oglm::vec3(0.0f, 0.0f, 2.0f), oglm::vec3(0.0f, 0.0f, 0.0f),
 	         oglm::vec3(0.0f, 1.0f, 0.0f));
 	for (auto &i : vertexBuffer) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
-		v = pers * view * trans * rot * scal * v;
+		v = view * pers * trans * rot * scal * v;
 		v /= v.w;
-		i = oglm::vec3(v.x, v.y, v.z);
+		current_buffer.push_back(oglm::vec3(v.x, v.y, v.z));
 	}
-	for (size_t i = 0; i < vertexBuffer.size() - 2; i = i + 2) {
-		float x0 = vertexBuffer[i].x;
-		float y0 = vertexBuffer[i].y;
-		float z0 = vertexBuffer[i].z;
-		float x1 = vertexBuffer[i + 1].x;
-		float y1 = vertexBuffer[i + 1].y;
-		float z1 = vertexBuffer[i + 1].z;
+	for (size_t i = 0; i < current_buffer.size() - 1; i = i + 2) {
+		float x0 = current_buffer[i].x;
+		float y0 = current_buffer[i].y;
+		float z0 = current_buffer[i].z;
+		float x1 = current_buffer[i + 1].x;
+		float y1 = current_buffer[i + 1].y;
+		float z1 = current_buffer[i + 1].z;
 
 		oglm::vec2i x0y0 = Angel::map(x0, y0);
 		oglm::vec2i x1y1 = Angel::map(x1, y1);
 		std::string key = std::to_string(x0y0.x) + ',' + std::to_string(x0y0.y);
 		std::string key2 =
 		    std::to_string(x1y1.x) + ',' + std::to_string(x1y1.y);
-		Line l(x0, y0, x1, y1);
-		l.draw();
-		// if (z0 >= depth_buffer[key] && z1 >= depth_buffer[key2]) {
-		// }
+		if (z0 >= depth_buffer[key] && z1 >= depth_buffer[key2]) {
+			Line l(x0, y0, x1, y1);
+			l.draw();
+		}
 	}
 }
 
@@ -84,7 +85,7 @@ void Angel::init_depth_buffer() {
 	for (size_t i = 0; i <= Angel::getWidth(); i++) {
 		for (size_t j = 0; j <= Angel::getHeight(); j++) {
 			std::string key = std::to_string(i) + ',' + std::to_string(j);
-			depth_buffer[key] = 0.0f;
+			depth_buffer[key] = -10.0f;
 		}
 	}
 }
