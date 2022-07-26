@@ -59,19 +59,19 @@ void Cube::translate(oglm::vec3f factor) {
 
 void Cube::rotate(float degree, float x, float y, float z) {}
 void Cube::rotate(float degree, oglm::vec3 factor) {
-	glm::mat4 scal = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(30.0f),
-	                            glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f)));
-	glm::mat4 trans =
-	    glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.8f));
-	glm::mat4 look =
-	    glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f),
-	                glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 pers_mat = glm::perspective(
+	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
+	oglm::mat4<float> rot = oglm::rotate(M_PI_4, oglm::vec3(0.0f, 0.0f, 0.0f));
+
+	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 2.0f));
+
+	oglm::mat4<float> look = oglm::lookAt(oglm::vec3(0.0f, 0.0f, 0.0f),
+	                                      oglm::vec3(0.0f, 0.0f, -0.1f),
+	                                      oglm::vec3(0.0f, 1.0f, 0.0f));
+	oglm::mat4<float> pers_mat = oglm::perspective(
 	    (float)M_PI_2, Angel::getWidth() / (float)Angel::getHeight(), 0.1f,
 	    100.0f);
 	for (auto &i : points) {
-		glm::vec4 v(i.x, i.y, i.z, 1);
+		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = pers_mat * look * trans * rot * scal * v;
 		v /= v.w;
 		i = oglm::vec3(v.x, v.y, v.z);
