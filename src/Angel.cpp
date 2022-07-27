@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <stdexcept>
 
 int Angel::m_width = 1280;
 int Angel::m_height = 720;
@@ -28,32 +29,19 @@ void Angel::draw() {
 	for (size_t i = 0; i < current_buffer.size() - 1; i = i + 2) {
 		float x0 = current_buffer[i].x;
 		float y0 = current_buffer[i].y;
-		float z0 = current_buffer[i].z;
+		float z0 = (current_buffer[i].z);
 		float x1 = current_buffer[i + 1].x;
 		float y1 = current_buffer[i + 1].y;
-		float z1 = current_buffer[i + 1].z;
-
-		oglm::vec2i x0y0 = Angel::map(x0, y0);
-		oglm::vec2i x1y1 = Angel::map(x1, y1);
-		std::string key = std::to_string(x0y0.x) + ',' + std::to_string(x0y0.y);
-		std::string key2 =
-		    std::to_string(x1y1.x) + ',' + std::to_string(x1y1.y);
-		if (depth_buffer.find(key) == depth_buffer.end() &&
-		    depth_buffer.find(key2) == depth_buffer.end()) {
-			depth_buffer[key] = z0;
-			depth_buffer[key2] = z1;
-			Line l(x0, y0, x1, y1);
-			l.draw();
-		} else {
-			if (z0 >= depth_buffer[key] && z1 >= depth_buffer[key2]) {
-				depth_buffer[key] = z0;
-				depth_buffer[key2] = z1;
-				Line l(x0, y0, x1, y1);
-				l.draw();
-			}
-		}
+		float z1 = (current_buffer[i + 1].z);
+		oglm::vec2i x0y0 = Angel::map(x0,y0);
+		oglm::vec2i x1y1 = Angel::map(x1,y1);
+		x0 = x0y0.x;
+		y0 = x0y0.y;
+		x1 = x1y1.x;
+		y1 = x1y1.y;
+		Line l(x0, y0, z0, x1, y1, z1);
+		l.draw3D();
 	}
-
 	//
 }
 
