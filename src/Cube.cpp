@@ -37,7 +37,7 @@ Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
 
 void Cube::animate() {}
 void Cube::rasterize() {
-	float offset = 0.005f;
+	float offset = 0.004f;
 	for (auto &i : indices) {
 		float x0 = points[i.x].x;
 		float y0 = points[i.x].y;
@@ -99,8 +99,7 @@ void Cube::rotate(float degree, float x, float y, float z) {}
 void Cube::rotate(float degree, oglm::vec3 factor) {
 	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
 	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 0.0f));
-	oglm::mat4<float> rot =
-	    oglm::rotate(glfwGetTime() * 30.0f, oglm::vec3(0.0f, 1.0f, 0.0f));
+	oglm::mat4<float> rot = oglm::rotate(30.0f, oglm::vec3(0.0f, 1.0f, 0.0f));
 	for (auto &i : points) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = trans * rot * scal * v;

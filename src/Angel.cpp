@@ -12,7 +12,7 @@ std::vector<oglm::vec3> Angel::current_buffer;
 oglm::mat4<float> Angel::view;
 oglm::mat4<float> Angel::pers;
 oglm::mat4<float> Angel::model;
-std::map<std::string, float> Angel::depth_buffer;
+std::unordered_map<std::string, float> Angel::depth_buffer;
 std::vector<oglm::vec3> Angel::vertexBuffer;
 unsigned int Angel::m_ID = 0;
 
@@ -20,7 +20,9 @@ void Angel::draw() {
 	for (auto &i : vertexBuffer) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = view * pers * model * v;
-		v /= v.w;
+		v.x /= v.w;
+		v.y /= v.w;
+		v.z /= v.w;
 		current_buffer.push_back(oglm::vec3(v.x, v.y, v.z));
 	}
 	for (size_t i = 0; i < current_buffer.size() - 1; i = i + 2) {
@@ -36,11 +38,24 @@ void Angel::draw() {
 		std::string key = std::to_string(x0y0.x) + ',' + std::to_string(x0y0.y);
 		std::string key2 =
 		    std::to_string(x1y1.x) + ',' + std::to_string(x1y1.y);
-		if (z0 >= depth_buffer[key] && z1 >= depth_buffer[key2]) {
+
+		if (depth_buffer.find(key) == depth_buffer.end() &&
+		    depth_buffer.find(key2) == depth_buffer.end()) {
+			depth_buffer[key] = z0;
+			depth_buffer[key2] = z1;
 			Line l(x0, y0, x1, y1);
 			l.draw();
+		} else {
+			if (z0 >= depth_buffer[key] && z1 >= depth_buffer[key2]) {
+				depth_buffer[key] = z0;
+				depth_buffer[key2] = z1;
+				Line l(x0, y0, x1, y1);
+				l.draw();
+			}
 		}
 	}
+
+	//
 }
 
 void Angel::init(unsigned int width, unsigned int height) {
@@ -71,16 +86,6 @@ void Angel::init(unsigned int width, unsigned int height) {
 	glBindVertexArray(0);
 	ResourceManager::LoadShader("res/shaders/pixel/vertex.glsl",
 	                            "res/shaders/pixel/fragment.glsl", "pixel");
-}
-void Angel::init_depth_buffer() {
-	// iniatilizing depth buffer
-	// depth_buffer.clear();
-	for (size_t i = 0; i <= Angel::getWidth(); i++) {
-		for (size_t j = 0; j <= Angel::getHeight(); j++) {
-			std::string key = std::to_string(i) + ',' + std::to_string(j);
-			depth_buffer[key] = -10.0f;
-		}
-	}
 }
 void Angel::enable() {
 	glBindVertexArray(m_ID);
@@ -147,9 +152,10 @@ void Angel::set_view(const oglm::vec3 &eye, const oglm::vec3 &towards,
 	view = oglm::lookAt(eye, towards, up);
 }
 
-void Angel::set_model(const oglm::vec3 &tFactor,const oglm::vec3& sFactor, float rotAng,const oglm::vec3& rotAxis){
+void Angel::set_model(const oglm::vec3 &tFactor, const oglm::vec3 &sFactor,
+                      float rotAng, const oglm::vec3 &rotAxis) {
 	oglm::mat4<float> trans = oglm::translate(tFactor);
 	oglm::mat4<float> scal = oglm::scale(sFactor);
-	oglm::mat4<float> rot = oglm::rotate(glfwGetTime()*rotAng, rotAxis);
-	model = trans*scal*rot;
+	oglm::mat4<float> rot = oglm::rotate(rotAng, oglm::normalize(rotAxis));
+	model = trans * scal * rot;
 }

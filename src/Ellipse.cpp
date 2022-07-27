@@ -1,20 +1,16 @@
 #include "Ellipse.hpp"
 #include "Color.hpp"
-#include "Line.hpp"
 #include <iostream>
 Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
-    : thickness(t), frameCount(60) {
+    : thickness(t), frameCount(10) {
 	majX = rX;
 	majY = rY;
 	centerX = x0;
 	centerY = y0;
-    // oglm::vec2 center = Angel::demap(x0, y0);
 
 	int offsetX = Angel::getWidth() / 2;
 	int offsetY = Angel::getHeight() / 2;
 
-	// centerX = center.x;
-	// centerY = center.y;
 	int rx = rX * offsetX;
 	int ry = rX * offsetY;
 	int dx, dy, d1, d2;
