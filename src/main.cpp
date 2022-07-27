@@ -80,10 +80,10 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
+	Angel::init_depth_buffer();
 	Cube c(1, 10);
 	c.load();
 	while (glfwWindowShouldClose(window) == false) {
-		Angel::init_depth_buffer();
 		Angel::current_buffer.clear();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);

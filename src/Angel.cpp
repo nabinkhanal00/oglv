@@ -18,7 +18,7 @@ unsigned int Angel::m_ID = 0;
 void Angel::draw() {
 	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
 	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 0.0f));
-	oglm::mat4<float> rot = oglm::rotate(glfwGetTime()*30.0f, oglm::vec3(0.0f, 1.0f, 0.0f));
+	oglm::mat4<float> rot = oglm::rotate(glfwGetTime()*45.0f, oglm::vec3(0.0f, 1.0f, 0.0f));
 
 	set_perspective((float)M_PI_2, getWidth() / (float)getHeight(), 0.1,
 	                100.0f);
@@ -81,7 +81,7 @@ void Angel::init(unsigned int width, unsigned int height) {
 }
 void Angel::init_depth_buffer() {
 	// iniatilizing depth buffer
-	depth_buffer.clear();
+	// depth_buffer.clear();
 	for (size_t i = 0; i <= Angel::getWidth(); i++) {
 		for (size_t j = 0; j <= Angel::getHeight(); j++) {
 			std::string key = std::to_string(i) + ',' + std::to_string(j);
