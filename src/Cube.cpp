@@ -37,7 +37,7 @@ Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
 
 void Cube::animate() {}
 void Cube::rasterize() {
-	float offset = 0.004f;
+	float offset = 0.01f;
 	for (auto &i : indices) {
 		float x0 = points[i.x].x;
 		float y0 = points[i.x].y;
@@ -87,7 +87,7 @@ void Cube::load() {
 void Cube::translate(float x, float y, float z) {}
 
 void Cube::translate(oglm::vec3f factor) {
-	oglm::mat4<float> trans_mat = oglm::translate(factor);
+	oglm::mat4 trans_mat = oglm::translate(factor);
 	for (auto &i : points) {
 		oglm::vec4f v(i.x, i.y, i.z, 1);
 		v = trans_mat * v;
@@ -97,9 +97,9 @@ void Cube::translate(oglm::vec3f factor) {
 
 void Cube::rotate(float degree, float x, float y, float z) {}
 void Cube::rotate(float degree, oglm::vec3 factor) {
-	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
-	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 0.0f));
-	oglm::mat4<float> rot = oglm::rotate(30.0f, oglm::vec3(0.0f, 1.0f, 0.0f));
+	oglm::mat4 scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
+	oglm::mat4 trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 0.0f));
+	oglm::mat4 rot = oglm::rotate(30.0f, oglm::vec3(0.0f, 1.0f, 0.0f));
 	for (auto &i : points) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = trans * rot * scal * v;
@@ -109,7 +109,7 @@ void Cube::rotate(float degree, oglm::vec3 factor) {
 
 void Cube::scale(float x, float y, float z) {}
 void Cube::scale(oglm::vec3 factor) {
-	oglm::mat4<float> scale_mat = oglm::scale(factor);
+	oglm::mat4 scale_mat = oglm::scale(factor);
 	for (auto &i : points) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = scale_mat * v;

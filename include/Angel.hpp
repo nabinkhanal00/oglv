@@ -40,10 +40,12 @@ class Angel {
 	static oglm::vec2i map(const float &x, const float &y);
 	static oglm::vec2f demap(const int &x, const int &y);
 	static oglm::vec2i map(const oglm::vec2 &point);
+	static oglm::vec3i map(const oglm::vec3 &point);
 	static oglm::vec2f demap(const oglm::vec2i &point);
-	static oglm::mat4<float> pers;
-	static oglm::mat4<float> view;
-	static oglm::mat4<float> model;
+	static oglm::vec3f demap(const oglm::vec3i &point);
+	static oglm::mat4 pers;
+	static oglm::mat4 view;
+	static oglm::mat4 model;
 	static std::unordered_map<std::string, float> depth_buffer;
 	static std::vector<oglm::vec3> vertexBuffer;
 	static void draw();
@@ -53,4 +55,5 @@ class Angel {
 	static Color m_color;
 	static int m_width;
 	static int m_height;
+	static int m_depth;
 };

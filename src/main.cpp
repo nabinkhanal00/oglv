@@ -74,15 +74,16 @@ int main(void) {
 	c.load();
 	// Circle c(0.0f, 0.0f, 0.5f, 4);
 	// Ellipse e(0, 0, 0.8f, 0.8f, 4);
-	// Line l(-1, 1, 1, 5, 3, -1);
+	// Line l(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1);
+	// l.show_points();
 	// l.show_points();
 	float angle = 4.0f;
 	while (glfwWindowShouldClose(window) == false) {
 		Angel::current_buffer.clear();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		Angel::set_model(oglm::vec3(), oglm::vec3(1.0f, 1.0f, 1.0f),
-		                 angle += 1.9,
+		Angel::set_model(oglm::vec3(0.0f, 0.0f, -2.0f),
+		                 oglm::vec3(1.0f, 1.0f, 0.0f), angle += 0.1f,
 		                 oglm::normalize(oglm::vec3(1.0f, 1.0f, 1.0f)));
 		Angel::draw();
 		Angel::drawAxes();

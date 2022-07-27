@@ -13,7 +13,7 @@ class Line {
 
   public:
 	Line(float x1, float y1, float x2, float y2, unsigned int thickness = 1);
-	Line(int x1, int y1, int z1, int x2, int y2, int z2,
+	Line(float x1, float y1, float z1, float x2, float y2, float z2,
 	     unsigned int thickness = 1);
 	void draw();
 	void draw3D();

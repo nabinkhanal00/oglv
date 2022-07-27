@@ -1,18 +1,18 @@
 #include "Angel.hpp"
 #include "Line.hpp"
 #include "ResourceManager.hpp"
-#include "VertexBuffer.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <stdexcept>
 
-int Angel::m_width = 1280;
+int Angel::m_width = 720;
 int Angel::m_height = 720;
+int Angel::m_depth = 720;
 std::vector<oglm::vec3> Angel::current_buffer;
-oglm::mat4<float> Angel::view;
-oglm::mat4<float> Angel::pers;
-oglm::mat4<float> Angel::model;
+oglm::mat4 Angel::view;
+oglm::mat4 Angel::pers;
+oglm::mat4 Angel::model;
 std::unordered_map<std::string, float> Angel::depth_buffer;
 std::vector<oglm::vec3> Angel::vertexBuffer;
 unsigned int Angel::m_ID = 0;
@@ -20,7 +20,7 @@ unsigned int Angel::m_ID = 0;
 void Angel::draw() {
 	for (auto &i : vertexBuffer) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
-		v = view * pers * model * v;
+		v = pers * view * model * v;
 		v.x /= v.w;
 		v.y /= v.w;
 		v.z /= v.w;
@@ -33,12 +33,6 @@ void Angel::draw() {
 		float x1 = current_buffer[i + 1].x;
 		float y1 = current_buffer[i + 1].y;
 		float z1 = (current_buffer[i + 1].z);
-		oglm::vec2i x0y0 = Angel::map(x0,y0);
-		oglm::vec2i x1y1 = Angel::map(x1,y1);
-		x0 = x0y0.x;
-		y0 = x0y0.y;
-		x1 = x1y1.x;
-		y1 = x1y1.y;
 		Line l(x0, y0, z0, x1, y1, z1);
 		l.draw3D();
 	}
@@ -106,11 +100,23 @@ oglm::vec2 Angel::demap(const oglm::vec2i &point) {
 	float newY = point.y / (float)m_height * 2 - 1.0f;
 	return oglm::vec2(newX, newY);
 }
+oglm::vec3 Angel::demap(const oglm::vec3i &point) {
+	float newX = point.x / (float)m_width * 2 - 1.0f;
+	float newY = point.y / (float)m_height * 2 - 1.0f;
+	float newZ = point.z / (float)m_depth * 2 - 1.0f;
+	return oglm::vec3(newX, newY, newZ);
+}
 
 oglm::vec2i Angel::map(const oglm::vec2f &point) {
 	int newX = round((point.x + 1.0f) * m_width / 2);
 	int newY = round((point.y + 1.0f) * m_height / 2);
 	return oglm::vec2i(newX, newY);
+}
+oglm::vec3i Angel::map(const oglm::vec3f &point) {
+	int newX = round((point.x + 1.0f) * m_width / 2);
+	int newY = round((point.y + 1.0f) * m_height / 2);
+	int newZ = round((point.y + 1.0f) * m_depth / 2);
+	return oglm::vec3i(newX, newY, newZ);
 }
 
 void Angel::putPixel(float x, float y, int thickness, Color c) {
@@ -141,8 +147,8 @@ void Angel::set_view(const oglm::vec3 &eye, const oglm::vec3 &towards,
 
 void Angel::set_model(const oglm::vec3 &tFactor, const oglm::vec3 &sFactor,
                       float rotAng, const oglm::vec3 &rotAxis) {
-	oglm::mat4<float> trans = oglm::translate(tFactor);
-	oglm::mat4<float> scal = oglm::scale(sFactor);
-	oglm::mat4<float> rot = oglm::rotate(rotAng, oglm::normalize(rotAxis));
+	oglm::mat4 trans = oglm::translate(tFactor);
+	oglm::mat4 scal = oglm::scale(sFactor);
+	oglm::mat4 rot = oglm::rotate(rotAng, oglm::normalize(rotAxis));
 	model = trans * scal * rot;
 }

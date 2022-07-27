@@ -53,9 +53,19 @@ Line::Line(float xa, float ya, float xb, float yb, unsigned int t)
 	}
 }
 
-Line::Line(int x1, int y1, int z1, int x2, int y2, int z2, unsigned int t)
+Line::Line(float _x1, float _y1, float _z1, float _x2, float _y2, float _z2,
+           unsigned int t)
     : thickness(t), frameCount(60) {
-	points3D.push_back((oglm::vec3(x1, y1, z1)));
+	points3D.push_back((oglm::vec3(_x1, _y1, _z1)));
+	oglm::vec3i pointone = Angel::map(oglm::vec3(_x1, _y1, _z1));
+	oglm::vec3i pointtwo = Angel::map(oglm::vec3(_x2, _y2, _z2));
+	int x1 = pointone.x;
+	int y1 = pointone.y;
+	int z1 = pointone.z;
+	int x2 = pointtwo.x;
+	int y2 = pointtwo.y;
+	int z2 = pointtwo.z;
+
 	int dx = abs(x2 - x1);
 	int dy = abs(y2 - y1);
 	int dz = abs(z2 - z1);
@@ -85,7 +95,7 @@ Line::Line(int x1, int y1, int z1, int x2, int y2, int z2, unsigned int t)
 			}
 			p1 += 2 * dy;
 			p2 += 2 * dz;
-			points3D.push_back(oglm::vec3(x1, y1, z1));
+			points3D.push_back(Angel::demap(oglm::vec3i(x1, y1, z1)));
 		}
 	}
 	// driving axis is y-axis
@@ -104,7 +114,7 @@ Line::Line(int x1, int y1, int z1, int x2, int y2, int z2, unsigned int t)
 			}
 			p1 += 2 * dx;
 			p2 += 2 * dz;
-			points3D.push_back(oglm::vec3(x1, y1, z1));
+			points3D.push_back(Angel::demap(oglm::vec3i(x1, y1, z1)));
 		}
 	} else {
 		float p1 = 2 * dy - dz;
@@ -121,14 +131,13 @@ Line::Line(int x1, int y1, int z1, int x2, int y2, int z2, unsigned int t)
 			}
 			p1 += 2 * dy;
 			p2 += 2 * dx;
-			points3D.push_back(oglm::vec3(x1, y1, z1));
+			points3D.push_back(Angel::demap(oglm::vec3i(x1, y1, z1)));
 		}
 	}
 }
 void Line::show_points() {
 	for (auto &i : points3D) {
 		std::cout << i.x << " " << i.y << " " << i.z << std::endl;
-		Angel::putPixel(i.x, i.y, thickness);
 	}
 }
 void Line::draw() {
@@ -138,19 +147,19 @@ void Line::draw() {
 }
 void Line::draw3D() {
 	for (auto &i : points3D) {
-		Angel::putPixel(i.x, i.y, thickness);
-		// std::string key = std::to_string(i.x) + ',' + std::to_string(i.y);
-		// if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
-		// 	Angel::depth_buffer[key] = i.z;
-		// 	Angel::putPixel(i.x, i.y, thickness);
-		// } else {
-		// 	if (i.z >= Angel::depth_buffer[key]) {
-		// 		Angel::depth_buffer[key] = i.z;
-		// 		Angel::putPixel(i.x, i.y, thickness);
-		// 	}
-		// }
+		std::string key = std::to_string(i.x) + ',' + std::to_string(i.y);
+		if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
+			Angel::depth_buffer[key] = i.z;
+			Angel::putPixel(i.x, i.y, thickness);
+		} else {
+			if (i.z >= Angel::depth_buffer[key]) {
+				Angel::depth_buffer[key] = i.z;
+				Angel::putPixel(i.x, i.y, thickness);
+			}
+		}
 	}
 }
+
 void Line::animate() {
 	static int count = 0;
 	static int i = 0;
