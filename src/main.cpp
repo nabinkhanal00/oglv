@@ -20,8 +20,8 @@
 
 #include <GLFW/glfw3.h>
 
-const unsigned int WIDTH = 720;
-const unsigned int HEIGHT = 720;
+const unsigned int WIDTH = 1920;
+const unsigned int HEIGHT = 1080;
 
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
                                unsigned int height) {
@@ -97,7 +97,7 @@ int main(void) {
 		                 oglm::vec3(0.0f, 1.0f, 0.0f));
 		Angel::draw();
 		Angel::set_model(oglm::vec3(2.0f, 0.0f, 1.0f),
-		                 oglm::vec3(0.5f, 0.5f, 0.1f), glfwGetTime()* 20.0f,
+		                 oglm::vec3(0.5f, 0.5f, 0.1f), glfwGetTime()* 60.0f,
 		                 oglm::vec3(0.0f, 1.0f, 0.0f));
 		Angel::draw();
 		Angel::drawAxes();
