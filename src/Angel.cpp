@@ -9,6 +9,7 @@
 int Angel::m_width = 720;
 int Angel::m_height = 720;
 int Angel::m_depth = 720;
+Color Angel::m_color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 std::vector<oglm::vec3> Angel::current_buffer;
 oglm::mat4 Angel::view;
 oglm::mat4 Angel::pers;
@@ -118,11 +119,12 @@ oglm::vec3i Angel::map(const oglm::vec3f &point) {
 	int newZ = round((point.y + 1.0f) * m_depth / 2);
 	return oglm::vec3i(newX, newY, newZ);
 }
+void Angel::set_color(const Color &color) { m_color = color; }
 
-void Angel::putPixel(float x, float y, int thickness, Color c) {
+void Angel::putPixel(float x, float y, int thickness) {
 	enable();
-	ResourceManager::GetShader("pixel").SetVec4("inColor",
-	                                            glm::vec4(c.r, c.g, c.b, c.a));
+	ResourceManager::GetShader("pixel").SetVec4(
+	    "inColor", glm::vec4(m_color.r, m_color.g, m_color.b, m_color.a));
 	oglm::vec2i point = map(x, y);
 	glEnable(GL_SCISSOR_TEST);
 	glScissor(point.x, point.y, thickness, thickness);
@@ -133,8 +135,8 @@ void Angel::putPixel(float x, float y, int thickness, Color c) {
 
 void Angel::drawAxes(Color c, bool octant) {
 	for (float i = -1.0f; i <= 1.0f; i += 0.001f) {
-		putPixel(0, i, 1, c);
-		putPixel(i, 0, 1, c);
+		putPixel(0, i, 1);
+		putPixel(i, 0, 1);
 	}
 }
 void Angel::set_perspective(float fov, float aspect, float near, float far) {
@@ -150,5 +152,18 @@ void Angel::set_model(const oglm::vec3 &tFactor, const oglm::vec3 &sFactor,
 	oglm::mat4 trans = oglm::translate(tFactor);
 	oglm::mat4 scal = oglm::scale(sFactor);
 	oglm::mat4 rot = oglm::rotate(rotAng, oglm::normalize(rotAxis));
-	model = trans * scal * rot;
+	// for (int i = 0; i < 4; i++) {
+	// 	for (int j = 0; j < 4; j++) {
+	// 		std::cout << rot[i][j] << "\t";
+	// 	}
+	// 	std::cout << std::endl;
+	// }
+	model = trans * rot * scal;
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			std::cout << model[i][j] << "\t";
+		}
+		std::cout << std::endl;
+	}
 }

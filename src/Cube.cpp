@@ -37,7 +37,7 @@ Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
 
 void Cube::animate() {}
 void Cube::rasterize() {
-	float offset = 0.01f;
+	float offset = 0.005f;
 	for (auto &i : indices) {
 		float x0 = points[i.x].x;
 		float y0 = points[i.x].y;

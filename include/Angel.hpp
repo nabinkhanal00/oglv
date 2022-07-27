@@ -21,8 +21,7 @@ class Angel {
 	static void init_depth_buffer();
 	static std::vector<oglm::vec3> current_buffer;
 
-	static void putPixel(float x, float y, int width = 4,
-	                     Color c = {1.0f, 1.0f, 1.0f, 1.0f});
+	static void putPixel(float x, float y, int width = 4);
 
 	static void drawAxes(Color c = {1.0f, 1.0f, 1.0f, 1.0f},
 	                     bool octant = false);
@@ -32,6 +31,7 @@ class Angel {
 	                     const oglm::vec3 &up);
 	static void set_model(const oglm::vec3 &tFactor, const oglm::vec3 &sFactor,
 	                      float rotAng, const oglm::vec3 &rotAxis);
+	static void set_color(const Color &color);
 	static void disable();
 	static void setHeight(unsigned int height);
 	static void setWidth(unsigned int width);
@@ -51,8 +51,8 @@ class Angel {
 	static void draw();
 
   private:
-	static unsigned int m_ID;
 	static Color m_color;
+	static unsigned int m_ID;
 	static int m_width;
 	static int m_height;
 	static int m_depth;

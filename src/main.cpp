@@ -82,11 +82,22 @@ int main(void) {
 		Angel::current_buffer.clear();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		Angel::set_model(oglm::vec3(0.0f, 0.0f, -2.0f),
-		                 oglm::vec3(1.0f, 1.0f, 0.0f), angle += 0.1f,
-		                 oglm::normalize(oglm::vec3(1.0f, 1.0f, 1.0f)));
+
+		Angel::set_color(
+		    Color(sin(glfwGetTime()), cos(glfwGetTime()), 1.0f, 1.0f));
+		Angel::set_model(oglm::vec3(0.0f, 0.0f, -4.0f),
+		                 oglm::vec3(1.0f, 1.0f, 1.0f), angle += 0.1f,
+		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+
 		Angel::draw();
+		Angel::set_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
 		Angel::drawAxes();
+		Angel::set_color(
+		    Color(cos(glfwGetTime()), sin(glfwGetTime()), 1.0f, 1.0f));
+		Angel::set_model(oglm::vec3(1.0f, 0.0f, -2.0f),
+		                 oglm::vec3(.5f, .5f, .5f), angle += 0.2f,
+		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+		Angel::draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

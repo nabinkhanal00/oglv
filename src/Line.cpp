@@ -148,6 +148,7 @@ void Line::draw() {
 void Line::draw3D() {
 	for (auto &i : points3D) {
 		std::string key = std::to_string(i.x) + ',' + std::to_string(i.y);
+		// Angel::putPixel(i.x, i.y, thickness);
 		if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
 			Angel::depth_buffer[key] = i.z;
 			Angel::putPixel(i.x, i.y, thickness);
@@ -174,16 +175,16 @@ void Line::animate() {
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
 			if (int(count / 10 + 4) % 2 == 0) {
-				Angel::putPixel(points[i].x, points[i].y, thickness,
-				                Color(1.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(points[i].x, points[i].y, thickness);
+
 			} else {
-				Angel::putPixel(false_points[i].x, false_points[i].y, thickness,
-				                Color(0.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(false_points[i].x, false_points[i].y,
+				                thickness);
 			}
 		} else {
 			if (cur > 0) {
-				Angel::putPixel(points[cur - 1].x, points[cur - 1].y, thickness,
-				                Color(1.0f, 0.0f, 0.0f, 1.0f));
+				Angel::putPixel(points[cur - 1].x, points[cur - 1].y,
+				                thickness);
 			}
 		}
 	}
