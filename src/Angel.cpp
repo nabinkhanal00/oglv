@@ -11,22 +11,15 @@ int Angel::m_height = 720;
 std::vector<oglm::vec3> Angel::current_buffer;
 oglm::mat4<float> Angel::view;
 oglm::mat4<float> Angel::pers;
+oglm::mat4<float> Angel::model;
 std::map<std::string, float> Angel::depth_buffer;
 std::vector<oglm::vec3> Angel::vertexBuffer;
 unsigned int Angel::m_ID = 0;
 
 void Angel::draw() {
-	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
-	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 0.0f));
-	oglm::mat4<float> rot = oglm::rotate(glfwGetTime()*45.0f, oglm::vec3(0.0f, 1.0f, 0.0f));
-
-	set_perspective((float)M_PI_2, getWidth() / (float)getHeight(), 0.1,
-	                100.0f);
-	set_view(oglm::vec3(0.0f, 0.0f, 2.0f), oglm::vec3(0.0f, 0.0f, 0.0f),
-	         oglm::vec3(0.0f, 1.0f, 0.0f));
 	for (auto &i : vertexBuffer) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
-		v = view * pers * trans * rot * scal * v;
+		v = view * pers * model * v;
 		v /= v.w;
 		current_buffer.push_back(oglm::vec3(v.x, v.y, v.z));
 	}
@@ -152,4 +145,11 @@ void Angel::set_perspective(float fov, float aspect, float near, float far) {
 void Angel::set_view(const oglm::vec3 &eye, const oglm::vec3 &towards,
                      const oglm::vec3 &up) {
 	view = oglm::lookAt(eye, towards, up);
+}
+
+void Angel::set_model(const oglm::vec3 &tFactor,const oglm::vec3& sFactor, float rotAng,const oglm::vec3& rotAxis){
+	oglm::mat4<float> trans = oglm::translate(tFactor);
+	oglm::mat4<float> scal = oglm::scale(sFactor);
+	oglm::mat4<float> rot = oglm::rotate(glfwGetTime()*rotAng, rotAxis);
+	model = trans*scal*rot;
 }

@@ -30,6 +30,7 @@ class Angel {
 	static void enable();
 	static void set_perspective(float fov, float aspect, float near, float far);
 	static void set_view(const oglm::vec3 &eye, const oglm::vec3& towards , const oglm::vec3 &up);
+	static void set_model(const oglm::vec3 &tFactor,const oglm::vec3& sFactor, float rotAng,const oglm::vec3& rotAxis);
 	static void disable();
 	static void setHeight(unsigned int height);
 	static void setWidth(unsigned int width);
@@ -41,6 +42,7 @@ class Angel {
 	static oglm::vec2f demap(const oglm::vec2i &point);
   static oglm::mat4<float> pers;
   static oglm::mat4<float> view;
+  static oglm::mat4<float> model;
   static std::map<std::string,float> depth_buffer;
   static std::vector<oglm::vec3> vertexBuffer;
   static void draw();
