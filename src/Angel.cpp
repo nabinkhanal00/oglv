@@ -38,7 +38,6 @@ void Angel::draw() {
 		std::string key = std::to_string(x0y0.x) + ',' + std::to_string(x0y0.y);
 		std::string key2 =
 		    std::to_string(x1y1.x) + ',' + std::to_string(x1y1.y);
-
 		if (depth_buffer.find(key) == depth_buffer.end() &&
 		    depth_buffer.find(key2) == depth_buffer.end()) {
 			depth_buffer[key] = z0;
