@@ -5,7 +5,7 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
-Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
+Cube::Cube() {
 	points.push_back(oglm::vec3(-0.5f, -0.5f, -0.5f));
 	points.push_back(oglm::vec3(0.5f, -0.5f, -0.5f));
 	points.push_back(oglm::vec3(0.5f, 0.5f, -0.5f));
@@ -49,7 +49,7 @@ void Cube::draw() {
 void Cube::translate(float x, float y, float z) {}
 
 void Cube::translate(oglm::vec3f factor) {
-	oglm::mat4<float> trans_mat = oglm::translate(factor);
+	oglm::mat4 trans_mat = oglm::translate(factor);
 	for (auto &i : points) {
 		oglm::vec4f v(i.x, i.y, i.z, 1);
 		v = trans_mat * v;
@@ -59,20 +59,37 @@ void Cube::translate(oglm::vec3f factor) {
 
 void Cube::rotate(float degree, float x, float y, float z) {}
 void Cube::rotate(float degree, oglm::vec3 factor) {
-	oglm::mat4<float> scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
-	oglm::mat4<float> rot = oglm::rotate(M_PI_4, oglm::vec3(0.0f, 0.0f, 0.0f));
+	oglm::mat4 scal = oglm::scale(oglm::vec3(1.0f, 1.0f, 1.0f));
+	// std::cout << "Scale" << std::endl;
+	// std::cout << scal << std::endl;
 
-	oglm::mat4<float> trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 2.0f));
+	oglm::mat4 rot = oglm::rotate(degree, factor);
 
-	oglm::mat4<float> look = oglm::lookAt(oglm::vec3(0.0f, 0.0f, 0.0f),
-	                                      oglm::vec3(0.0f, 0.0f, -0.1f),
-	                                      oglm::vec3(0.0f, 1.0f, 0.0f));
-	oglm::mat4<float> pers_mat = oglm::perspective(
+	// std::cout << "Rotate" << std::endl;
+	// std::cout << rot << std::endl;
+
+	oglm::mat4 trans = oglm::translate(oglm::vec3(0.0f, 0.0f, 2.0f));
+
+	// std::cout << "Translate" << std::endl;
+	// std::cout << trans << std::endl;
+
+	oglm::mat4 look = oglm::lookAt(oglm::vec3(0.0f, 0.0f, 0.0f),
+	                               oglm::vec3(0.0f, 0.0f, -0.1f),
+	                               oglm::vec3(0.0f, 1.0f, 0.0f));
+
+	// std::cout << "Look At" << std::endl;
+	// std::cout << look << std::endl;
+
+	oglm::mat4 pers = oglm::perspective(
 	    (float)M_PI_2, Angel::getWidth() / (float)Angel::getHeight(), 0.1f,
 	    100.0f);
+
+	// std::cout << "Perspective" << std::endl;
+	// std::cout << pers << std::endl;
+
 	for (auto &i : points) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
-		v = pers_mat * look * trans * rot * scal * v;
+		v = pers * look * trans * rot * scal * v;
 		v /= v.w;
 		i = oglm::vec3(v.x, v.y, v.z);
 	}
@@ -80,7 +97,7 @@ void Cube::rotate(float degree, oglm::vec3 factor) {
 
 void Cube::scale(float x, float y, float z) {}
 void Cube::scale(oglm::vec3 factor) {
-	oglm::mat4<float> scale_mat = oglm::scale(factor);
+	oglm::mat4 scale_mat = oglm::scale(factor);
 	for (auto &i : points) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = scale_mat * v;

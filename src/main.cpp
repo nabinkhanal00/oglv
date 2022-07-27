@@ -2,21 +2,8 @@
 
 #include <iostream>
 
-#include "Ellipse.hpp"
-#include "Circle.hpp"
-#include "Cube.hpp"
-#include "Line.hpp"
-#include "ResourceManager.hpp"
-#include "VertexBuffer.hpp"
-#include "VertexArray.hpp"
-#include "IndexBuffer.hpp"
-#include "Shader.hpp"
-#include "Renderer.hpp"
 #include "Angel.hpp"
-
-#include "imgui.h"
-#include "imgui_impl_opengl3.h"
-#include "imgui_impl_glfw.h"
+#include "Cube.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -80,8 +67,8 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
-	Cube c(1, 5);
-	c.rotate(45.0f, oglm::normalize(oglm::vec3(1.0f, 0.0f, 0.0f)));
+	Cube c;
+	c.rotate(45.0f, oglm::normalize(oglm::vec3(1.0f, 1.0f, 1.0f)));
 	// Ellipse c(0.0f, 0.0f, 0.6f, 0.2f, 2);
 	// Circle c(0.0f, 0.0f, 0.5f, 5);
 	while (glfwWindowShouldClose(window) == false) {

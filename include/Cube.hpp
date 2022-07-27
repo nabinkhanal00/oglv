@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Line.hpp"
 #include <vector>
+
+#include "oglm.hpp"
 
 class Cube {
   private:
@@ -11,7 +12,7 @@ class Cube {
 	unsigned int frameCount;
 
   public:
-	Cube(unsigned int length, unsigned int thickness);
+	Cube();
 	void draw();
 	void animate();
 	void translate(float x, float y, float z);
