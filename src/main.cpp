@@ -2,26 +2,11 @@
 
 #include <iostream>
 
-#include "Ellipse.hpp"
-#include "Circle.hpp"
 #include "Cube.hpp"
-#include "Line.hpp"
-#include "ResourceManager.hpp"
-#include "VertexBuffer.hpp"
-#include "VertexArray.hpp"
-#include "IndexBuffer.hpp"
-#include "Shader.hpp"
-#include "Renderer.hpp"
-#include "Angel.hpp"
-
-#include "imgui.h"
-#include "imgui_impl_opengl3.h"
-#include "imgui_impl_glfw.h"
-
 #include <GLFW/glfw3.h>
 
-const unsigned int WIDTH = 1268;
-const unsigned int HEIGHT = 720;
+const unsigned int WIDTH = 1920;
+const unsigned int HEIGHT = 1080;
 
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
                                unsigned int height) {
@@ -80,14 +65,39 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
-	Cube c(1, 5);
-	c.rotate(45.0f, oglm::normalize(oglm::vec3(1.0f, 0.0f, 0.0f)));
-	// Ellipse c(0.0f, 0.0f, 0.6f, 0.2f, 2);
-	// Circle c(0.0f, 0.0f, 0.5f, 5);
+	Angel::set_perspective((float)M_PI_2,
+	                       Angel::getWidth() / (float)Angel::getHeight(), 0.1,
+	                       100.0f);
+	Angel::set_view(oglm::vec3(0.0f, 0.0f, 2.0f), oglm::vec3(0.0f, 0.0f, 0.0f),
+	                oglm::vec3(0.0f, 1.0f, 0.0f));
+	Cube c(1, 1);
+	c.load();
+	// Circle c(0.0f, 0.0f, 0.5f, 4);
+	// Ellipse e(0, 0, 0.8f, 0.8f, 4);
+	// Line l(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1);
+	// l.show_points();
+	// l.show_points();
+	float angle = 4.0f;
 	while (glfwWindowShouldClose(window) == false) {
+		Angel::current_buffer.clear();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		c.draw();
+
+		Angel::set_color(
+		    Color(sin(glfwGetTime()), cos(glfwGetTime()), 1.0f, 1.0f));
+		Angel::set_model(oglm::vec3(0.0f, 0.0f, -4.0f),
+		                 oglm::vec3(1.0f, 1.0f, 1.0f), angle += 0.1f,
+		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+
+		Angel::draw();
+		Angel::set_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
+		Angel::drawAxes();
+		Angel::set_color(
+		    Color(cos(glfwGetTime()), sin(glfwGetTime()), 1.0f, 1.0f));
+		Angel::set_model(oglm::vec3(1.0f, 0.0f, -2.0f),
+		                 oglm::vec3(.5f, .5f, .5f), angle += 0.2f,
+		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+		Angel::draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

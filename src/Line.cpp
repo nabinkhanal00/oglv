@@ -53,11 +53,114 @@ Line::Line(float xa, float ya, float xb, float yb, unsigned int t)
 	}
 }
 
+Line::Line(float _x1, float _y1, float _z1, float _x2, float _y2, float _z2,
+           unsigned int t)
+    : thickness(t), frameCount(60) {
+	points3D.push_back((oglm::vec3(_x1, _y1, _z1)));
+	oglm::vec3i pointone = Angel::map(oglm::vec3(_x1, _y1, _z1));
+	oglm::vec3i pointtwo = Angel::map(oglm::vec3(_x2, _y2, _z2));
+	int x1 = pointone.x;
+	int y1 = pointone.y;
+	int z1 = pointone.z;
+	int x2 = pointtwo.x;
+	int y2 = pointtwo.y;
+	int z2 = pointtwo.z;
+
+	int dx = abs(x2 - x1);
+	int dy = abs(y2 - y1);
+	int dz = abs(z2 - z1);
+	int xs{1}, ys{1}, zs{1};
+
+	if (x2 <= x1)
+		xs = -1;
+
+	if (y2 <= y1)
+		ys = -1;
+	if (z2 <= z1)
+		zs = -1;
+
+	// driving axis is X-axis
+	if (dx >= dy && dx >= dz) {
+		float p1 = 2 * dy - dx;
+		float p2 = 2 * dz - dx;
+		while (x1 != x2) {
+			x1 += xs;
+			if (p1 >= 0) {
+				y1 += ys;
+				p1 -= 2 * dx;
+			}
+			if (p2 >= 0) {
+				z1 += zs;
+				p2 -= 2 * dx;
+			}
+			p1 += 2 * dy;
+			p2 += 2 * dz;
+			points3D.push_back(Angel::demap(oglm::vec3i(x1, y1, z1)));
+		}
+	}
+	// driving axis is y-axis
+	else if (dy >= dx && dy >= dz) {
+		float p1 = 2 * dx - dy;
+		float p2 = 2 * dz - dy;
+		while (y1 != y2) {
+			y1 += ys;
+			if (p1 >= 0) {
+				x1 += xs;
+				p1 -= 2 * dy;
+			}
+			if (p2 >= 0) {
+				z1 += zs;
+				p2 -= 2 * dy;
+			}
+			p1 += 2 * dx;
+			p2 += 2 * dz;
+			points3D.push_back(Angel::demap(oglm::vec3i(x1, y1, z1)));
+		}
+	} else {
+		float p1 = 2 * dy - dz;
+		float p2 = 2 * dx - dz;
+		while (z1 != z2) {
+			z1 += zs;
+			if (p1 >= 0) {
+				y1 += ys;
+				p1 -= 2 * dz;
+			}
+			if (p2 >= 0) {
+				x1 += xs;
+				p2 -= 2 * dz;
+			}
+			p1 += 2 * dy;
+			p2 += 2 * dx;
+			points3D.push_back(Angel::demap(oglm::vec3i(x1, y1, z1)));
+		}
+	}
+}
+void Line::show_points() {
+	for (auto &i : points3D) {
+		std::cout << i.x << " " << i.y << " " << i.z << std::endl;
+	}
+}
 void Line::draw() {
 	for (auto &i : points) {
 		Angel::putPixel(i.x, i.y, thickness);
 	}
 }
+void Line::draw3D() {
+	for (auto &i : points3D) {
+		std::string key = std::to_string(i.x) + ',' + std::to_string(i.y);
+		// Angel::putPixel(i.x, i.y, thickness);
+		if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
+			Angel::depth_buffer[key] = i.z;
+			Angel::putPixel(i.x, i.y, thickness);
+		} else {
+			if (i.z >= Angel::depth_buffer[key]) {
+				Angel::depth_buffer[key] = i.z;
+				Angel::putPixel(i.x, i.y, thickness);
+			}
+		}
+	}
+}
+
 void Line::animate() {
 	static int count = 0;
 	static int i = 0;
@@ -72,16 +175,16 @@ void Line::animate() {
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
 			if (int(count / 10 + 4) % 2 == 0) {
-				Angel::putPixel(points[i].x, points[i].y, thickness,
-				                Color(1.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(points[i].x, points[i].y, thickness);
+
 			} else {
-				Angel::putPixel(false_points[i].x, false_points[i].y, thickness,
-				                Color(0.0f, 0.0f, 1.0f, 1.0f));
+				Angel::putPixel(false_points[i].x, false_points[i].y,
+				                thickness);
 			}
 		} else {
 			if (cur > 0) {
-				Angel::putPixel(points[cur - 1].x, points[cur - 1].y, thickness,
-				                Color(1.0f, 0.0f, 0.0f, 1.0f));
+				Angel::putPixel(points[cur - 1].x, points[cur - 1].y,
+				                thickness);
 			}
 		}
 	}
