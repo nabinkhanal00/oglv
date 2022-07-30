@@ -146,16 +146,23 @@ void Line::draw() {
 	}
 }
 void Line::draw3D() {
+	float left = -1.0f;
+	float right = 1.0f;
+	float bottom = -1.0f;
+	float top =1.0f;
 	for (auto &i : points3D) {
 		std::string key = std::to_string(i.x) + ',' + std::to_string(i.y);
 		// Angel::putPixel(i.x, i.y, thickness);
-		if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
-			Angel::depth_buffer[key] = i.z;
-			Angel::putPixel(i.x, i.y, thickness);
-		} else {
-			if (i.z >= Angel::depth_buffer[key]) {
+
+		if (i.x <= right && i.x >= left && i.y >= bottom && i.y <= top) {
+			if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
 				Angel::depth_buffer[key] = i.z;
 				Angel::putPixel(i.x, i.y, thickness);
+			} else {
+				if (i.z >= Angel::depth_buffer[key]) {
+					Angel::depth_buffer[key] = i.z;
+					Angel::putPixel(i.x, i.y, thickness);
+				}
 			}
 		}
 	}

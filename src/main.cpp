@@ -21,29 +21,30 @@ oglm::vec3 to(0.0f, 0.0f, 0.0f);
 oglm::vec3 up(0.0f, 1.0f, 0.0f);
 
 void handleInput(GLFWwindow *window) {
+	float speed = 0.09f;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		at.y += 0.02;
-		to.y += 0.02;
+		at.y += speed;
+		to.y += speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		at.y -= 0.02;
-		to.y -= 0.02;
+		at.y -= speed;
+		to.y -= speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		at.z += 0.02;
-		to.z += 0.02;
+		at.z += speed;
+		to.z += speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-		at.z -= 0.02;
-		to.z -= 0.02;
+		at.z -= speed;
+		to.z -= speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		at.x -= 0.02;
-		to.x -= 0.02;
+		at.x -= speed;
+		to.x -= speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		at.x += 0.02;
-		to.x += 0.02;
+		at.x += speed;
+		to.x += speed;
 	}
 }
 GLFWwindow *InitWindow() {
