@@ -81,7 +81,7 @@ void Cube::load() {
 		Angel::vertexBuffer.push_back(oglm::vec3(x0, y0, z0));
 		Angel::vertexBuffer.push_back(oglm::vec3(x1, y1, z1));
 	}
-	rasterize();
+	// rasterize();
 }
 
 void Cube::translate(float x, float y, float z) {}
