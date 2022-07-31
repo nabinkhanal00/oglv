@@ -1,6 +1,7 @@
 // Include GLFW
 
 #include <iostream>
+#include <Ellipse.hpp>
 
 #include "Cube.hpp"
 #include <GLFW/glfw3.h>
@@ -103,7 +104,7 @@ int main(void) {
 	Cube c(1, 1);
 	c.load();
 	// Circle c(0.0f, 0.0f, 0.5f, 4);
-	// Ellipse e(0, 0, 0.8f, 0.8f, 4);
+	Ellipse e(0, 0, 0.8f, 0.8f, 4);
 	// Line l(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1);
 	// l.show_points();
 	// l.show_points();
@@ -123,14 +124,15 @@ int main(void) {
 		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
 
 		Angel::draw();
-		Angel::set_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
-		Angel::drawAxes();
-		Angel::set_color(
-		    Color(cos(glfwGetTime()), sin(glfwGetTime()), 1.0f, 1.0f));
-		Angel::set_model(oglm::vec3(1.0f, 0.0f, -2.0f),
-		                 oglm::vec3(.5f, .5f, .5f), angle += 0.02f,
-		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
-		Angel::draw();
+		// e.animate();
+		// Angel::set_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
+		// Angel::drawAxes();
+		// Angel::set_color(
+		//     Color(cos(glfwGetTime()), sin(glfwGetTime()), 1.0f, 1.0f));
+		// Angel::set_model(oglm::vec3(1.0f, 0.0f, -2.0f),
+		//                  oglm::vec3(.5f, .5f, .5f), angle += 0.02f,
+		//                  oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+		// Angel::draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

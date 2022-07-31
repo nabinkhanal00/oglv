@@ -1,5 +1,6 @@
 #include "Angel.hpp"
 #include "Line.hpp"
+#include <algorithm>
 #include "ResourceManager.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -17,7 +18,73 @@ oglm::mat4 Angel::model;
 std::unordered_map<std::string, float> Angel::depth_buffer;
 std::vector<oglm::vec3> Angel::vertexBuffer;
 unsigned int Angel::m_ID = 0;
+std::vector<oglm::vec3> triangles;
+void fillBottomFlatTriangle(const oglm::vec3 &_v1, const oglm::vec3 &_v2,
+                            const oglm::vec3 &_v3) {
 
+	oglm::vec3i v1 = Angel::map(_v1); 
+	oglm::vec3i v2 = Angel::map(_v2); 
+	oglm::vec3i v3 = Angel::map(_v3); 
+	float invslope1 = float(v2.x - v1.x) / (v2.y - v1.y);
+	float invslope2 = float(v3.x - v1.x) / (v3.y - v1.y);
+
+
+	float curx1 = v1.x;
+	float curx2 = v1.x;
+
+	for (int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++) {
+		oglm::vec2 p0 = Angel::demap(curx1,scanlineY);
+		oglm::vec2 p1 = Angel::demap(curx2,scanlineY);
+		Line l(p0.x, p0.y, p1.x, p1.y);
+		l.draw();
+		curx1 += invslope1;
+		curx2 += invslope2;
+	}
+}
+
+void fillTopFlatTriangle(const oglm::vec3 &_v1, const oglm::vec3 &_v2,
+                         const oglm::vec3 &_v3) {
+
+	oglm::vec3i v1 = Angel::map(_v1); 
+	oglm::vec3i v2 = Angel::map(_v2); 
+	oglm::vec3i v3 = Angel::map(_v3); 
+	float invslope1 = float(v3.x - v1.x) / (v3.y - v1.y);
+	float invslope2 = float(v3.x - v2.x) / (v3.y - v2.y);
+
+	float curx1 = v3.x;
+	float curx2 = v3.x;
+
+	for (int scanlineY = v3.y; scanlineY > v1.y; scanlineY--) {
+		oglm::vec2 p0 = Angel::demap(curx1,scanlineY);
+		oglm::vec2 p1 = Angel::demap(curx2,scanlineY);
+		Line l(p0.x, p0.y, p1.x, p1.y);
+		l.draw();
+		curx1 -= invslope1;
+		curx2 -= invslope2;
+	}
+}
+void fillTriangle(std::vector<oglm::vec3> &points) {
+	std::sort(points.begin(), points.end(),
+	          [](oglm::vec3 a, oglm::vec3 b) { return a.y < b.y; });
+	oglm::vec3 v1 = points.at(0);
+	oglm::vec3 v2 = points.at(1);
+	oglm::vec3 v3 = points.at(2);
+
+	/* here we know that v1.y <= v2.y <= v3.y */
+	/* check for trivial case of bottom-flat triangle */
+	if (fabs(v2.y - v3.y) <= 0.005) {
+		fillBottomFlatTriangle(v1, v2, v3);
+	}
+	/* check for trivial case of top-flat triangle */
+	else if (fabs(v1.y - v2.y) <= 0.005) {
+		fillTopFlatTriangle(v1, v2, v3);
+	} else {
+		/* general case - split the triangle in a topflat and bottom-flat one */
+		oglm::vec3* v4 = new oglm::vec3((v1.x+((float)(v2.y-v1.y)/(float)(v3.y-v1.y))*(v3.x-v1.x)),v2.y,v2.z);
+		fillBottomFlatTriangle(v1, v2, *v4);
+		fillTopFlatTriangle(v2, *v4, v3);
+	}
+}
 void Angel::draw() {
 	for (auto &i : vertexBuffer) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
@@ -27,6 +94,8 @@ void Angel::draw() {
 		v.z /= v.w;
 		current_buffer.push_back(oglm::vec3(v.x, v.y, v.z));
 	}
+
+	int c = 0;
 	for (size_t i = 0; i < current_buffer.size() - 1; i = i + 2) {
 		float x0 = current_buffer[i].x;
 		float y0 = current_buffer[i].y;
@@ -34,10 +103,19 @@ void Angel::draw() {
 		float x1 = current_buffer[i + 1].x;
 		float y1 = current_buffer[i + 1].y;
 		float z1 = (current_buffer[i + 1].z);
-		Line l(x0, y0, z0, x1, y1, z1,10);
+		Line l(x0, y0, z0, x1, y1, z1, 5);
 		l.draw3D();
+		c++;
+		if (c % 2 == 0) {
+			triangles.push_back(oglm::vec3(x1, y1, z1));
+			fillTriangle(triangles);
+			triangles.clear();
+
+		} else {
+			triangles.push_back(oglm::vec3(x0, y0, z0));
+			triangles.push_back(oglm::vec3(x1, y1, z1));
+		}
 	}
-	//
 }
 
 void Angel::init(unsigned int width, unsigned int height) {
