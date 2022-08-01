@@ -111,10 +111,12 @@ oglm::vec3 calculateNormal(std::vector<oglm::vec3> &points) {
 	return norm;
 }
 void Angel::draw() {
+	float val = 0.1f;
+
 	for (auto &i : vertexBuffer) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = pers * view * model * v;
-		if (v.z > 0.6) {
+		if (v.z > val) {
 			v.x /= v.w;
 			v.y /= v.w;
 			v.z /= v.w;
@@ -138,36 +140,28 @@ void Angel::draw() {
 		float x1 = current_buffer[i + 1].x;
 		float y1 = current_buffer[i + 1].y;
 		float z1 = (current_buffer[i + 1].z);
-		if (z1 >= 0.6 && z0 < 0.6) {
-			std::cout << x0 << " " << y0 << std::endl;
-			z0 = 0.6f;
+		if (z1 >= val && z0 < val) {
+			z0 = val;
 			if(x0<0)
-				x0 = x0-1.0f;
+				x0 = -1.0f;
 			else
-				x0 +=1.0f;
+				x0 =1.0f;
 			if(y0<0)
-				y0 -=1.0f;
+				y0 =-1.0f;
 			else
-				y0 +=1.0f;
-		} else if (z0 >= 0.6 && z1 < 0.6) {
-			std::cout << x1 << " " << y1 << std::endl;
-			if(x0<0)
-				x0 = x0-1.0f;
+				y0 =1.0f;
+		} else if (z0 >= val && z1 < val) {
+			if(x1<0)
+				x1 = -1.0f;
 			else
-				x0 +=1.0f;
+				x1 =1.0f;
 			if(y0<0)
-				y0 -=1.0f;
+				y1 =-1.0f;
 			else
-				y0 +=1.0f;
-			z1 = 0.6f;
+				y1 =1.0f;
+			z1 = val;
 		}
-		if (z1 >= 0.6 && z0 < 0.6) {
-			std::cout << x0 << " " << y0 << std::endl;
-			z0 = 0.6f;
-			x0 = x0;
-			y0 = y0;
-		}
-		if (z0 >= 0.6 && z1 >= 0.6) {
+		if (z0 >= val && z1 >= val) {
 			Line l(x0, y0, z0, x1, y1, z1, 5);
 			l.draw3D();
 			c++;
