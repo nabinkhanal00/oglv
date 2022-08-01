@@ -141,10 +141,10 @@ void Line::show_points() {
 	}
 }
 void Line::draw() {
-	float left = -1.0f;
-	float right = 1.0f;
-	float bottom = -1.0f;
-	float top = 1.0f;
+	float left = -1.00f;
+	float right = 1.00f;
+	float bottom = -1.00f;
+	float top = 1.00f;
 	for (auto &i : points) {
 		// if (i.x <= right && i.x >= left && i.y >= bottom && i.y <= top) {
 		Angel::putPixel(i.x, i.y, thickness);
@@ -152,28 +152,25 @@ void Line::draw() {
 	}
 }
 void Line::draw3D() {
-	float left = -1.0f;
-	float right = 1.0f;
-	float bottom = -1.0f;
-	float top = 1.0f;
+	float left = -0.70f;
+	float right = 0.70f;
+	float bottom = -0.70f;
+	float top = 0.70f;
 	for (auto &i : points3D) {
 		std::string key = std::to_string(i.x) + ',' + std::to_string(i.y);
-		// Angel::putPixel(i.x, i.y, thickness);
-
-		Angel::putPixel(i.x, i.y, thickness);
-		// if (i.x <= right && i.x >= left && i.y >= bottom && i.y <= top) {
-		// 	// std::cout << "x: " << i.x << std::endl;
-		// 	// std::cout << "y: " << i.y << std::endl;
-		// 	if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
-		// 		Angel::depth_buffer[key] = i.z;
-		// 		Angel::putPixel(i.x, i.y, thickness);
-		// 	} else {
-		// 		if (i.z >= Angel::depth_buffer[key]) {
-		// 			Angel::depth_buffer[key] = i.z;
-		// 			Angel::putPixel(i.x, i.y, thickness);
-		// 		}
-		// 	}
-		// }
+		if (i.x <= right && i.x >= left && i.y >= bottom && i.y <= top) {
+			// std::cout << "x: " << i.x << std::endl;
+			// std::cout << "y: " << i.y << std::endl;
+			if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
+				Angel::depth_buffer[key] = i.z;
+				Angel::putPixel(i.x, i.y, thickness);
+			} else {
+				if (i.z >= Angel::depth_buffer[key]) {
+					Angel::depth_buffer[key] = i.z;
+					Angel::putPixel(i.x, i.y, thickness);
+				}
+			}
+		}
 	}
 }
 

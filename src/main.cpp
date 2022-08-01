@@ -6,8 +6,8 @@
 #include "Cube.hpp"
 #include <GLFW/glfw3.h>
 
-const unsigned int WIDTH = 720;
-const unsigned int HEIGHT = 720;
+const unsigned int WIDTH = 1000;
+const unsigned int HEIGHT = 1000;
 
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
                                unsigned int height) {
@@ -22,7 +22,7 @@ oglm::vec3 to(0.0f, 0.0f, 0.0f);
 oglm::vec3 up(0.0f, 1.0f, 0.0f);
 
 void handleInput(GLFWwindow *window) {
-	float speed = 0.05f;
+	float speed = 0.03f;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		at.y += speed;
 		to.y += speed;
@@ -104,7 +104,8 @@ int main(void) {
 	Cube c(1, 1);
 
 	c.load();
-	float angle = 20.f;
+	float angle =00.f;
+	float cn =00.f;
 	while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
 		Angel::current_buffer.clear();
@@ -115,8 +116,13 @@ int main(void) {
 
 		Angel::set_color(
 		    Color(sin(glfwGetTime()), cos(glfwGetTime()), 1.0f, 1.0f));
-		Angel::set_model(oglm::vec3(0.0f, 0.0f, -5.0f),
-		                 oglm::vec3(1.0f, 1.0f, 1.0f), angle+=0.001,
+		Angel::set_model(oglm::vec3(0.0f, 0.0f, -2.0f),
+		                 oglm::vec3(1.0f, 1.0f, 1.0f), angle,
+		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+
+		Angel::draw();
+		Angel::set_model(oglm::vec3(0.0f, 0.0f, -6.0f),
+		                 oglm::vec3(1.0f, 1.0f, 1.0f), angle,
 		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
 
 		Angel::draw();

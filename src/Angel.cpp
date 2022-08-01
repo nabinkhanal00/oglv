@@ -4,6 +4,7 @@
 #include "ResourceManager.hpp"
 #include "vec3.hpp"
 #include <GLFW/glfw3.h>
+#include <cmath>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <stdexcept>
@@ -111,7 +112,7 @@ oglm::vec3 calculateNormal(std::vector<oglm::vec3> &points) {
 	return norm;
 }
 void Angel::draw() {
-	float val = 0.1f;
+	float val = 0.0f;
 
 	for (auto &i : vertexBuffer) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
@@ -140,42 +141,56 @@ void Angel::draw() {
 		float x1 = current_buffer[i + 1].x;
 		float y1 = current_buffer[i + 1].y;
 		float z1 = (current_buffer[i + 1].z);
+		float slope = (y1 - y0) / (x1 - x0);
 		if (z1 >= val && z0 < val) {
 			z0 = val;
-			if(x0<0)
+			if (x0 < 0) {
 				x0 = -1.0f;
-			else
-				x0 =1.0f;
-			if(y0<0)
-				y0 =-1.0f;
-			else
-				y0 =1.0f;
+				y0 = y1 + slope * (x0 - x1);
+			} else {
+				x0 = 1.0f;
+				y0 = y1 + slope * (x0 - x1);
+			}
 		} else if (z0 >= val && z1 < val) {
-			if(x1<0)
+
+			if (x1 < 0) {
 				x1 = -1.0f;
-			else
-				x1 =1.0f;
-			if(y0<0)
-				y1 =-1.0f;
-			else
-				y1 =1.0f;
+				y1 = y0 + slope * (x1 - x0);
+			} else {
+				x1 = 1.0f;
+				y1 = y0 + slope * (x1 - x0);
+			}
 			z1 = val;
 		}
-		if (z0 >= val && z1 >= val) {
-			Line l(x0, y0, z0, x1, y1, z1, 5);
-			l.draw3D();
-			c++;
-			if (c % 2 == 0) {
-				// std::cout << "Plane: " << c / 2 << std::endl;
-				triangles.push_back(oglm::vec3(x1, y1, z1));
-				// std::cout << calculateNormal(triangles) << std::endl;
-				// fillTriangle(triangles);
-				triangles.clear();
-
-			} else {
-				triangles.push_back(oglm::vec3(x0, y0, z0));
-				triangles.push_back(oglm::vec3(x1, y1, z1));
-			}
+		int precision = 1000;
+		if (y0 < -precision)
+			y0 = -1;
+		if (y0 > precision)
+			y0 = 1;
+		if (y1 < -precision)
+			y1 = -1;
+		if (y1 > precision)
+			y1 = 1;
+		// x0 = std::roundf(x0);
+		// x1 = std::roundf(x1);
+		if (z0 >= val && z1 >= val && x0 > -1.0 && x1 < 1.0) {
+			// c++;
+			// std::cout << "Drawn lines: " << c << std::endl;
+			// std::cout << x0 << " " << y0 << std::endl;
+			// std::cout << x1 << " " << y1 << std::endl;
+			Line l(x0, y0, x1, y1, 5);
+			l.draw();
+			// if (c % 2 == 0) {
+			// 	// std::cout << "Plane: " << c / 2 << std::endl;
+			// 	triangles.push_back(oglm::vec3(x1, y1, z1));
+			// 	// std::cout << calculateNormal(triangles) << std::endl;
+			// 	// fillTriangle(triangles);
+			// 	triangles.clear();
+			//
+			// } else {
+			// 	triangles.push_back(oglm::vec3(x0, y0, z0));
+			// 	triangles.push_back(oglm::vec3(x1, y1, z1));
+			// }
 		}
 	}
 }
