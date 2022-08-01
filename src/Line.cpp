@@ -140,19 +140,19 @@ void Line::show_points() {
 		std::cout << i.x << " " << i.y << " " << i.z << std::endl;
 	}
 }
-void Line::draw() {
+void Line::draw(const oglm::vec4 &color) {
 	for (auto &i : points) {
-		Angel::putPixel(i.x, i.y, thickness);
+		Angel::putPixel(i.x, i.y, thickness, color);
 	}
 }
-void Line::draw3D() {
+void Line::draw3D(const oglm::vec4 &color) {
 	float left = -1.0f;
 	float right = 1.0f;
 	float bottom = -1.0f;
 	float top = 1.0f;
 	for (auto &i : points3D) {
 		std::string key = std::to_string(i.x) + ',' + std::to_string(i.y);
-		Angel::putPixel(i.x, i.y, thickness);
+		Angel::putPixel(i.x, i.y, thickness, color);
 
 		// if (i.x <= right && i.x >= left && i.y >= bottom && i.y <= top) {
 		// 	if (Angel::depth_buffer.find(key) == Angel::depth_buffer.end()) {
@@ -173,25 +173,29 @@ void Line::animate() {
 	static int i = 0;
 	static int stuck = 0;
 
+	static const oglm::vec4 white(1.0f, 1.0f, 1.0f, 1.0f);
+	static const oglm::vec4 blue(0.0f, 0.0f, 1.0f, 1.0f);
+	static const oglm::vec4 red(1.0f, 0.0f, 0.0f, 1.0f);
+	static const oglm::vec4 green(0.0f, 1.0f, 0.0f, 1.0f);
 	int cur;
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(points[cur].x, points[cur].y, thickness);
+		Angel::putPixel(points[cur].x, points[cur].y, thickness, white);
 	}
 	Angel::putPixel(points[points.size() - 1].x, points[points.size() - 1].y,
-	                thickness);
+	                thickness, white);
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
 			if (int(count / 10 + 4) % 2 == 0) {
-				Angel::putPixel(points[i].x, points[i].y, thickness);
+				Angel::putPixel(points[i].x, points[i].y, thickness, red);
 
 			} else {
-				Angel::putPixel(false_points[i].x, false_points[i].y,
-				                thickness);
+				Angel::putPixel(false_points[i].x, false_points[i].y, thickness,
+				                blue);
 			}
 		} else {
 			if (cur > 0) {
-				Angel::putPixel(points[cur - 1].x, points[cur - 1].y,
-				                thickness);
+				Angel::putPixel(points[cur - 1].x, points[cur - 1].y, thickness,
+				                red);
 			}
 		}
 	}

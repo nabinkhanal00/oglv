@@ -34,17 +34,17 @@ Circle::Circle(float x0, float y0, float r, unsigned int t)
 	}
 }
 
-void Circle::draw() {
+void Circle::draw(const oglm::vec4 &color) {
 
 	for (auto &i : points) {
-		Angel::putPixel(i.x + centerX, i.y + centerY, thickness);
-		Angel::putPixel(i.y + centerX, i.x + centerY, thickness);
-		Angel::putPixel(-i.x + centerX, i.y + centerY, thickness);
-		Angel::putPixel(-i.y + centerX, i.x + centerY, thickness);
-		Angel::putPixel(i.x + centerX, -i.y + centerY, thickness);
-		Angel::putPixel(i.y + centerX, -i.x + centerY, thickness);
-		Angel::putPixel(-i.x + centerX, -i.y + centerY, thickness);
-		Angel::putPixel(-i.y + centerX, -i.x + centerY, thickness);
+		Angel::putPixel(i.x + centerX, i.y + centerY, thickness, color);
+		Angel::putPixel(i.y + centerX, i.x + centerY, thickness, color);
+		Angel::putPixel(-i.x + centerX, i.y + centerY, thickness, color);
+		Angel::putPixel(-i.y + centerX, i.x + centerY, thickness, color);
+		Angel::putPixel(i.x + centerX, -i.y + centerY, thickness, color);
+		Angel::putPixel(i.y + centerX, -i.x + centerY, thickness, color);
+		Angel::putPixel(-i.x + centerX, -i.y + centerY, thickness, color);
+		Angel::putPixel(-i.y + centerX, -i.x + centerY, thickness, color);
 	}
 }
 

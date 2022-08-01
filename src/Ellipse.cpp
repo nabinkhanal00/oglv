@@ -86,13 +86,13 @@ Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
 	}
 }
 
-void Ellipse::draw() {
+void Ellipse::draw(const oglm::vec4 &color) {
 
 	for (auto &i : points) {
-		Angel::putPixel(i.x + centerX, i.y + centerY, thickness);
-		Angel::putPixel(-i.x + centerX, i.y + centerY, thickness);
-		Angel::putPixel(i.x + centerX, -i.y + centerY, thickness);
-		Angel::putPixel(-i.x + centerX, -i.y + centerY, thickness);
+		Angel::putPixel(i.x + centerX, i.y + centerY, thickness, color);
+		Angel::putPixel(-i.x + centerX, i.y + centerY, thickness, color);
+		Angel::putPixel(i.x + centerX, -i.y + centerY, thickness, color);
+		Angel::putPixel(-i.x + centerX, -i.y + centerY, thickness, color);
 	}
 }
 

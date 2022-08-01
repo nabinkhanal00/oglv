@@ -15,7 +15,7 @@ class Circle {
 
   public:
 	Circle(float x0, float y0, float r, unsigned int thickness);
-	void draw();
+	void draw(const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	void animate();
 	void translate(float x, float y);
 	void translate(oglm::vec2 factor);
