@@ -25,7 +25,7 @@ Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
 	indices.push_back(oglm::vec2i(5, 6));
 	indices.push_back(oglm::vec2i(6, 7));
 
-	//back
+	// back
 	indices.push_back(oglm::vec2i(3, 2));
 	indices.push_back(oglm::vec2i(2, 1));
 	indices.push_back(oglm::vec2i(1, 0));
@@ -95,6 +95,7 @@ void Cube::animate() {}
 
 void Cube::load() {
 	for (auto &i : indices) {
+		// std::cout<<i.x<<" "<<i.y<<std::endl;
 		float x0 = points[i.x].x;
 		float y0 = points[i.x].y;
 		float z0 = points[i.x].z;

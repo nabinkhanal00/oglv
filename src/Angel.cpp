@@ -2,6 +2,7 @@
 #include "Line.hpp"
 #include <algorithm>
 #include "ResourceManager.hpp"
+#include "vec3.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
@@ -9,7 +10,7 @@
 
 int Angel::m_width = 720;
 int Angel::m_height = 720;
-int Angel::m_depth = 720;
+int Angel::m_depth = 100;
 Color Angel::m_color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 std::vector<oglm::vec3> Angel::current_buffer;
 oglm::mat4 Angel::view;
@@ -22,19 +23,18 @@ std::vector<oglm::vec3> triangles;
 void fillBottomFlatTriangle(const oglm::vec3 &_v1, const oglm::vec3 &_v2,
                             const oglm::vec3 &_v3) {
 
-	oglm::vec3i v1 = Angel::map(_v1); 
-	oglm::vec3i v2 = Angel::map(_v2); 
-	oglm::vec3i v3 = Angel::map(_v3); 
+	oglm::vec3i v1 = Angel::map(_v1);
+	oglm::vec3i v2 = Angel::map(_v2);
+	oglm::vec3i v3 = Angel::map(_v3);
 	float invslope1 = float(v2.x - v1.x) / (v2.y - v1.y);
 	float invslope2 = float(v3.x - v1.x) / (v3.y - v1.y);
-
 
 	float curx1 = v1.x;
 	float curx2 = v1.x;
 
 	for (int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++) {
-		oglm::vec2 p0 = Angel::demap(curx1,scanlineY);
-		oglm::vec2 p1 = Angel::demap(curx2,scanlineY);
+		oglm::vec2 p0 = Angel::demap(curx1, scanlineY);
+		oglm::vec2 p1 = Angel::demap(curx2, scanlineY);
 		Line l(p0.x, p0.y, p1.x, p1.y);
 		l.draw();
 		curx1 += invslope1;
@@ -45,9 +45,9 @@ void fillBottomFlatTriangle(const oglm::vec3 &_v1, const oglm::vec3 &_v2,
 void fillTopFlatTriangle(const oglm::vec3 &_v1, const oglm::vec3 &_v2,
                          const oglm::vec3 &_v3) {
 
-	oglm::vec3i v1 = Angel::map(_v1); 
-	oglm::vec3i v2 = Angel::map(_v2); 
-	oglm::vec3i v3 = Angel::map(_v3); 
+	oglm::vec3i v1 = Angel::map(_v1);
+	oglm::vec3i v2 = Angel::map(_v2);
+	oglm::vec3i v3 = Angel::map(_v3);
 	float invslope1 = float(v3.x - v1.x) / (v3.y - v1.y);
 	float invslope2 = float(v3.x - v2.x) / (v3.y - v2.y);
 
@@ -55,8 +55,8 @@ void fillTopFlatTriangle(const oglm::vec3 &_v1, const oglm::vec3 &_v2,
 	float curx2 = v3.x;
 
 	for (int scanlineY = v3.y; scanlineY > v1.y; scanlineY--) {
-		oglm::vec2 p0 = Angel::demap(curx1,scanlineY);
-		oglm::vec2 p1 = Angel::demap(curx2,scanlineY);
+		oglm::vec2 p0 = Angel::demap(curx1, scanlineY);
+		oglm::vec2 p1 = Angel::demap(curx2, scanlineY);
 		Line l(p0.x, p0.y, p1.x, p1.y);
 		l.draw();
 		curx1 -= invslope1;
@@ -80,40 +80,108 @@ void fillTriangle(std::vector<oglm::vec3> &points) {
 		fillTopFlatTriangle(v1, v2, v3);
 	} else {
 		/* general case - split the triangle in a topflat and bottom-flat one */
-		oglm::vec3* v4 = new oglm::vec3((v1.x+((float)(v2.y-v1.y)/(float)(v3.y-v1.y))*(v3.x-v1.x)),v2.y,v2.z);
+		oglm::vec3 *v4 = new oglm::vec3(
+		    (v1.x +
+		     ((float)(v2.y - v1.y) / (float)(v3.y - v1.y)) * (v3.x - v1.x)),
+		    v2.y, v2.z);
 		fillBottomFlatTriangle(v1, v2, *v4);
 		fillTopFlatTriangle(v2, *v4, v3);
 	}
+}
+
+oglm::vec3 calculateNormal(std::vector<oglm::vec3> &points) {
+	oglm::vec3 p1 = points.at(0);
+	oglm::vec3 p2 = points.at(1);
+	oglm::vec3 p3 = points.at(2);
+	// std::cout<<p1<<std::endl;
+	// std::cout<<p2<<std::endl;
+	// std::cout<<p3<<std::endl;
+	oglm::vec3 p1p2 = p2 - p1;
+	oglm::vec3 p1p3 = p3 - p1;
+	float x1 = p1p2.x;
+	float y1 = p1p2.y;
+	float z1 = p1p2.z;
+	float x2 = p1p3.x;
+	float y2 = p1p3.y;
+	float z2 = p1p3.z;
+	// std::cout<<p1p2<<std::endl;
+	// std::cout<<p1p3<<std::endl;
+	oglm::vec3 norm((y1 * z2 - y2 * z1), (x2 * z1 - x1 * z2),
+	                (x1 * y2 - x2 * y1));
+	return norm;
 }
 void Angel::draw() {
 	for (auto &i : vertexBuffer) {
 		oglm::vec4 v(i.x, i.y, i.z, 1);
 		v = pers * view * model * v;
-		v.x /= v.w;
-		v.y /= v.w;
-		v.z /= v.w;
+		if (v.z > 0.6) {
+			v.x /= v.w;
+			v.y /= v.w;
+			v.z /= v.w;
+		}
+		// if (v.z >= -1 && v.z < 0) {
+		// 	// std::cout << "negative: " << v.z << std::endl;
+		// }
+		// if (v.z >= 0 && v.z <= 1) {
+		// 	// std::cout << "postive: " << v.z << std::endl;
+		// }
 		current_buffer.push_back(oglm::vec3(v.x, v.y, v.z));
 	}
 
 	int c = 0;
 	for (size_t i = 0; i < current_buffer.size() - 1; i = i + 2) {
+		// std::cout<<current_buffer[i]<<std::endl;
+		// std::cout<<current_buffer[i+1]<<std::endl;
 		float x0 = current_buffer[i].x;
 		float y0 = current_buffer[i].y;
 		float z0 = (current_buffer[i].z);
 		float x1 = current_buffer[i + 1].x;
 		float y1 = current_buffer[i + 1].y;
 		float z1 = (current_buffer[i + 1].z);
-		Line l(x0, y0, z0, x1, y1, z1, 5);
-		l.draw3D();
-		c++;
-		if (c % 2 == 0) {
-			triangles.push_back(oglm::vec3(x1, y1, z1));
-			fillTriangle(triangles);
-			triangles.clear();
+		if (z1 >= 0.6 && z0 < 0.6) {
+			std::cout << x0 << " " << y0 << std::endl;
+			z0 = 0.6f;
+			if(x0<0)
+				x0 = x0-1.0f;
+			else
+				x0 +=1.0f;
+			if(y0<0)
+				y0 -=1.0f;
+			else
+				y0 +=1.0f;
+		} else if (z0 >= 0.6 && z1 < 0.6) {
+			std::cout << x1 << " " << y1 << std::endl;
+			if(x0<0)
+				x0 = x0-1.0f;
+			else
+				x0 +=1.0f;
+			if(y0<0)
+				y0 -=1.0f;
+			else
+				y0 +=1.0f;
+			z1 = 0.6f;
+		}
+		if (z1 >= 0.6 && z0 < 0.6) {
+			std::cout << x0 << " " << y0 << std::endl;
+			z0 = 0.6f;
+			x0 = x0;
+			y0 = y0;
+		}
+		if (z0 >= 0.6 && z1 >= 0.6) {
+			Line l(x0, y0, z0, x1, y1, z1, 5);
+			l.draw3D();
+			c++;
+			if (c % 2 == 0) {
+				// std::cout << "Plane: " << c / 2 << std::endl;
+				triangles.push_back(oglm::vec3(x1, y1, z1));
+				// std::cout << calculateNormal(triangles) << std::endl;
+				// fillTriangle(triangles);
+				triangles.clear();
 
-		} else {
-			triangles.push_back(oglm::vec3(x0, y0, z0));
-			triangles.push_back(oglm::vec3(x1, y1, z1));
+			} else {
+				triangles.push_back(oglm::vec3(x0, y0, z0));
+				triangles.push_back(oglm::vec3(x1, y1, z1));
+			}
 		}
 	}
 }
