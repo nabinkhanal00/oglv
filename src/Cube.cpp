@@ -24,42 +24,41 @@ Cube::Cube(unsigned int length, unsigned int thickness) : thickness(thickness) {
 	indices.push_back(oglm::vec2i(4, 5));
 	indices.push_back(oglm::vec2i(5, 6));
 	indices.push_back(oglm::vec2i(6, 7));
- //
+	//
 	// // back
 	indices.push_back(oglm::vec2i(3, 2));
 	indices.push_back(oglm::vec2i(2, 1));
 	indices.push_back(oglm::vec2i(1, 0));
 	indices.push_back(oglm::vec2i(0, 3));
 
-	//top
+	// top
 	indices.push_back(oglm::vec2i(3, 7));
 	indices.push_back(oglm::vec2i(7, 6));
 	indices.push_back(oglm::vec2i(6, 2));
 	indices.push_back(oglm::vec2i(2, 3));
 	//
-	//bottom
+	// bottom
 	indices.push_back(oglm::vec2i(0, 1));
 	indices.push_back(oglm::vec2i(1, 5));
 	indices.push_back(oglm::vec2i(5, 4));
 	indices.push_back(oglm::vec2i(4, 0));
 
-	//left
+	// left
 	indices.push_back(oglm::vec2i(7, 3));
 	indices.push_back(oglm::vec2i(3, 0));
 	indices.push_back(oglm::vec2i(0, 4));
 	indices.push_back(oglm::vec2i(4, 7));
 
-	//right
+	// right
 	indices.push_back(oglm::vec2i(6, 5));
 	indices.push_back(oglm::vec2i(5, 1));
 	indices.push_back(oglm::vec2i(1, 2));
 	indices.push_back(oglm::vec2i(2, 6));
-
 }
 
 void Cube::animate() {}
 void Cube::rasterize() {
-	float offset = 0.007f;
+	float offset = 0.05f;
 	for (auto &i : indices) {
 		float x0 = points[i.x].x;
 		float y0 = points[i.x].y;
@@ -80,8 +79,7 @@ void Cube::rasterize() {
 				Angel::vertexBuffer.push_back(oglm::vec3(x1, y1, temp));
 				temp += offset;
 			}
-		}
-		else if (z0 == -z1) {
+		} else if (z0 == -z1) {
 			float temp = y0;
 			while (temp < 0.5) {
 				Angel::vertexBuffer.push_back(oglm::vec3(x0, temp, z0));
@@ -104,7 +102,7 @@ void Cube::load() {
 		Angel::vertexBuffer.push_back(oglm::vec3(x0, y0, z0));
 		Angel::vertexBuffer.push_back(oglm::vec3(x1, y1, z1));
 	}
-	rasterize();
+	// rasterize();
 }
 
 void Cube::translate(float x, float y, float z) {}

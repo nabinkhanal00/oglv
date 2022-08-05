@@ -17,12 +17,11 @@ void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
 	glViewport(0, 0, width, height);
 }
 
-oglm::vec3 at(0.0f, 0.0f, 1.0f);
-oglm::vec3 to(0.0f, 0.0f, 0.0f);
-oglm::vec3 up(0.0f, 1.0f, 0.0f);
-
 void handleInput(GLFWwindow *window) {
-	float speed = 0.03f;
+	oglm::vec3 &at = Angel::camPos;
+	oglm::vec3 &to = Angel::camFocus;
+	oglm::vec3 &up = Angel::camUp;
+	float speed = 0.01f;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		at.y += speed;
 		to.y += speed;
@@ -99,31 +98,25 @@ int main(void) {
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
 	Angel::set_perspective((float)M_PI_2,
-	                       Angel::getWidth() / (float)Angel::getHeight(), 0.1,
-	                       100.0f);
+	                       Angel::getWidth() / (float)Angel::getHeight(), 0.0f,
+	                       10.0f);
 	Cube c(1, 1);
 
 	c.load();
-	float angle =00.f;
-	float cn =00.f;
+	float angle = 0.f;
+	float cn = 00.f;
 	while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
 		Angel::current_buffer.clear();
-
-		Angel::set_view(at, to, up);
+		Angel::set_view(Angel::camPos, Angel::camFocus, Angel::camUp);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		Angel::set_color(
-		    Color(sin(glfwGetTime()), cos(glfwGetTime()), 1.0f, 1.0f));
-		Angel::set_model(oglm::vec3(0.0f, 0.0f, -2.0f),
-		                 oglm::vec3(1.0f, 1.0f, 1.0f), angle,
-		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
-
-		Angel::draw();
-		Angel::set_model(oglm::vec3(0.0f, 0.0f, -6.0f),
-		                 oglm::vec3(1.0f, 1.0f, 1.0f), angle,
-		                 oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+		// Angel::set_color(
+		//     Color(sin(glfwGetTime()), cos(glfwGetTime()), 1.0f, 1.0f));
+		Angel::set_model(oglm::vec3(0.0f, 0.0f, -5.5f),
+		                 oglm::vec3(2.0f, 2.0f, 2.0f), angle,
+		                 oglm::normalize(oglm::vec3(1.0f, 1.0f, 1.0f)));
 
 		Angel::draw();
 		glfwSwapBuffers(window);
