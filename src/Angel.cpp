@@ -122,19 +122,11 @@ void Angel::draw() {
 			v.y /= v.w;
 			v.z /= v.w;
 		}
-		// if (v.z >= -1 && v.z < 0) {
-		// 	// std::cout << "negative: " << v.z << std::endl;
-		// }
-		// if (v.z >= 0 && v.z <= 1) {
-		// 	// std::cout << "postive: " << v.z << std::endl;
-		// }
 		current_buffer.push_back(oglm::vec3(v.x, v.y, v.z));
 	}
 
 	int c = 0;
 	for (size_t i = 0; i < current_buffer.size() - 1; i = i + 2) {
-		// std::cout<<current_buffer[i]<<std::endl;
-		// std::cout<<current_buffer[i+1]<<std::endl;
 		float x0 = current_buffer[i].x;
 		float y0 = current_buffer[i].y;
 		float z0 = (current_buffer[i].z);
@@ -171,26 +163,9 @@ void Angel::draw() {
 			y1 = -1;
 		if (y1 > precision)
 			y1 = 1;
-		// x0 = std::roundf(x0);
-		// x1 = std::roundf(x1);
 		if (z0 >= val && z1 >= val && x0 > -1.0 && x1 < 1.0) {
-			// c++;
-			// std::cout << "Drawn lines: " << c << std::endl;
-			// std::cout << x0 << " " << y0 << std::endl;
-			// std::cout << x1 << " " << y1 << std::endl;
 			Line l(x0, y0, x1, y1, 5);
 			l.draw();
-			// if (c % 2 == 0) {
-			// 	// std::cout << "Plane: " << c / 2 << std::endl;
-			// 	triangles.push_back(oglm::vec3(x1, y1, z1));
-			// 	// std::cout << calculateNormal(triangles) << std::endl;
-			// 	// fillTriangle(triangles);
-			// 	triangles.clear();
-			//
-			// } else {
-			// 	triangles.push_back(oglm::vec3(x0, y0, z0));
-			// 	triangles.push_back(oglm::vec3(x1, y1, z1));
-			// }
 		}
 	}
 }
