@@ -115,7 +115,7 @@ int main(void) {
 		// Angel::set_color(
 		//     Color(sin(glfwGetTime()), cos(glfwGetTime()), 1.0f, 1.0f));
 		Angel::set_model(oglm::vec3(0.0f, 0.0f, -5.5f),
-		                 oglm::vec3(2.0f, 2.0f, 2.0f), angle,
+		                 oglm::vec3(2.0f, 2.0f, 2.0f), angle += 0.02,
 		                 oglm::normalize(oglm::vec3(1.0f, 1.0f, 1.0f)));
 
 		Angel::draw();
