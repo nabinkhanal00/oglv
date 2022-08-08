@@ -4,10 +4,11 @@
 #include <Ellipse.hpp>
 
 #include "Cube.hpp"
+#include "Circle.hpp"
 #include <GLFW/glfw3.h>
 
-const unsigned int WIDTH = 1920;
-const unsigned int HEIGHT = 1080;
+const unsigned int WIDTH = 1000;
+const unsigned int HEIGHT = 1000;
 
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
                                unsigned int height) {
@@ -98,14 +99,14 @@ int main(void) {
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
-	// Angel::set_perspective((float)M_PI_2,
-	//                        Angel::getWidth() / (float)Angel::getHeight(),
-	//                        0.1, 100.0f);
-	Line l(0, 0, 1, 1, 10);
+	Angel::set_perspective((float)M_PI_2,
+	                       Angel::getWidth() / (float)Angel::getHeight(), 0.1,
+	                       100.0f);
+	// Line l(0, 0, 1, 1, 10);
 	// Cube c(1, 1);
 	// c.load();
-	// Circle c(0.0f, 0.0f, 0.5f, 4);
-	// Ellipse e(0, 0, 0.8f, 0.8f, 4);
+	Circle c(0.0f, 0.0f, 0.5f, 4);
+	Ellipse e(0, 0, 0.8f, 0.8f, 4);
 	// // Line l(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1);
 	// l.show_points();
 	// l.show_points();
@@ -114,7 +115,7 @@ int main(void) {
 		handleInput(window);
 		Angel::current_buffer.clear();
 
-		// Angel::set_view(at, to, up);
+		Angel::set_view(at, to, up);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//
@@ -123,8 +124,9 @@ int main(void) {
 		//                  oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
 		//
 		// Angel::draw(oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-		l.animate();
-		// e.animate();
+		// e.draw();
+		// c.draw();
+		e.animate();
 		// Angel::set_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
 		Angel::drawAxes();
 		// Angel::set_color(

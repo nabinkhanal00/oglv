@@ -2,7 +2,7 @@
 #include "Color.hpp"
 #include <iostream>
 Ellipse::Ellipse(float x0, float y0, float rX, float rY, unsigned int t)
-    : thickness(t), frameCount(10) {
+    : thickness(t), frameCount(60) {
 	majX = rX;
 	majY = rY;
 	centerX = x0;
@@ -101,50 +101,55 @@ void Ellipse::animate() {
 	static int i = 0;
 	static int stuck = 0;
 	int cur;
+
+	static const oglm::vec4 white(1.0f, 1.0f, 1.0f, 1.0f);
+	static const oglm::vec4 blue(0.0f, 0.0f, 1.0f, 1.0f);
+	static const oglm::vec4 red(1.0f, 0.0f, 0.0f, 1.0f);
+	static const oglm::vec4 green(0.0f, 1.0f, 0.0f, 1.0f);
 	for (cur = 0; cur < i; cur++) {
 		Angel::putPixel(points[cur].x + centerX, points[cur].y + centerY,
-		                thickness);
+		                thickness, white);
 	}
 	for (int cur = 0; cur < i; cur++) {
 		Angel::putPixel(-points[cur].x + centerX, points[cur].y + centerY,
-		                thickness);
+		                thickness, white);
 	}
 
 	for (int cur = 0; cur < i; cur++) {
 		Angel::putPixel(points[cur].x + centerX, -points[cur].y + centerY,
-		                thickness);
+		                thickness, white);
 	}
 	for (int cur = 0; cur < i; cur++) {
 		Angel::putPixel(-points[cur].x + centerX, -points[cur].y + centerY,
-		                thickness);
+		                thickness, white);
 	}
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
 			if (int(count / 10 + 4) % 2 == 0) {
-				Angel::putPixel(points[i].x, points[i].y, thickness);
-				Angel::putPixel(-points[i].x, points[i].y, thickness);
-				Angel::putPixel(points[i].x, -points[i].y, thickness);
-				Angel::putPixel(-points[i].x, -points[i].y, thickness);
+				Angel::putPixel(points[i].x, points[i].y, thickness, red);
+				Angel::putPixel(-points[i].x, points[i].y, thickness, red);
+				Angel::putPixel(points[i].x, -points[i].y, thickness, red);
+				Angel::putPixel(-points[i].x, -points[i].y, thickness, red);
 			} else {
-				Angel::putPixel(false_points[i].x, false_points[i].y,
-				                thickness);
+				Angel::putPixel(false_points[i].x, false_points[i].y, thickness,
+				                blue);
 				Angel::putPixel(-false_points[i].x, false_points[i].y,
-				                thickness);
+				                thickness, blue);
 				Angel::putPixel(false_points[i].x, -false_points[i].y,
-				                thickness);
+				                thickness, blue);
 				Angel::putPixel(-false_points[i].x, -false_points[i].y,
-				                thickness);
+				                thickness, blue);
 			}
 		} else {
 			if (cur > 0) {
-				Angel::putPixel(points[cur - 1].x, points[cur - 1].y,
-				                thickness);
+				Angel::putPixel(points[cur - 1].x, points[cur - 1].y, thickness,
+				                red);
 				Angel::putPixel(-points[cur - 1].x, points[cur - 1].y,
-				                thickness);
+				                thickness, red);
 				Angel::putPixel(points[cur - 1].x, -points[cur - 1].y,
-				                thickness);
+				                thickness, red);
 				Angel::putPixel(-points[cur - 1].x, -points[cur - 1].y,
-				                thickness);
+				                thickness, red);
 			}
 		}
 	}
