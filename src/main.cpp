@@ -100,25 +100,40 @@ int main(void) {
 	Angel::set_perspective((float)M_PI_2,
 	                       Angel::getWidth() / (float)Angel::getHeight(), 0.0f,
 	                       10.0f);
-	Cube c(1, 1);
+	Cube cubeObject(1, 1);
 
-	c.load();
+	cubeObject.load();
+	Cube lightSource(1, 1);
+
+	lightSource.load();
 	float angle = 0.f;
 	float cn = 00.f;
+	// object
+	oglm::vec3 cubeObjectPos(0.0f, 0.0f, -2.0f);
+	oglm::vec4 cubeObjectColor(1.0f, 1.0f, 0.0f, 1.0f);
+	// light
+	oglm::vec4 lightSourceColor(0.5f, 0.5f, 0.5f, 1.0f);
+	// main loop
 	while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
 		Angel::current_buffer.clear();
 		Angel::set_view(Angel::camPos, Angel::camFocus, Angel::camUp);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		// light source
 
-		// Angel::set_color(
-		//     Color(sin(glfwGetTime()), cos(glfwGetTime()), 1.0f, 1.0f));
-		Angel::set_model(oglm::vec3(0.0f, 0.0f, -5.5f),
-		                 oglm::vec3(2.0f, 2.0f, 2.0f), angle += 0.02,
-		                 oglm::normalize(oglm::vec3(1.0f, 1.0f, 1.0f)));
+		oglm::vec3 lightSourcePos(4 * cos(glfwGetTime()), 0.0f,
+		                          4 * sin(glfwGetTime()));
+		lightSource.set_model(lightSourcePos, oglm::vec3(0.1f, 0.1f, 0.1f),
+		                      angle,
+		                      oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+		lightSource.draw(false, lightSourceColor);
+		// cube object
+		cubeObject.set_model(cubeObjectPos, oglm::vec3(1.0f, 1.0f, 1.0f), angle,
+		                     oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
+		cubeObject.draw(true, cubeObjectColor, lightSourcePos,
+		                lightSourceColor);
 
-		Angel::draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
