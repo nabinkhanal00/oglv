@@ -4,17 +4,17 @@
 #include <vector>
 class Ellipse {
   private:
-	std::vector<oglm::vec2> points;
-	std::vector<oglm::vec2> false_points;
+	std::vector<oglm::vec2i> points;
+	std::vector<oglm::vec2i> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
-	float centerX;
-	float centerY;
-	float majX;
-	float majY;
+	int centerX;
+	int centerY;
+	int majX;
+	int majY;
 
   public:
-	Ellipse(float x0, float y0, float a, float b, unsigned int thickness);
+	Ellipse(int x0, int y0, int a, int b, unsigned int thickness);
 	void draw(const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	void animate();
 	void translate(float x, float y);

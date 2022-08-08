@@ -3,12 +3,13 @@
 #include <iostream>
 #include <Ellipse.hpp>
 
+#include "Sphere.hpp"
 #include "Cube.hpp"
 #include "Circle.hpp"
 #include <GLFW/glfw3.h>
 
-const unsigned int WIDTH = 1000;
-const unsigned int HEIGHT = 1000;
+unsigned int WIDTH = 1000;
+unsigned int HEIGHT = 1000;
 
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
                                unsigned int height) {
@@ -94,23 +95,47 @@ GLFWwindow *InitWindow() {
 	return window;
 }
 
-int main(void) {
+int main() {
 	GLFWwindow *window = InitWindow();
 	if (!window)
 		return -1;
 	Angel::init(WIDTH, HEIGHT);
+
+	std::vector<Sphere> spheres;
+	// position, radius, surface color, reflectivity, transparency, emission
+	// color
+	spheres.push_back(Sphere(Vec3f(0.0, -10004, -20), 10000,
+	                         Vec3f(0.20, 0.20, 0.20), 0, 0.0));
+	spheres.push_back(
+	    Sphere(Vec3f(0.0, 0, -20), 4, Vec3f(1.00, 0.32, 0.36), 1, 0.5));
+	spheres.push_back(
+	    Sphere(Vec3f(5.0, -1, -15), 2, Vec3f(0.90, 0.76, 0.46), 1, 0.0));
+	spheres.push_back(
+	    Sphere(Vec3f(5.0, 0, -25), 3, Vec3f(0.65, 0.77, 0.97), 1, 0.0));
+	spheres.push_back(
+	    Sphere(Vec3f(-5.5, 0, -15), 3, Vec3f(0.90, 0.90, 0.90), 1, 0.0));
+	// light
+	spheres.push_back(Sphere(Vec3f(0.0, 20, -30), 3, Vec3f(0.00, 0.00, 0.00), 0,
+	                         0.0, Vec3f(3)));
+
+	Vec3f **pixels;
+	pixels = new Vec3f *[WIDTH];
+	for (int i = 0; i < WIDTH; i++) {
+		pixels[i] = new Vec3f[HEIGHT];
+	}
+	fillColor(spheres, WIDTH, HEIGHT, pixels);
+
 	Angel::set_perspective((float)M_PI_2,
 	                       Angel::getWidth() / (float)Angel::getHeight(), 0.1,
 	                       100.0f);
-	// Line l(0, 0, 1, 1, 10);
-	// Cube c(1, 1);
-	// c.load();
-	Circle c(0.0f, 0.0f, 0.5f, 4);
-	Ellipse e(0, 0, 0.8f, 0.8f, 4);
-	// // Line l(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1);
-	// l.show_points();
-	// l.show_points();
-	// float angle = 4.0f;
+	Line l(0, 0, 1, 1, 10);
+	Cube c(1, 1);
+
+	c.load();
+	Circle circle(WIDTH / 2, HEIGHT / 2, 400, 10);
+	Ellipse ellipse(static_cast<int>(WIDTH / 2), static_cast<int>(HEIGHT / 2),
+	                400, 100, 10);
+	float angle = 4.0f;
 	while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
 		Angel::current_buffer.clear();
@@ -123,12 +148,21 @@ int main(void) {
 		//                  oglm::vec3(1.0f, 1.0f, 1.0f), angle += 0.02f,
 		//                  oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
 		//
+		// circle.animate();
 		// Angel::draw(oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		// e.draw();
 		// c.draw();
-		e.animate();
+		// ellipse.draw();
+		// ellipse.animate();
+		for (int i = 0; i < WIDTH; i++) {
+			for (int j = 0; j < HEIGHT; j++) {
+				Vec3f c = pixels[i][HEIGHT - j - 1];
+				Angel::putPixel(Angel::demap(i, j).x, Angel::demap(i, j).y, 1,
+				                oglm::vec4(c.x, c.y, c.z, 1.0f));
+			}
+		}
 		// Angel::set_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
-		Angel::drawAxes();
+		// Angel::drawAxes();
 		// Angel::set_color(
 		//     Color(cos(glfwGetTime()), sin(glfwGetTime()), 1.0f, 1.0f));
 		// Angel::set_model(oglm::vec3(1.0f, 0.0f, -2.0f),

@@ -199,6 +199,16 @@ oglm::vec3i Angel::map(const oglm::vec3f &point) {
 	return oglm::vec3i(newX, newY, newZ);
 }
 
+void Angel::putPixel(int x, int y, int thickness, const oglm::vec4 &color) {
+	enable();
+	ResourceManager::GetShader("pixel").SetVec4(
+	    "inColor", glm::vec4(color.x, color.y, color.z, color.w));
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(x, y, thickness, thickness);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisable(GL_SCISSOR_TEST);
+	disable();
+}
 void Angel::putPixel(float x, float y, int thickness, const oglm::vec4 &color) {
 	enable();
 	ResourceManager::GetShader("pixel").SetVec4(
@@ -213,8 +223,8 @@ void Angel::putPixel(float x, float y, int thickness, const oglm::vec4 &color) {
 
 void Angel::drawAxes(oglm::vec4 color, bool octant) {
 	for (float i = -1.0f; i <= 1.0f; i += 0.001f) {
-		putPixel(0, i, 1, color);
-		putPixel(i, 0, 1, color);
+		putPixel(0.0f, i, 1, color);
+		putPixel(i, 0.0f, 1, color);
 	}
 }
 void Angel::set_perspective(float fov, float aspect, float near, float far) {

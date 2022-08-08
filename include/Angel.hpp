@@ -24,6 +24,9 @@ class Angel {
 	static void putPixel(float x, float y, int width = 1,
 	                     const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f,
 	                                                          1.0f));
+	static void putPixel(int x, int y, int width = 1,
+	                     const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f,
+	                                                          1.0f));
 
 	static void drawAxes(oglm::vec4 color = oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
 	                     bool octant = false);
