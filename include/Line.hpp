@@ -5,9 +5,9 @@
 #include <vector>
 class Line {
   private:
-	std::vector<oglm::vec2> points;
-	std::vector<oglm::vec3> points3D;
-	std::vector<oglm::vec2> false_points;
+	std::vector<oglm::vec2f> points;
+	std::vector<oglm::vec3f> points3D;
+	std::vector<oglm::vec2f> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
 

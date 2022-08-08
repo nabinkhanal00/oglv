@@ -100,19 +100,27 @@ void Ellipse::animate() {
 	static const oglm::vec4 red(1.0f, 0.0f, 0.0f, 1.0f);
 	static const oglm::vec4 green(0.0f, 1.0f, 0.0f, 1.0f);
 	for (cur = 0; cur < i; cur++) {
+		Angel::putPixel(false_points[cur].x + centerX,
+		                false_points[cur].y + centerY, thickness, blue);
 		Angel::putPixel(points[cur].x + centerX, points[cur].y + centerY,
 		                thickness, white);
 	}
 	for (int cur = 0; cur < i; cur++) {
+		Angel::putPixel(-false_points[cur].x + centerX,
+		                false_points[cur].y + centerY, thickness, blue);
 		Angel::putPixel(-points[cur].x + centerX, points[cur].y + centerY,
 		                thickness, white);
 	}
 
 	for (int cur = 0; cur < i; cur++) {
+		Angel::putPixel(false_points[cur].x + centerX,
+		                -false_points[cur].y + centerY, thickness, blue);
 		Angel::putPixel(points[cur].x + centerX, -points[cur].y + centerY,
 		                thickness, white);
 	}
 	for (int cur = 0; cur < i; cur++) {
+		Angel::putPixel(-false_points[cur].x + centerX,
+		                -false_points[cur].y + centerY, thickness, blue);
 		Angel::putPixel(-points[cur].x + centerX, -points[cur].y + centerY,
 		                thickness, white);
 	}

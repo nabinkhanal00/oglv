@@ -11,6 +11,8 @@
 unsigned int WIDTH = 1000;
 unsigned int HEIGHT = 1000;
 
+int current = 1;
+
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
                                unsigned int height) {
 
@@ -22,6 +24,19 @@ void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
 oglm::vec3 at(0.0f, 0.0f, 1.0f);
 oglm::vec3 to(0.0f, 0.0f, 0.0f);
 oglm::vec3 up(0.0f, 1.0f, 0.0f);
+
+float cameraSpeed = 0.1;
+static void cursorPositionCallback(GLFWwindow *window, double xpos,
+                                   double ypos) {
+	float x = xpos / WIDTH - 0.5;
+	float y = -ypos / HEIGHT + 0.5;
+	to += oglm::vec3(x, y, 0);
+	glfwSetCursorPos(window, WIDTH / 2.0f, HEIGHT / 2.0f);
+}
+static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {
+	at += oglm::vec3(0, 0, -cameraSpeed * yoffset);
+	to += oglm::vec3(0, 0, -cameraSpeed * 5 * yoffset);
+}
 
 void handleInput(GLFWwindow *window) {
 	float speed = 0.09f;
@@ -48,6 +63,15 @@ void handleInput(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		at.x += speed;
 		to.x += speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		current = 1;
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		current = 2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+		current = 3;
 	}
 }
 GLFWwindow *InitWindow() {
@@ -81,8 +105,6 @@ GLFWwindow *InitWindow() {
 	}
 	glfwMakeContextCurrent(window);
 
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
-	// Initialize GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Unable to laod GLAD" << std::endl;
 	}
@@ -91,6 +113,9 @@ GLFWwindow *InitWindow() {
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetCursorPosCallback(window, cursorPositionCallback);
 
 	return window;
 }
@@ -123,7 +148,7 @@ int main() {
 	for (int i = 0; i < WIDTH; i++) {
 		pixels[i] = new Vec3f[HEIGHT];
 	}
-	fillColor(spheres, WIDTH, HEIGHT, pixels);
+	// fillColor(spheres, WIDTH, HEIGHT, pixels);
 
 	Angel::set_perspective((float)M_PI_2,
 	                       Angel::getWidth() / (float)Angel::getHeight(), 0.1,
@@ -139,36 +164,21 @@ int main() {
 	while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
 		Angel::current_buffer.clear();
-
 		Angel::set_view(at, to, up);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		//
-		// Angel::set_model(oglm::vec3(0.0f, 0.0f, -4.0f),
-		//                  oglm::vec3(1.0f, 1.0f, 1.0f), angle += 0.02f,
-		//                  oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
-		//
-		// circle.animate();
-		// Angel::draw(oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-		// e.draw();
-		// c.draw();
-		// ellipse.draw();
-		// ellipse.animate();
-		for (int i = 0; i < WIDTH; i++) {
-			for (int j = 0; j < HEIGHT; j++) {
-				Vec3f c = pixels[i][HEIGHT - j - 1];
-				Angel::putPixel(Angel::demap(i, j).x, Angel::demap(i, j).y, 1,
-				                oglm::vec4(c.x, c.y, c.z, 1.0f));
-			}
+		if (current == 1) {
+			Angel::drawAxes();
+			l.animate();
+
+		} else if (current == 2) {
+			Angel::drawAxes();
+			circle.animate();
+
+		} else if (current == 3) {
+			Angel::drawAxes();
+			ellipse.animate();
 		}
-		// Angel::set_color(Color(1.0f, 1.0f, 1.0f, 1.0f));
-		// Angel::drawAxes();
-		// Angel::set_color(
-		//     Color(cos(glfwGetTime()), sin(glfwGetTime()), 1.0f, 1.0f));
-		// Angel::set_model(oglm::vec3(1.0f, 0.0f, -2.0f),
-		//                  oglm::vec3(.5f, .5f, .5f), angle += 0.02f,
-		//                  oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
-		// Angel::draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

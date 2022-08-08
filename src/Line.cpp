@@ -179,6 +179,8 @@ void Line::animate() {
 	static const oglm::vec4 green(0.0f, 1.0f, 0.0f, 1.0f);
 	int cur;
 	for (cur = 0; cur < i; cur++) {
+		Angel::putPixel(false_points[cur].x, false_points[cur].y, thickness,
+		                blue);
 		Angel::putPixel(points[cur].x, points[cur].y, thickness, white);
 	}
 	Angel::putPixel(points[points.size() - 1].x, points[points.size() - 1].y,

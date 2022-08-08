@@ -10,6 +10,7 @@
 int Angel::m_width = 720;
 int Angel::m_height = 720;
 int Angel::m_depth = 720;
+
 std::vector<oglm::vec3> Angel::current_buffer;
 oglm::mat4 Angel::view;
 oglm::mat4 Angel::pers;
