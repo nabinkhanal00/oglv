@@ -19,9 +19,10 @@ class Angel {
 
 	static void init(unsigned int width, unsigned int height);
 	static void init_depth_buffer();
-	static std::vector<oglm::vec3> current_buffer;
+	static std::vector<oglm::vec4> current_buffer;
 
-	static void putPixel(float x, float y, int width = 4);
+	static void putPixel(float x, float y, int width = 4,
+	                     const oglm::vec4 &color = {1.0f, 1.0f, 1.0f, 1.0f});
 
 	static void drawAxes(Color c = {1.0f, 1.0f, 1.0f, 1.0f},
 	                     bool octant = false);
@@ -48,7 +49,10 @@ class Angel {
 	static oglm::mat4 model;
 	static std::unordered_map<std::string, float> depth_buffer;
 	static std::vector<oglm::vec3> vertexBuffer;
-	static void draw();
+	static void draw(const oglm::vec4 &color);
+	static oglm::vec3 camPos;
+	static oglm::vec3 camFocus;
+	static oglm::vec3 camUp;
 
   private:
 	static Color m_color;
