@@ -140,9 +140,9 @@ void Line::show_points() {
 		std::cout << i.x << " " << i.y << " " << i.z << std::endl;
 	}
 }
-void Line::draw() {
+void Line::draw(const oglm::vec4 &color) {
 	for (auto &i : points) {
-		Angel::putPixel(i.x, i.y, thickness);
+		Angel::putPixel(i.x, i.y, thickness, color);
 	}
 }
 void Line::draw3D() {
