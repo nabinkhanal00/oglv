@@ -7,9 +7,7 @@
 #include <cassert>
 
 #if defined __linux__ || defined __APPLE__
-// "Compiled for Linux
 #else
-// Windows doesn't define these values by default, Linux does
 #define M_PI 3.141592653589793
 #define INFINITY 1e8
 #endif
@@ -207,7 +205,8 @@ Vec3f trace(const Vec3f &rayorig, const Vec3f &raydir,
 // trace it and return a color. If the ray hits a sphere, we return the color of
 // the sphere at the intersection point, else we return the background color.
 //[/comment]
-void fillColor(const std::vector<Sphere> &spheres, int width, int height,Vec3f** pixels) {
+void fillColor(const std::vector<Sphere> &spheres, int width, int height,
+               Vec3f **pixels) {
 	float invWidth = 1 / float(width), invHeight = 1 / float(height);
 	float fov = 30, aspectratio = width / float(height);
 	float angle = tan(M_PI * 0.5 * fov / 180.);
@@ -218,8 +217,7 @@ void fillColor(const std::vector<Sphere> &spheres, int width, int height,Vec3f**
 			float yy = (1 - 2 * ((y + 0.5) * invHeight)) * angle;
 			Vec3f raydir(xx, yy, -1);
 			raydir.normalize();
-			pixels[x][y]= trace(Vec3f(0), raydir, spheres, 0);
+			pixels[x][y] = trace(Vec3f(0), raydir, spheres, 0);
 		}
 	}
 }
-

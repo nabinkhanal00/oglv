@@ -15,8 +15,8 @@ class Line {
 	Line(float x1, float y1, float x2, float y2, unsigned int thickness = 1);
 	Line(float x1, float y1, float z1, float x2, float y2, float z2,
 	     unsigned int thickness = 1);
-	void draw(const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	void draw3D(const oglm::vec4 &color);
+	void draw(const oglm::vec4 &color = {1.0f, 1.0f, 1.0f, 1.0f});
+	void draw3D();
 	void show_points();
 	void animate();
 	void translate(float x, float y);
