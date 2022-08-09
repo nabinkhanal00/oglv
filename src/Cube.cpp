@@ -71,21 +71,21 @@ void Cube::rasterize() {
 		if (x0 == -x1) {
 			float temp = y0;
 			while (temp < 0.5) {
-				Angel::vertexBuffer.push_back(oglm::vec3(x0, temp, z0));
-				Angel::vertexBuffer.push_back(oglm::vec3(x1, temp, z1));
+				vertexBuffer.push_back(oglm::vec3(x0, temp, z0));
+				vertexBuffer.push_back(oglm::vec3(x1, temp, z1));
 				temp += offset;
 			}
 			temp = z0;
 			while (temp < 0.5) {
-				Angel::vertexBuffer.push_back(oglm::vec3(x0, y0, temp));
-				Angel::vertexBuffer.push_back(oglm::vec3(x1, y1, temp));
+				vertexBuffer.push_back(oglm::vec3(x0, y0, temp));
+				vertexBuffer.push_back(oglm::vec3(x1, y1, temp));
 				temp += offset;
 			}
 		} else if (z0 == -z1) {
 			float temp = y0;
 			while (temp < 0.5) {
-				Angel::vertexBuffer.push_back(oglm::vec3(x0, temp, z0));
-				Angel::vertexBuffer.push_back(oglm::vec3(x1, temp, z1));
+				vertexBuffer.push_back(oglm::vec3(x0, temp, z0));
+				vertexBuffer.push_back(oglm::vec3(x1, temp, z1));
 				temp += offset;
 			}
 		}
@@ -213,6 +213,7 @@ oglm::vec4 phong(const oglm::vec3 &frag, const oglm::vec3 &normal,
 
 void Cube::draw(bool lineFill, bool isLightedObject, const oglm::vec4 &color,
                 const oglm::vec3 &lightPos, const oglm::vec4 &lightColor) {
+	float val = 0.0f;
 
 	std::vector<oglm::vec3> triangle;
 	std::vector<oglm::vec3> fragPos;
@@ -222,7 +223,7 @@ void Cube::draw(bool lineFill, bool isLightedObject, const oglm::vec4 &color,
 		fragPos.push_back(oglm::vec3(v.x, v.y, v.z));
 
 		v = Angel::pers * Angel::view * v;
-		if (v.w != 1) {
+		if (v.w > val) {
 			v.x /= v.w;
 			v.y /= v.w;
 			v.z /= v.w;
@@ -233,17 +234,48 @@ void Cube::draw(bool lineFill, bool isLightedObject, const oglm::vec4 &color,
 	int c = 0;
 	oglm::vec3 frag0, frag1, frag2;
 	for (size_t i = 0; i < currentBuffer.size() - 1; i = i + 2) {
-
 		float x0 = currentBuffer[i].x;
 		float y0 = currentBuffer[i].y;
 		float z0 = (currentBuffer[i].z);
 		float x1 = currentBuffer[i + 1].x;
 		float y1 = currentBuffer[i + 1].y;
 		float z1 = (currentBuffer[i + 1].z);
-		if (!isLightedObject) {
-			std::cout << "hello world" << std::endl;
-			Line l(x0, y0, x1, y1);
-			l.draw();
+		float slope = (y1 - y0) / (x1 - x0);
+		// std::cout << clipping << std::endl;
+		if (clipping) {
+			if (z1 >= val && z0 < val) {
+				z0 = val;
+				if (x0 < 0) {
+					x0 = -1.0f;
+					y0 = y1 + slope * (x0 - x1);
+				} else {
+					x0 = 1.0f;
+					y0 = y1 + slope * (x0 - x1);
+				}
+			} else if (z0 >= val && z1 < val) {
+
+				if (x1 < 0) {
+					x1 = -1.0f;
+					y1 = y0 + slope * (x1 - x0);
+				} else {
+					x1 = 1.0f;
+					y1 = y0 + slope * (x1 - x0);
+				}
+				z1 = val;
+			}
+			int precision = 1000;
+			if (y0 < -precision)
+				y0 = -1;
+			if (y0 > precision)
+				y0 = 1;
+			if (y1 < -precision)
+				y1 = -1;
+			if (y1 > precision)
+				y1 = 1;
+			if (z0 >= val && z1 >= val && x0 > -1.0 && x1 < 1.0) {
+				Line l(x0, y0, x1, y1, 5);
+				l.draw();
+			}
 		} else {
 
 			c++;

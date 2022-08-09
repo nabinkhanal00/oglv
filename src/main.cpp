@@ -113,7 +113,7 @@ int main(void) {
 		Angel::set_view(Angel::camPos, Angel::camFocus, Angel::camUp);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		cubeObject.draw(true, false, cubeObjectColor);
+		cubeObject.draw(false, false, cubeObjectColor);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
