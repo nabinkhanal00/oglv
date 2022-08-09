@@ -22,7 +22,7 @@ Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
 	// For region 1
 	while (dx <= dy) {
 		points.push_back(oglm::vec2i(x, y));
-		false_points.push_back(oglm::vec2i(x, y));
+		false_points.push_back(oglm::vec2i(falseX, falseY));
 
 		// Checking and updating value of
 		// decision parameter based on algorithm

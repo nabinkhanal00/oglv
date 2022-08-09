@@ -67,10 +67,10 @@ void Circle::animate() {
 	//         -Angel::getHeight(), 1);
 	// l2.draw();
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(points[cur].x + centerX, points[cur].y + centerY,
-		                thickness, white);
 		Angel::putPixel(false_points[cur].x + centerX,
 		                false_points[cur].y + centerY, thickness, blue);
+		Angel::putPixel(points[cur].x + centerX, points[cur].y + centerY,
+		                thickness, white);
 	}
 
 	if ((i + 1) < points.size()) {
@@ -90,10 +90,10 @@ void Circle::animate() {
 		}
 	}
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(points[cur].y + centerX, points[cur].x + centerY,
-		                thickness, white);
 		Angel::putPixel(false_points[cur].y + centerX,
 		                false_points[cur].x + centerY, thickness, blue);
+		Angel::putPixel(points[cur].y + centerX, points[cur].x + centerY,
+		                thickness, white);
 	}
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
@@ -112,10 +112,10 @@ void Circle::animate() {
 		}
 	}
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(-points[cur].x + centerX, points[cur].y + centerY,
-		                thickness, white);
 		Angel::putPixel(-false_points[cur].x + centerX,
 		                false_points[cur].y + centerY, thickness, blue);
+		Angel::putPixel(-points[cur].x + centerX, points[cur].y + centerY,
+		                thickness, white);
 	}
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
@@ -134,10 +134,10 @@ void Circle::animate() {
 		}
 	}
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(-points[cur].y + centerX, points[cur].x + centerY,
-		                thickness, white);
 		Angel::putPixel(-false_points[cur].y + centerX,
 		                false_points[cur].x + centerY, thickness, blue);
+		Angel::putPixel(-points[cur].y + centerX, points[cur].x + centerY,
+		                thickness, white);
 	}
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
@@ -157,10 +157,10 @@ void Circle::animate() {
 	}
 
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(points[cur].x + centerX, -points[cur].y + centerY,
-		                thickness, white);
 		Angel::putPixel(false_points[cur].x + centerX,
 		                -false_points[cur].y + centerY, thickness, blue);
+		Angel::putPixel(points[cur].x + centerX, -points[cur].y + centerY,
+		                thickness, white);
 	}
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
@@ -179,10 +179,10 @@ void Circle::animate() {
 		}
 	}
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(points[cur].y + centerX, -points[cur].x + centerY,
-		                thickness, white);
 		Angel::putPixel(false_points[cur].y + centerX,
 		                -false_points[cur].x + centerY, thickness, blue);
+		Angel::putPixel(points[cur].y + centerX, -points[cur].x + centerY,
+		                thickness, white);
 	}
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
@@ -201,10 +201,10 @@ void Circle::animate() {
 		}
 	}
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(-points[cur].x + centerX, -points[cur].y + centerY,
-		                thickness, white);
 		Angel::putPixel(-false_points[cur].x + centerX,
 		                -false_points[cur].y + centerY, thickness, blue);
+		Angel::putPixel(-points[cur].x + centerX, -points[cur].y + centerY,
+		                thickness, white);
 	}
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
@@ -223,10 +223,10 @@ void Circle::animate() {
 		}
 	}
 	for (cur = 0; cur < i; cur++) {
-		Angel::putPixel(-points[cur].y + centerX, -points[cur].x + centerY,
-		                thickness, white);
 		Angel::putPixel(-false_points[cur].y + centerX,
 		                -false_points[cur].x + centerY, thickness, blue);
+		Angel::putPixel(-points[cur].y + centerX, -points[cur].x + centerY,
+		                thickness, white);
 	}
 	if ((i + 1) < points.size()) {
 		if (stuck > 30) {
