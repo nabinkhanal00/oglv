@@ -3,14 +3,15 @@
 #include <iostream>
 #include <Ellipse.hpp>
 #include <thread>
+#include "Context.hpp"
 #include "Defines.hpp"
 #include "Line.hpp"
-#include "Sphere.hpp"
 #include "Circle.hpp"
+#include "Cube.hpp"
 #include <GLFW/glfw3.h>
 
-unsigned int WIDTH = 1000;
-unsigned int HEIGHT = 1000;
+// unsigned int Context::width = 1000;
+// unsigned int Context::height = 1000;
 
 int current = 1;
 
@@ -31,10 +32,10 @@ oglm::vec3 up;
 static void cursorPositionCallback(GLFWwindow *window, double xpos,
 								   double ypos)
 {
-	float x = xpos / WIDTH - 0.5;
-	float y = -ypos / HEIGHT + 0.5;
+	float x = xpos / Context::width - 0.5;
+	float y = -ypos / Context::height + 0.5;
 	to += oglm::vec3(x, y, 0);
-	glfwSetCursorPos(window, WIDTH / 2.0f, HEIGHT / 2.0f);
+	// glfwSetCursorPos(window, Context::width / 2.0f, Context::height / 2.0f);
 }
 static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
@@ -126,7 +127,7 @@ GLFWwindow *InitWindow()
 
 	// Open a window and create its OpenGL context
 	GLFWwindow *window =
-		glfwCreateWindow(WIDTH, HEIGHT, "opengl-Red triangle", NULL, NULL);
+		glfwCreateWindow(Context::width, Context::height, "opengl-Red triangle", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(
@@ -149,7 +150,7 @@ GLFWwindow *InitWindow()
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetCursorPosCallback(window, cursorPositionCallback);
 
 	return window;
@@ -160,40 +161,16 @@ int main()
 	GLFWwindow *window = InitWindow();
 	if (!window)
 		return -1;
-	Angel::init(WIDTH, HEIGHT);
-
-	std::vector<Sphere> spheres;
-	// position, radius, surface color, reflectivity, transparency, emission
-	// color
-	spheres.push_back(Sphere(Vec3f(0.0, -10004, -20), 10000,
-							 Vec3f(0.20, 0.20, 0.20), 0, 0.0));
-	spheres.push_back(
-		Sphere(Vec3f(0.0, 0, -20), 4, Vec3f(1.00, 0.32, 0.36), 1, 0.5));
-	spheres.push_back(
-		Sphere(Vec3f(5.0, -1, -15), 2, Vec3f(0.90, 0.76, 0.46), 1, 0.0));
-	spheres.push_back(
-		Sphere(Vec3f(5.0, 0, -25), 3, Vec3f(0.65, 0.77, 0.97), 1, 0.0));
-	spheres.push_back(
-		Sphere(Vec3f(-5.5, 0, -15), 3, Vec3f(0.90, 0.90, 0.90), 1, 0.0));
-	// light
-	spheres.push_back(Sphere(Vec3f(0.0, 20, -30), 3, Vec3f(0.00, 0.00, 0.00), 0,
-							 0.0, Vec3f(3)));
-
-	Vec3f **pixels;
-	pixels = new Vec3f *[WIDTH];
-	for (int i = 0; i < WIDTH; i++)
-	{
-		pixels[i] = new Vec3f[HEIGHT];
-	}
-	fillColor(spheres, WIDTH, HEIGHT, pixels);
+	Angel::init(Context::width, Context::height);
 
 	Line l(-0.5, -0.3, 1, 0.8, 10);
 
-	Circle circle(WIDTH / 2, HEIGHT / 2, 400, 10);
-	// Ellipse ellipse(static_cast<int>(WIDTH / 2), static_cast<int>(HEIGHT / 2),
+	Circle circle(Context::width / 2, Context::height / 2, 400, 10);
+	// Ellipse ellipse(static_cast<int>(Context::width / 2), static_cast<int>(Context::height / 2),
 	//                 400, 100, 10);
 	float angle = 4.0f;
 
+	Cube c;
 	while (glfwWindowShouldClose(window) == false)
 	{
 		handleInput(window);
@@ -218,15 +195,7 @@ int main()
 		}
 		else
 		{
-			for (int i = 0; i < WIDTH; i++)
-			{
-				for (int j = 0; j < HEIGHT; j++)
-				{
-					Vec3f color = pixels[i][HEIGHT - j - 1];
-					Angel::putPixel(
-						i, j, 1, oglm::vec4(color.x, color.y, color.z, 1.0f));
-				}
-			}
+			c.draw(glm::mat4(1.0f));
 		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();

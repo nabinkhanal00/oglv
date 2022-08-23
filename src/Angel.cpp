@@ -16,9 +16,6 @@ int Angel::m_depth = 100;
 Color Angel::m_color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 unsigned int Angel::m_ID = 0;
-std::vector<oglm::vec3> triangle;
-
-oglm::vec3 calculateNormal(std::vector<oglm::vec3> &points);
 
 void Angel::init(unsigned int width, unsigned int height)
 {

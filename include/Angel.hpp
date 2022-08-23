@@ -2,12 +2,8 @@
 
 #include "Color.hpp"
 #include "oglm.hpp"
-#include "IndexBuffer.hpp"
 #include "Shader.hpp"
-#include "VertexArray.hpp"
-#include "VertexBuffer.hpp"
-#include "VertexBufferLayout.hpp"
-#include "VertexBufferElement.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/geometric.hpp>
 #include <glm/mat4x4.hpp>
