@@ -13,17 +13,8 @@ int Angel::m_width = 720;
 int Angel::m_height = 720;
 int Angel::m_depth = 100;
 
-oglm::vec3 Angel::camPos(0.0f, 0.0f, 6.0f);
-oglm::vec3 Angel::camFocus(0.0f, 0.0f, 0.0f);
-oglm::vec3 Angel::camUp(0.0f, 1.0f, 0.0f);
 Color Angel::m_color = Color(1.0f, 1.0f, 1.0f, 1.0f);
-std::vector<oglm::vec4> Angel::current_buffer = {};
 
-oglm::mat4 Angel::view;
-oglm::mat4 Angel::pers;
-oglm::mat4 Angel::model;
-std::unordered_map<std::string, float> Angel::depth_buffer;
-std::vector<oglm::vec3> Angel::vertexBuffer;
 unsigned int Angel::m_ID = 0;
 std::vector<oglm::vec3> triangle;
 
@@ -150,38 +141,3 @@ void Angel::drawAxes(oglm::vec4 color, bool octant)
 		putPixel(i, 0.0f, 1, color);
 	}
 }
-void Angel::set_perspective(float fov, float aspect, float n, float f)
-{
-	pers = oglm::perspective(fov, aspect, n, f);
-}
-void Angel::set_view(const oglm::vec3 &eye, const oglm::vec3 &towards,
-					 const oglm::vec3 &up)
-{
-	view = oglm::lookAt(eye, towards, up);
-}
-
-void Angel::set_model(const oglm::vec3 &tFactor, const oglm::vec3 &sFactor,
-					  float rotAng, const oglm::vec3 &rotAxis)
-{
-	oglm::mat4 trans = oglm::translate(tFactor);
-	oglm::mat4 scal = oglm::scale(sFactor);
-	oglm::mat4 rot = oglm::rotate(rotAng, oglm::normalize(rotAxis));
-	model = trans * rot * scal;
-}
-
-// oglm::vec3 calculateNormal(std::vector<oglm::vec3> &points) {
-// 	oglm::vec3 p1 = points.at(0);
-// 	oglm::vec3 p2 = points.at(1);
-// 	oglm::vec3 p3 = points.at(2);
-// 	oglm::vec3 p1p2 = p2 - p1;
-// 	oglm::vec3 p1p3 = p3 - p1;
-// 	float x1 = p1p2.x;
-// 	float y1 = p1p2.y;
-// 	float z1 = p1p2.z;
-// 	float x2 = p1p3.x;
-// 	float y2 = p1p3.y;
-// 	float z2 = p1p3.z;
-// 	oglm::vec3 norm((y1 * z2 - y2 * z1), (x2 * z1 - x1 * z2),
-// 	                (x1 * y2 - x2 * y1));
-// 	return norm;
-// }

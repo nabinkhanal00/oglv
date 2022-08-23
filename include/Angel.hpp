@@ -13,29 +13,24 @@
 #include <glm/mat4x4.hpp>
 #include <unordered_map>
 
-class Angel {
-  public:
+class Angel
+{
+public:
 	Angel();
 
 	static void init(unsigned int width, unsigned int height);
-	static void init_depth_buffer();
-	static std::vector<oglm::vec4> current_buffer;
 
 	static void putPixel(float x, float y, int width = 1,
-	                     const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f,
-	                                                          1.0f));
+						 const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f,
+															  1.0f));
 	static void putPixel(int x, int y, int width = 1,
-	                     const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f,
-	                                                          1.0f));
+						 const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f,
+															  1.0f));
 
 	static void drawAxes(oglm::vec4 color = oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-	                     bool octant = false);
+						 bool octant = false);
 	static void enable();
-	static void set_perspective(float fov, float aspect, float near, float far);
-	static void set_view(const oglm::vec3 &eye, const oglm::vec3 &towards,
-	                     const oglm::vec3 &up);
-	static void set_model(const oglm::vec3 &tFactor, const oglm::vec3 &sFactor,
-	                      float rotAng, const oglm::vec3 &rotAxis);
+
 	static void disable();
 	static void setHeight(unsigned int height);
 	static void setWidth(unsigned int width);
@@ -47,17 +42,10 @@ class Angel {
 	static oglm::vec3i map(const oglm::vec3 &point);
 	static oglm::vec2f demap(const oglm::vec2i &point);
 	static oglm::vec3f demap(const oglm::vec3i &point);
-	static oglm::mat4 pers;
-	static oglm::mat4 view;
-	static oglm::mat4 model;
-	static std::unordered_map<std::string, float> depth_buffer;
-	static std::vector<oglm::vec3> vertexBuffer;
-	static void draw(const oglm::vec4 &color);
-	static oglm::vec3 camPos;
-	static oglm::vec3 camFocus;
-	static oglm::vec3 camUp;
 
-  private:
+	static void draw(const oglm::vec4 &color);
+
+private:
 	static Color m_color;
 	static unsigned int m_ID;
 	static int m_width;
