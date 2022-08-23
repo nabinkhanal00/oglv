@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 #include "oglm.hpp"
 #include "Defines.hpp"
@@ -8,24 +9,28 @@
 class Cube {
   private:
 	std::vector<oglm::vec3> points;
+	std::vector<oglm::vec3> vertexBuffer;
+	std::vector<oglm::vec4> currentBuffer;
+	std::map<std::string, float> depth_buffer;
 	std::vector<oglm::vec2i> indices;
 	unsigned int thickness;
 	unsigned int frameCount;
 
   public:
-	Cube();
-	void draw();
-	void animate();
-	void translate(float x, float y, float z);
-	void translate(oglm::vec3f factor);
-	void rotate(float angle, float x, float y, float z);
-	void rotate(float angle, oglm::vec3 factor);
-	void scale(float x, float y, float z);
-	void scale(oglm::vec3 factor);
-	bool isCompleted();
-	void pause();
-	void reset();
-	void increaseSpeed(int speed);
-	void decreaseSpeed(int speed);
-	~Cube();
+
+	Cube(unsigned int length, unsigned int thickness);
+	// void draw(const oglm::vec4 &color = {1.0f, 1.0f, 1.0f, 1.0f});
+	void draw(bool lineFill = true, bool isLightedObject = false,
+	          const oglm::vec4 &color = {1.0f, 1.0f, 1.0f, 1.0f},
+	          const oglm::vec3 &lightPos = {1.0f, 0.0f, 0.0f},
+	          const oglm::vec4 &lightcolor = {1.0f, 1.0f, 1.0f, 1.0f});
+
+	void set_model(const oglm::vec3 &tFactor, const oglm::vec3 &sFactor,
+	               float rotAng, const oglm::vec3 &rotAxis);
+	void rasterize();
+	void load(bool doRasterize = false);
+	bool clipping = false;
+	oglm::mat4 model;
+	~Cube(){};
+
 };

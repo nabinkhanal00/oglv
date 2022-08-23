@@ -5,14 +5,19 @@
 #include <vector>
 class Line {
   private:
-	std::vector<oglm::vec2> points;
-	std::vector<oglm::vec2> false_points;
+	std::vector<oglm::vec2f> points;
+	std::vector<oglm::vec3f> points3D;
+	std::vector<oglm::vec2f> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
 
   public:
 	Line(float x1, float y1, float x2, float y2, unsigned int thickness = 1);
-	void draw();
+	Line(float x1, float y1, float z1, float x2, float y2, float z2,
+	     unsigned int thickness = 1);
+	void draw(const oglm::vec4 &color = {1.0f, 1.0f, 1.0f, 1.0f});
+	void draw3D();
+	void show_points();
 	void animate();
 	void translate(float x, float y);
 	void translate(oglm::vec2 factor);

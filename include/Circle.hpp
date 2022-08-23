@@ -5,17 +5,17 @@
 #include <vector>
 class Circle {
   private:
-	std::vector<oglm::vec2> points;
-	std::vector<oglm::vec2> false_points;
+	std::vector<oglm::vec2i> points;
+	std::vector<oglm::vec2i> false_points;
 	unsigned int thickness;
 	unsigned int frameCount;
-	float centerX;
-	float centerY;
-	float radius;
+	int centerX;
+	int centerY;
+	int radius;
 
   public:
-	Circle(float x0, float y0, float r, unsigned int thickness);
-	void draw();
+	Circle(int x0, int y0, int r, unsigned int thickness);
+	void draw(const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	void animate();
 	void translate(float x, float y);
 	void translate(oglm::vec2 factor);
