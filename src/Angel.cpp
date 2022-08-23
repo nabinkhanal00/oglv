@@ -33,8 +33,8 @@ void Angel::init(unsigned int width, unsigned int height) {
 	m_width = width;
 	m_height = height;
 	glBindVertexArray(0);
-	ResourceManager::LoadShader("res/shaders/pixel/vertex.glsl",
-	                            "res/shaders/pixel/fragment.glsl", "pixel");
+	ResourceManager::LoadShader("shaders/pixel/vertex.glsl",
+	                            "shaders/pixel/fragment.glsl", "pixel");
 }
 
 void Angel::enable() {

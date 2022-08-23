@@ -1,3 +1,13 @@
 [submodule "lib/oglm"]
 	path = lib/oglm
 	url = git@github.com:khanalnabin/oglm.git
+[submodule "lib/glfw"]
+	path = lib/glfw
+	url = https://github.com/glfw/glfw
+[submodule "lib/glad"]
+	path = lib/glad
+	url = git@github.com:Dav1dde/glad.git
+	branch = c
+[submodule "lib/glm"]
+	path = lib/glm
+	url = git@github.com:g-truc/glm.git

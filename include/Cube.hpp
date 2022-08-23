@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "oglm.hpp"
+#include "Defines.hpp"
 
 class Cube {
   private:
