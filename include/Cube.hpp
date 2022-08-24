@@ -4,22 +4,20 @@
 #include <vector>
 #include "Light.hpp"
 
-class Cube
-{
-private:
+class Cube {
+  private:
 	static float vertices[];
 	unsigned int m_vid;
 	float shininess;
 	glm::vec3 color;
 
-public:
+  public:
 	Cube();
-	struct props
-	{
+	struct props {
 		glm::vec3 ambient, diffuse, specular;
 	};
 	unsigned int id;
 	glm::mat4 translate, rotate, scale;
 	props prop;
-	void draw(std::vector<Light> &lights);
+	void draw();
 };

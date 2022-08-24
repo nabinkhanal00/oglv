@@ -1,5 +1,4 @@
 #include "Ellipse.hpp"
-#include "Color.hpp"
 #include <iostream>
 Ellipse::Ellipse(int x0, int y0, int rx, int ry, unsigned int t)
     : thickness(t), frameCount(60) {

@@ -131,6 +131,7 @@ GLFWwindow *InitWindow() {
 	// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	// glfwSetCursorPosCallback(window, cursorPositionCallback);
 
+	glEnable(GL_DEPTH_TEST);
 	glfwSetScrollCallback(window, scrollCallback);
 	return window;
 }
@@ -282,7 +283,7 @@ int main() {
 			circle.animate();
 			ImGui::End();
 		} else {
-			c.draw(lights);
+			c.draw();
 		}
 
 		ImGui::Render();
