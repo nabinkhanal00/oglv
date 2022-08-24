@@ -91,19 +91,20 @@ void Cube::draw() {
 	glBindVertexArray(0);
 	shader.Unbind();
 }
-void Cube::draw(Light light) {
-	Shader &shader = ResourceManager::GetShader("cube");
-	glm::mat4 modelMatrix = translate * rotate * scale;
-	glm::mat4 viewMatrix = Context::cam.GetViewMatrix();
+void Cube::draw(Light light, bool isPhong) {
+    if (isPhong) {
+        Shader &shader = ResourceManager::GetShader("cube");
+        glm::mat4 modelMatrix = translate * rotate * scale;
+        glm::mat4 viewMatrix = Context::cam.GetViewMatrix();
 
-	shader.Bind();
-	shader.SetMat4("model", modelMatrix);
-	shader.SetMat4("view", viewMatrix);
-	shader.SetMat4("projection", Context::projectionMatrix);
-	shader.SetVec3("objectColor", color);
-	shader.SetVec3("lightPos", light.position);
-	shader.SetVec3("viewPos", Context::cam.GetPosition());
-	shader.SetVec3("lightColor", light.color);
+        shader.Bind();
+        shader.SetMat4("model", modelMatrix);
+        shader.SetMat4("view", viewMatrix);
+        shader.SetMat4("projection", Context::projectionMatrix);
+        shader.SetVec3("objectColor", color);
+        shader.SetVec3("lightPos", light.position);
+        shader.SetVec3("viewPos", Context::cam.GetPosition());
+        shader.SetVec3("lightColor", light.color);
         shader.SetFloat("ambientStrength", light.ambientStrength);
         shader.SetFloat("specularStrength", light.specularStrength);
         shader.SetFloat("diffuseStrength", light.diffuseStrength);
@@ -116,4 +117,31 @@ void Cube::draw(Light light) {
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         shader.Unbind();
+    } else {
+
+        Shader &shader = ResourceManager::GetShader("gorad");
+        glm::mat4 modelMatrix = translate * rotate * scale;
+        glm::mat4 viewMatrix = Context::cam.GetViewMatrix();
+
+        shader.Bind();
+        shader.SetMat4("model", modelMatrix);
+        shader.SetMat4("view", viewMatrix);
+        shader.SetMat4("projection", Context::projectionMatrix);
+        shader.SetVec3("objectColor", color);
+        shader.SetVec3("lightPos", light.position);
+        shader.SetVec3("viewPos", Context::cam.GetPosition());
+        shader.SetVec3("lightColor", light.color);
+        shader.SetFloat("ambientStrength", light.ambientStrength);
+        shader.SetFloat("specularStrength", light.specularStrength);
+        shader.SetFloat("diffuseStrength", light.diffuseStrength);
+        shader.SetInt("shininess", light.shininess);
+        // shader.SetVec3("ambient", light.ambient);
+        // shader.SetVec3("diffuse", light.diffuse);
+        // shader.SetVec3("specular", light.specular);
+
+        glBindVertexArray(m_vid);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        shader.Unbind();
+    }
 }

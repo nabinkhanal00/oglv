@@ -153,6 +153,8 @@ int main() {
 
     ResourceManager::LoadShader("shaders/cube/vertex.glsl",
                                 "shaders/cube/fragment.glsl", "cube");
+    ResourceManager::LoadShader("shaders/cubeGourard/vertex.glsl",
+                                "shaders/cubeGourard/fragment.glsl", "gorad");
     ResourceManager::LoadShader("shaders/lightsource/vertex.glsl",
                                 "shaders/lightsource/fragment.glsl",
                                 "lightShader");
@@ -202,6 +204,16 @@ int main() {
     float lightPosY{0.8};
     float lightPosZ{0.6};
 
+    // transformation
+    float speed = 0.01f;
+    float rotX = 0.0f;
+    float rotY = 1.0f;
+    float rotZ = 0.0f;
+
+    float scaleX = 1.0f;
+    float scaleY = 1.0f;
+    float scaleZ = 1.0f;
+
     float ambientStrength{0.5};
     float diffuseStrength{0.5};
     float specularStrength{0.5};
@@ -211,6 +223,8 @@ int main() {
     float lightSourceColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
     float cubeColor[4] = {1.0f, 0.0f, 0.0f, 1.0f};
 
+    // is phong
+    bool isPhong = true;
     std::vector<Line> Lines;
     while (glfwWindowShouldClose(window) == false) {
         handleInput(window);
@@ -404,6 +418,9 @@ int main() {
             }
             ImGui::End();
         } else {
+
+            ImGui::Begin("Light settings",
+                         &showLineWindow); // Pass a pointer to our bool
             ImGui::SliderFloat(
                 "LightPosX", &lightPosX, -10.0f,
                 10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
@@ -413,6 +430,8 @@ int main() {
             ImGui::SliderFloat(
                 "LightPosZ", &lightPosZ, -10.0f,
                 10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::End();
+            ImGui::Begin("Cube settings", &showLineWindow);
             ImGui::SliderFloat(
                 "CubePosX", &cubePosX, -10.0f,
                 10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
@@ -422,6 +441,29 @@ int main() {
             ImGui::SliderFloat(
                 "CubePosZ", &cubePosZ, -10.0f,
                 10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat(
+                "CubeRotX", &rotX, -1.0f,
+                1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat(
+                "CubeRotY", &rotY, -1.0f,
+                1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat(
+                "CubeRotZ", &rotZ, -1.0f,
+                1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            // ImGui::SliderFloat(
+            //     "CubeScaleX", &scaleX, -10.0f,
+            //     10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            // ImGui::SliderFloat(
+            //     "CubeScaleY", &scaleY, -10.0f,
+            //     10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            // ImGui::SliderFloat(
+            //     "CubeScaleZ", &scaleZ, -10.0f,
+            //     10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat(
+                "Speed of rotaion", &speed, -1.0f,
+                1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::End();
+            ImGui::Begin("Properties", &showLineWindow);
             ImGui::SliderFloat(
                 "Ambient Strength", &ambientStrength, 0.0f,
                 1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
@@ -442,17 +484,26 @@ int main() {
             light.specularStrength = specularStrength;
             light.shininess = shininess;
 
+            ImGui::Checkbox("Phong", &isPhong);
+            ImGui::End();
+            ImGui::Begin("Colors", &showLineWindow);
             ImGui::ColorEdit4("lightSourceColor", lightSourceColor);
             ImGui::ColorEdit4("cubeColor", cubeColor);
+            ImGui::End();
             c.color = glm::vec4(cubeColor[0], cubeColor[1], cubeColor[2],
                                 cubeColor[3]);
             c.translate = glm::translate(
                 glm::mat4(1.0f), glm::vec3(cubePosX, cubePosY, cubePosZ));
             c.rotate =
-                glm::rotate(c.rotate, 0.01f, glm::vec3(1.0f, 0.0f, 0.0f));
+                glm::rotate(c.rotate, speed, glm::vec3(rotX, rotY, rotZ));
+            // c.scale = glm::scale(c.scale, glm::vec3(scaleX, scaleY, scaleZ));
             light.color = glm::vec4(lightSourceColor[0], lightSourceColor[1],
                                     lightSourceColor[2], lightSourceColor[3]);
-            c.draw(light);
+            if (isPhong) {
+                c.draw(light, true);
+            } else {
+                c.draw(light, false);
+            }
             lightSource.color =
                 glm::vec4(lightSourceColor[0], lightSourceColor[1],
                           lightSourceColor[2], lightSourceColor[3]);

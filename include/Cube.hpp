@@ -21,5 +21,5 @@ class Cube {
 	glm::vec3 position;
 	props prop;
 	void draw();
-	void draw(Light light);
+        void draw(Light light, bool isPhong);
 };
