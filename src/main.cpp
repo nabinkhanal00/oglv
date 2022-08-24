@@ -202,12 +202,6 @@ int main() {
                          oglm::vec3(1.0f, 1.0f, 1.0f), 0.0f,
                          oglm::normalize(oglm::vec3(0.0f, 1.0f, 0.0f)));
 
-    // Ellipse ellipse(static_cast<int>(WIDTH / 2), static_cast<int>(HEIGHT /
-    // 2),
-    //                 400, 100, 10);
-    bool lineDraw = true;
-    bool lineAnimate = false;
-
     // our state
     // line
     float x0{0}, y0{0}, x1{0.8}, y1{0.9};
@@ -216,6 +210,8 @@ int main() {
     float circleCenterX{float(WIDTH) / 2};
     float circleCenterY{float(HEIGHT) / 2};
     float circleRadius{400};
+    std::vector<Line> Lines;
+
     while (glfwWindowShouldClose(window) == false) {
         handleInput(window);
 
@@ -238,8 +234,6 @@ int main() {
             ImGui::Begin(
                 "Line window",
                 &showLineWindow); // Pass a pointer to our bool variable
-                                  // (the window will have a closing button
-                                  // that will clear the bool when clicked)
             ImGui::InputFloat("x0", &x0, 0.01, 2, "%.2f", 0);
             ImGui::InputFloat("y0", &y0, 0.01, 2, "%.2f", 0);
             ImGui::InputFloat("x1", &x1, 0.01, 2, "%.2f", 0);
@@ -260,24 +254,69 @@ int main() {
                 y1 = 1.0f;
             if (x1 > 1.0f)
                 x1 = 1.0f;
-            Line *l = new Line(x0, y0, x1, y1, 10);
+            if (ImGui::Button("New line")) {
+                Lines.push_back(Line(x0, y0, x1, y1, 10));
+            }
+            int c = 0;
+            for (auto &line : Lines) {
+                c++;
+                std::string tmp = "Line" + std::to_string(c);
+                char const *num_char = tmp.c_str();
+                ImGui::Begin(num_char,
+                             &showLineWindow); // Pass a pointer to our bool
+                                               // variable (the window will have
+                                               // a closing button that will
+                                               // clear the bool when clicked)
 
-            Angel::drawAxes();
-            if (ImGui::Button("Animate")) {
-                lineDraw = false;
-                lineAnimate = true;
-            }
-            if (ImGui::Button("Draw")) {
-                lineDraw = true;
-                lineAnimate = false;
-            }
-            if (lineDraw) {
-                l->draw();
-            }
-            if (lineAnimate) {
-                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-                Line *l1 = new Line(x0, y0, x1, y1, 10);
-                l1->animate();
+                ImGui::ColorEdit3("color", line.color);
+                if (ImGui::Button("Delete")) {
+                    Lines.erase(Lines.begin() + (c - 1));
+                }
+                if (ImGui::Button("Stop")) {
+                    line.count = 0;
+                    line.i = 0;
+                    line.stuck = 0;
+                    line.startLineDrawing = false;
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Start")) {
+                    line.frameCount = 60;
+                    line.startLineDrawing = true;
+                    line.lineDraw = true;
+                    line.lineAnimate = false;
+                }
+                if (line.startLineDrawing) {
+                    Angel::drawAxes();
+                    if (ImGui::Button("Animate")) {
+                        line.stuck = 0;
+                        line.lineDraw = false;
+                        line.lineAnimate = true;
+                    }
+                    ImGui::SameLine();
+                    ImGui::SameLine();
+                    if (ImGui::Button("Draw")) {
+                        line.count = 0;
+                        line.i = 0;
+                        line.stuck = 0;
+                        line.lineDraw = true;
+                        line.lineAnimate = false;
+                    }
+                    if (line.lineDraw) {
+                        line.draw(
+                            oglm::vec4(line.color[0], line.color[1], line.color[2], line.color[3]));
+                    }
+                    if (line.lineAnimate) {
+                        if (ImGui::Button("Pause Animation")) {
+                            line.frameCount = 1000000;
+                        }
+                        ImGui::SameLine();
+                        if (ImGui::Button("start Animation")) {
+                            line.frameCount = 60;
+                        }
+                        line.animate();
+                    }
+                }
+                ImGui::End();
             }
             ImGui::End();
         } else if (current == 2) {
