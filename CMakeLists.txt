@@ -18,13 +18,14 @@ endif()
 include_directories(include/
                     lib/glad/include/
                     lib/glfw/include/
-                    lib/glm
+                    lib/glm/
+                    lib/imgui/
                     lib/oglm/
 )
 
 file(GLOB VENDORS_SOURCES lib/glad/src/glad.c)
 file(GLOB PROJECT_HEADERS include/*.hpp)
-file(GLOB PROJECT_SOURCES src/*.cpp)
+file(GLOB PROJECT_SOURCES src/*.cpp lib/imgui/*.cpp)
 file(GLOB PROJECT_RESOURCES res/*)
 file(GLOB PROJECT_CONFIGS CMakeLists.txt
                           Readme.md
