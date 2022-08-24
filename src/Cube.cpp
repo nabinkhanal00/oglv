@@ -60,9 +60,6 @@ Cube::Cube() : prop{0.2, 0.2, 0.2}
 }
 void Cube::draw(const glm::mat4 &viewMatrix)
 {
-
-	Camera c;
-	glm::mat4 vMatrix = c.GetViewMatrix();
 	rotate = glm::rotate(rotate, 0.001f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 	Shader &shader = ResourceManager::GetShader("cube");

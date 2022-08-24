@@ -12,7 +12,7 @@ public:
 	Cube();
 	struct props
 	{
-		float ambient, diffuse, specular;
+		glm::vec3 ambient, diffuse, specular;
 	};
 	unsigned int id;
 	glm::mat4 translate, rotate, scale;
