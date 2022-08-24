@@ -14,7 +14,7 @@
 // unsigned int Context::height = 1000;
 
 int current = 1;
-
+bool firstMouse = true;
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
 							   unsigned int height)
 {
@@ -24,16 +24,28 @@ void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
 	glViewport(0, 0, width, height);
 }
 
-float cameraSpeed = 0.1;
-
-oglm::vec3 at;
-oglm::vec3 to;
-oglm::vec3 up;
-static void cursorPositionCallback(GLFWwindow *window, double xpos,
-								   double ypos)
+float lastX = Context::width / 2;
+float lastY = Context::height / 2;
+static void cursorPositionCallback(GLFWwindow *window, double xposIn,
+								   double yposIn)
 {
-	Context::cam.ProcessMouseMovement(xpos, ypos);
-	// glfwSetCursorPos(window, Context::width / 2.0f, Context::height / 2.0f);
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	Context::cam.ProcessMouseMovement(xoffset, yoffset);
 }
 static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
@@ -45,36 +57,16 @@ void processEvents()
 
 void handleInput(GLFWwindow *window)
 {
-
-	float speed = 0.01f;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		Context::cam.ProcessKeyboard(FORWARD, speed);
-	}
+	float deltaTime = 0.001;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		Context::cam.ProcessKeyboard(FORWARD, speed);
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-		at.z += speed;
-		to.z += speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	{
-		at.z -= speed;
-		to.z -= speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-	{
-		at.x -= speed;
-		to.x -= speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-	{
-		at.x += speed;
-		to.x += speed;
-	}
+		Context::cam.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		Context::cam.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		Context::cam.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		Context::cam.ProcessKeyboard(RIGHT, deltaTime);
+
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 	{
 		current = 1;

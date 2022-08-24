@@ -93,9 +93,18 @@ void Cube::draw()
 	Shader &shader = ResourceManager::GetShader("cube");
 	glm::mat4 modelMatrix = translate * rotate * scale;
 	glm::mat4 viewMatrix = Context::cam.GetViewMatrix();
+	// for (int i = 0; i < 4; i++)
+	// {
+	// 	for (int j = 0; j < 4; j++)
+	// 	{
+	// 		std::cout << viewMatrix[i][j] << "\t";
+	// 	}
+	// 	std::cout << std::endl;
+	// }
 	shader.Bind();
 	shader.SetMat4("model", modelMatrix);
-	shader.SetMat4("view", glm::mat4(1.0f));
+	shader.SetMat4("view", viewMatrix);
+	// shader.SetMat4("view", viewMatrix);
 	shader.SetMat4("projection", Context::projectionMatrix);
 	glBindVertexArray(m_vid);
 	glDrawArrays(GL_TRIANGLES, 0, 36);

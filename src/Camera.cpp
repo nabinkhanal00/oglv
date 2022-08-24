@@ -1,5 +1,5 @@
 #include "Camera.hpp"
-
+#include <iostream>
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
 	Position = position;
@@ -21,6 +21,10 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 // returns the view matrix calculated using Euler Angles and the LookAt Matrix
 glm::mat4 Camera::GetViewMatrix()
 {
+	std::cout << "Position: " << Position.x << " " << Position.y << " " << Position.z << std::endl;
+	std::cout << "Up: " << Up.x << " " << Up.y << " " << Up.z << std::endl;
+	std::cout << "Front: " << Front.x << " " << Front.y << " " << Front.z << std::endl;
+
 	return glm::lookAt(Position, Position + Front, Up);
 }
 
