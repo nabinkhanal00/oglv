@@ -69,8 +69,6 @@ Cube::Cube() : shininess(32.0f), color(glm::vec3(1.0f, 0.0f, 0.0f)) {
 
 	scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
-	ResourceManager::LoadShader("shaders/cube/vertex.glsl",
-	                            "shaders/cube/fragment.glsl", "cube");
 	Shader &shader = ResourceManager::GetShader("cube");
 	shader.Bind();
 	shader.SetVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
@@ -78,20 +76,34 @@ Cube::Cube() : shininess(32.0f), color(glm::vec3(1.0f, 0.0f, 0.0f)) {
 	shader.Unbind();
 }
 void Cube::draw() {
-	rotate = glm::rotate(rotate, 0.001f, glm::vec3(1.0f, 0.0f, 0.0f));
+	Shader &shader = ResourceManager::GetShader("lightShader");
+	glm::mat4 modelMatrix = translate * rotate * scale;
+	glm::mat4 viewMatrix = Context::cam.GetViewMatrix();
 
+	shader.Bind();
+	shader.SetMat4("model", modelMatrix);
+	shader.SetMat4("view", viewMatrix);
+	shader.SetMat4("projection", Context::projectionMatrix);
+	shader.SetVec3("objectColor", color);
+
+	glBindVertexArray(m_vid);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+	shader.Unbind();
+}
+void Cube::draw(Light light) {
 	Shader &shader = ResourceManager::GetShader("cube");
 	glm::mat4 modelMatrix = translate * rotate * scale;
 	glm::mat4 viewMatrix = Context::cam.GetViewMatrix();
 
 	shader.Bind();
-	shader.SetVec3("lightPos", glm::vec3(0.0f, 0.0f, 2.0f));
-	shader.SetVec3("viewPos", Context::cam.GetPosition());
 	shader.SetMat4("model", modelMatrix);
 	shader.SetMat4("view", viewMatrix);
 	shader.SetMat4("projection", Context::projectionMatrix);
-	shader.SetVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-	shader.SetVec3("objectColor", glm::vec3(1.0f, 0.0f, 0.0f));
+	shader.SetVec3("objectColor", color);
+	shader.SetVec3("lightPos", light.position);
+	shader.SetVec3("viewPos", Context::cam.GetPosition());
+	shader.SetVec3("lightColor", light.color);
 
 	glBindVertexArray(m_vid);
 	glDrawArrays(GL_TRIANGLES, 0, 36);

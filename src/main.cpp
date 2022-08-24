@@ -6,6 +6,7 @@
 
 #include "Context.hpp"
 #include "Defines.hpp"
+#include "ResourceManager.hpp"
 
 #include "Circle.hpp"
 #include "Cube.hpp"
@@ -142,19 +143,6 @@ int main() {
 		return -1;
 	Angel::init(Context::width, Context::height);
 
-	std::vector<Light> lights;
-	Light pointLight;
-	pointLight.position = glm::vec3(0.0f, 0.0f, 2.0f);
-	pointLight.ambient = glm::vec3(0.05f, 0.05f, 0.05f);
-	pointLight.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
-	pointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
-	pointLight.isDirLight = false;
-	pointLight.isSpotlight = false;
-	pointLight.constant = 1.0f;
-	pointLight.linear = 0.09f;
-	pointLight.quadratic = 0.032f;
-	pointLight.direction = glm::vec3(0.0f);
-
 	// Initialize ImGUI
 	ImGui::CreateContext();
 	ImGuiIO &io = ImGui::GetIO();
@@ -173,7 +161,31 @@ int main() {
 	float circleCenterY{float(Context::height) / 2};
 	float circleRadius{400};
 	std::vector<Line> Lines;
+
+	ResourceManager::LoadShader("shaders/cube/vertex.glsl",
+	                            "shaders/cube/fragment.glsl", "cube");
+	ResourceManager::LoadShader("shaders/lightsource/vertex.glsl",
+	                            "shaders/lightsource/fragment.glsl",
+	                            "lightShader");
 	Cube c;
+	c.position = glm::vec3(0.0f, 0.0f, 0.0f);
+	c.color = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	Light light;
+	light.position = glm::vec3(1.0f, 1.0f, 2.0f);
+	light.color = glm::vec3(1.0f, 1.0f, 1.0f);
+	light.ambient = glm::vec3(0.05f, 0.05f, 0.05f);
+	light.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+	light.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	Cube lightSource;
+	lightSource.position = light.position;
+	lightSource.color = light.color;
+	lightSource.scale =
+	    glm::scale(lightSource.scale, glm::vec3(0.2f, 0.2f, 0.2f));
+	lightSource.translate =
+	    glm::translate(lightSource.translate, lightSource.position);
+
 	while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -283,7 +295,11 @@ int main() {
 			circle.animate();
 			ImGui::End();
 		} else {
-			c.draw();
+			c.rotate =
+			    glm::rotate(c.rotate, 0.01f, glm::vec3(1.0f, 0.0f, 0.0f));
+			c.draw(light);
+
+			lightSource.draw();
 		}
 
 		ImGui::Render();

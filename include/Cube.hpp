@@ -8,8 +8,6 @@ class Cube {
   private:
 	static float vertices[];
 	unsigned int m_vid;
-	float shininess;
-	glm::vec3 color;
 
   public:
 	Cube();
@@ -18,6 +16,10 @@ class Cube {
 	};
 	unsigned int id;
 	glm::mat4 translate, rotate, scale;
+	glm::vec3 color;
+	float shininess;
+	glm::vec3 position;
 	props prop;
 	void draw();
+	void draw(Light light);
 };
