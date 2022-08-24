@@ -17,5 +17,5 @@ public:
 	unsigned int id;
 	glm::mat4 translate, rotate, scale;
 	props prop;
-	void draw(const glm::mat4 &viewMatrix);
+	void draw();
 };

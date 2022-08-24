@@ -32,15 +32,15 @@ oglm::vec3 up;
 static void cursorPositionCallback(GLFWwindow *window, double xpos,
 								   double ypos)
 {
-	float x = xpos / Context::width - 0.5;
-	float y = -ypos / Context::height + 0.5;
-	to += oglm::vec3(x, y, 0);
+	Context::cam.ProcessMouseMovement(xpos, ypos);
 	// glfwSetCursorPos(window, Context::width / 2.0f, Context::height / 2.0f);
 }
 static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
-	at += oglm::vec3(0, 0, -cameraSpeed * yoffset);
-	to += oglm::vec3(0, 0, -cameraSpeed * 5 * yoffset);
+	Context::cam.ProcessMouseScroll(yoffset);
+}
+void processEvents()
+{
 }
 
 void handleInput(GLFWwindow *window)
@@ -49,13 +49,11 @@ void handleInput(GLFWwindow *window)
 	float speed = 0.01f;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		at.y += speed;
-		to.y += speed;
+		Context::cam.ProcessKeyboard(FORWARD, speed);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		at.y -= speed;
-		to.y -= speed;
+		Context::cam.ProcessKeyboard(FORWARD, speed);
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
@@ -153,6 +151,8 @@ GLFWwindow *InitWindow()
 	// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetCursorPosCallback(window, cursorPositionCallback);
 
+	glEnable(GL_DEPTH_TEST);
+
 	return window;
 }
 
@@ -174,9 +174,9 @@ int main()
 	while (glfwWindowShouldClose(window) == false)
 	{
 		handleInput(window);
-
+		processEvents();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (current == 1)
 		{
@@ -195,7 +195,7 @@ int main()
 		}
 		else
 		{
-			c.draw(glm::mat4(1.0f));
+			c.draw();
 		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
