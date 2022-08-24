@@ -10,11 +10,14 @@ uniform vec3 viewPos;
 uniform vec3 lightColor;
 uniform vec3 objectColor;
 
+uniform vec3 ambient;
+uniform vec3 diffuse;
+uniform vec3 specular;
+
 void main()
 {
     // ambient
-    float ambientStrength = 0.1;
-    vec3 ambient = ambientStrength * lightColor;
+    vec3 ambient = ambient * lightColor;
   	
     // diffuse 
     vec3 norm = mat3(inverse(transpose(Model))) * normalize(Normal);

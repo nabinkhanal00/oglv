@@ -183,8 +183,6 @@ int main() {
 	lightSource.color = light.color;
 	lightSource.scale =
 	    glm::scale(lightSource.scale, glm::vec3(0.2f, 0.2f, 0.2f));
-	lightSource.translate =
-	    glm::translate(lightSource.translate, lightSource.position);
 
 	while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
@@ -299,6 +297,8 @@ int main() {
 			    glm::rotate(c.rotate, 0.01f, glm::vec3(1.0f, 0.0f, 0.0f));
 			c.draw(light);
 
+			lightSource.translate =
+			    glm::translate(glm::mat4(1.0f), light.position);
 			lightSource.draw();
 		}
 
