@@ -6,7 +6,6 @@
 class Circle {
 private:
   unsigned int thickness;
-  unsigned int frameCount;
   int centerX;
   int centerY;
   int radius;
@@ -15,6 +14,10 @@ public:
   Circle(int x0, int y0, int r, unsigned int thickness);
   std::vector<oglm::vec2i> points;
   std::vector<oglm::vec2i> false_points;
+  static int count;
+  static int i;
+  static int stuck;
+  static unsigned int frameCount;
   void draw(const oglm::vec4 &color = oglm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
   void animate();
   void translate(float x, float y);

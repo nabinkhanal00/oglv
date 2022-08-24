@@ -175,147 +175,226 @@ int main()
 	float circleCenterX{float(Context::width) / 2};
 	float circleCenterY{float(Context::height) / 2};
 	float circleRadius{400};
-	std::vector<Line> Lines;
-	Cube c;
-	while (glfwWindowShouldClose(window) == false)
-	{
-		handleInput(window);
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        bool startCircleDrawing = true;
+        bool drawCircle = true;
+        bool animateCircle = false;
 
-		// IMGUI
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
+        // ellipse
+        float ellipseCenterX{float(Context::width) / 2};
+        float ellipseCenterY{float(Context::height) / 2};
+        float ellipseMajor{300};
+        float ellipseMinor{200};
+        bool startEllipseDrawing = true;
+        bool drawEllipse = true;
+        bool animateEllipse = false;
 
-		if (current == 1)
-		{
-			ImGui::Begin(
-				"Line window",
-				&showLineWindow); // Pass a pointer to our bool variable
-			ImGui::InputFloat("x0", &x0, 0.01, 2, "%.2f", 0);
-			ImGui::InputFloat("y0", &y0, 0.01, 2, "%.2f", 0);
-			ImGui::InputFloat("x1", &x1, 0.01, 2, "%.2f", 0);
-			ImGui::InputFloat("y1", &y1, 0.01, 2, "%.2f", 0);
-			if (x0 < -1.0f)
-				x0 = -1.0f;
-			if (y0 < -1.0f)
-				y0 = -1.0f;
-			if (y1 < -1.0f)
-				y1 = -1.0f;
-			if (x1 < -1.0f)
-				x1 = -1.0f;
-			if (x0 > 1.0f)
-				x0 = 1.0f;
-			if (y0 > 1.0f)
-				y0 = 1.0f;
-			if (y1 > 1.0f)
-				y1 = 1.0f;
-			if (x1 > 1.0f)
-				x1 = 1.0f;
-			if (ImGui::Button("New line"))
-			{
-				Lines.push_back(Line(x0, y0, x1, y1, 10));
-			}
-			int c = 0;
-			for (auto &line : Lines)
-			{
-				c++;
-				std::string tmp = "Line" + std::to_string(c);
-				char const *num_char = tmp.c_str();
-				ImGui::Begin(num_char,
-							 &showLineWindow); // Pass a pointer to our bool
-											   // variable (the window will have
-											   // a closing button that will
-											   // clear the bool when clicked)
+        std::vector<Line> Lines;
+        Cube c;
+        while (glfwWindowShouldClose(window) == false) {
+            handleInput(window);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-				ImGui::ColorEdit3("color", line.color);
-				if (ImGui::Button("Delete"))
-				{
-					Lines.erase(Lines.begin() + (c - 1));
-				}
-				if (ImGui::Button("Stop"))
-				{
-					line.count = 0;
-					line.i = 0;
-					line.stuck = 0;
-					line.startLineDrawing = false;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Start"))
-				{
-					line.frameCount = 60;
-					line.startLineDrawing = true;
-					line.lineDraw = true;
-					line.lineAnimate = false;
-				}
-				if (line.startLineDrawing)
-				{
-					Angel::drawAxes();
-					if (ImGui::Button("Animate"))
-					{
-						line.stuck = 0;
-						line.lineDraw = false;
-						line.lineAnimate = true;
-					}
-					ImGui::SameLine();
-					ImGui::SameLine();
-					if (ImGui::Button("Draw"))
-					{
-						line.count = 0;
-						line.i = 0;
-						line.stuck = 0;
-						line.lineDraw = true;
-						line.lineAnimate = false;
-					}
-					if (line.lineDraw)
-					{
-						line.draw(
-							oglm::vec4(line.color[0], line.color[1], line.color[2], line.color[3]));
-					}
-					if (line.lineAnimate)
-					{
-						if (ImGui::Button("Pause Animation"))
-						{
-							line.frameCount = 1000000;
-						}
-						ImGui::SameLine();
-						if (ImGui::Button("start Animation"))
-						{
-							line.frameCount = 60;
-						}
-						line.animate();
-					}
-				}
-				ImGui::End();
-			}
-			ImGui::End();
-		}
-		else if (current == 2)
-		{
-			ImGui::Begin("Line window"); // Pass a pointer to our bool variable
-			ImGui::InputFloat("x0", &circleCenterX, 5, 2, "%.2f", 0);
-			ImGui::InputFloat("y0", &circleCenterY, 5, 2, "%.2f", 0);
-			ImGui::InputFloat("radius", &circleRadius, 5, 2, "%.2f", 0);
-			Circle circle(circleCenterX, circleCenterY, circleRadius, 10);
-			Angel::drawAxes();
-			circle.animate();
-			ImGui::End();
-		}
-		else
-		{
-			c.draw();
-		}
+            // IMGUI
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-	glfwTerminate();
+            if (current == 1) {
+                ImGui::Begin(
+                    "Line window",
+                    &showLineWindow); // Pass a pointer to our bool variable
+                ImGui::InputFloat("x0", &x0, 0.01, 2, "%.2f", 0);
+                ImGui::InputFloat("y0", &y0, 0.01, 2, "%.2f", 0);
+                ImGui::InputFloat("x1", &x1, 0.01, 2, "%.2f", 0);
+                ImGui::InputFloat("y1", &y1, 0.01, 2, "%.2f", 0);
+                if (x0 < -1.0f)
+                    x0 = -1.0f;
+                if (y0 < -1.0f)
+                    y0 = -1.0f;
+                if (y1 < -1.0f)
+                    y1 = -1.0f;
+                if (x1 < -1.0f)
+                    x1 = -1.0f;
+                if (x0 > 1.0f)
+                    x0 = 1.0f;
+                if (y0 > 1.0f)
+                    y0 = 1.0f;
+                if (y1 > 1.0f)
+                    y1 = 1.0f;
+                if (x1 > 1.0f)
+                    x1 = 1.0f;
+                if (ImGui::Button("New line")) {
+                    Lines.push_back(Line(x0, y0, x1, y1, 10));
+                }
+                int c = 0;
+                for (auto &line : Lines) {
+                    c++;
+                    std::string tmp = "Line" + std::to_string(c);
+                    char const *num_char = tmp.c_str();
+                    ImGui::Begin(
+                        num_char,
+                        &showLineWindow); // Pass a pointer to our bool
+                                          // variable (the window will have
+                                          // a closing button that will
+                                          // clear the bool when clicked)
 
-	return 0;
+                    ImGui::ColorEdit3("color", line.color);
+                    if (ImGui::Button("Delete")) {
+                        Lines.erase(Lines.begin() + (c - 1));
+                    }
+                    if (ImGui::Button("Stop")) {
+                        line.count = 0;
+                        line.i = 0;
+                        line.stuck = 0;
+                        line.startLineDrawing = false;
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Start")) {
+                        line.frameCount = 60;
+                        line.startLineDrawing = true;
+                        line.lineDraw = true;
+                        line.lineAnimate = false;
+                    }
+                    if (line.startLineDrawing) {
+                        Angel::drawAxes();
+                        if (ImGui::Button("Animate")) {
+                            line.stuck = 0;
+                            line.lineDraw = false;
+                            line.lineAnimate = true;
+                        }
+                        ImGui::SameLine();
+                        ImGui::SameLine();
+                        if (ImGui::Button("Draw")) {
+                            line.count = 0;
+                            line.i = 0;
+                            line.stuck = 0;
+                            line.lineDraw = true;
+                            line.lineAnimate = false;
+                        }
+                        if (line.lineDraw) {
+                            line.draw(oglm::vec4(line.color[0], line.color[1],
+                                                 line.color[2], line.color[3]));
+                        }
+                        if (line.lineAnimate) {
+                            if (ImGui::Button("Pause Animation")) {
+                                line.frameCount = 1000000;
+                            }
+                            ImGui::SameLine();
+                            if (ImGui::Button("start Animation")) {
+                                line.frameCount = 60;
+                            }
+                            line.animate();
+                        }
+                    }
+                    ImGui::End();
+                }
+                ImGui::End();
+            } else if (current == 2) {
+                ImGui::Begin(
+                    "circle window"); // Pass a pointer to our bool variable
+                ImGui::InputFloat("x0", &circleCenterX, 5, 2, "%.2f", 0);
+                ImGui::InputFloat("y0", &circleCenterY, 5, 2, "%.2f", 0);
+                ImGui::InputFloat("radius", &circleRadius, 5, 2, "%.2f", 0);
+                Circle circle(circleCenterX, circleCenterY, circleRadius, 10);
+                Angel::drawAxes();
+                if (ImGui::Button("Stop")) {
+                    Circle::count = 0;
+                    Circle::i = 0;
+                    Circle::stuck = 0;
+                    startCircleDrawing = false;
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Start")) {
+                    Circle::frameCount = 60;
+                    startCircleDrawing = true;
+                }
+                if (startCircleDrawing) {
+                    if (ImGui::Button("Animate")) {
+                        Circle::frameCount = 60;
+                        animateCircle = true;
+                        drawCircle = false;
+                    }
+                    if (ImGui::Button("Draw")) {
+                        Circle::frameCount = 60;
+                        animateCircle = false;
+                        drawCircle = true;
+                    }
+                    if (drawCircle) {
+                        circle.draw();
+                    }
+                    if (animateCircle) {
+                        if (ImGui::Button("Pause Animation")) {
+                            Circle::frameCount = 1000000;
+                        }
+                        ImGui::SameLine();
+                        if (ImGui::Button("start Animation")) {
+                            Circle::frameCount = 60;
+                        }
+                        circle.animate();
+                    }
+                }
+                ImGui::End();
+            } else if (current == 3) {
+                ImGui::Begin(
+                    "circle window"); // Pass a pointer to our bool variable
+                ImGui::InputFloat("x0", &ellipseCenterX, 5, 2, "%.2f", 0);
+                ImGui::InputFloat("y0", &ellipseCenterY, 5, 2, "%.2f", 0);
+                ImGui::InputFloat("a", &ellipseMajor, 5, 2, "%.2f", 0);
+                ImGui::InputFloat("b", &ellipseMinor, 5, 2, "%.2f", 0);
+                Ellipse e(ellipseCenterX, ellipseCenterY, ellipseMajor,
+                          ellipseMinor, 10);
+                Angel::drawAxes();
+                if (ImGui::Button("Stop")) {
+                    Ellipse::count = 0;
+                    Ellipse::i = 0;
+                    Ellipse::stuck = 0;
+                    startEllipseDrawing = false;
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Start")) {
+                    Ellipse::frameCount = 60;
+                    startEllipseDrawing = true;
+                }
+                if (startEllipseDrawing) {
+                    if (ImGui::Button("Animate")) {
+                        Ellipse::frameCount = 60;
+                        animateEllipse = true;
+                        drawEllipse = false;
+                    }
+                    if (ImGui::Button("Draw")) {
+                        Ellipse::frameCount = 60;
+                        animateEllipse = false;
+                        drawEllipse = true;
+                    }
+                    if (drawEllipse) {
+                        e.draw();
+                    }
+                    if (animateEllipse) {
+                        if (ImGui::Button("Pause Animation")) {
+                            Ellipse::frameCount = 1000000;
+                        }
+                        ImGui::SameLine();
+                        if (ImGui::Button("start Animation")) {
+                            Ellipse::frameCount = 60;
+                        }
+                        e.animate();
+                    }
+                }
+                ImGui::End();
+            } else {
+                c.draw();
+            }
+
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+        glfwTerminate();
+
+        return 0;
 }
