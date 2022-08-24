@@ -151,18 +151,7 @@ int main() {
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	bool showLineWindow = true;
-	// our state
-	// line
-	float x0{0}, y0{0}, x1{0.8}, y1{0.9};
-
-	// circle
-	float circleCenterX{float(Context::width) / 2};
-	float circleCenterY{float(Context::height) / 2};
-	float circleRadius{400};
-	std::vector<Line> Lines;
-
-	ResourceManager::LoadShader("shaders/cube/vertex.glsl",
+        ResourceManager::LoadShader("shaders/cube/vertex.glsl",
 	                            "shaders/cube/fragment.glsl", "cube");
 	ResourceManager::LoadShader("shaders/lightsource/vertex.glsl",
 	                            "shaders/lightsource/fragment.glsl",
@@ -183,8 +172,18 @@ int main() {
 	lightSource.color = light.color;
 	lightSource.scale =
 	    glm::scale(lightSource.scale, glm::vec3(0.2f, 0.2f, 0.2f));
+        bool showLineWindow = true;
+        // our state
+        // line
+        float x0{0}, y0{0}, x1{0.8}, y1{0.9};
 
-	while (glfwWindowShouldClose(window) == false) {
+        // circle
+        float circleCenterX{float(Context::width) / 2};
+        float circleCenterY{float(Context::height) / 2};
+        float circleRadius{400};
+        std::vector<Line> Lines;
+
+        while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
