@@ -10,6 +10,7 @@
 #include "Circle.hpp"
 #include "Cube.hpp"
 #include "Line.hpp"
+#include "Light.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -20,8 +21,7 @@ int current = 1;
 
 bool firstMouse = true;
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
-							   unsigned int height)
-{
+                               unsigned int height) {
 
 	Angel::setHeight(height);
 	Angel::setWidth(width);
@@ -31,37 +31,32 @@ void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
 float lastX = Context::width / 2;
 float lastY = Context::height / 2;
 static void cursorPositionCallback(GLFWwindow *window, double xposIn,
-								   double yposIn)
-{
+                                   double yposIn) {
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
 
-	if (firstMouse)
-	{
+	if (firstMouse) {
 		lastX = xpos;
 		lastY = ypos;
 		firstMouse = false;
 	}
 
 	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	float yoffset =
+	    lastY - ypos; // reversed since y-coordinates go from bottom to top
 
 	lastX = xpos;
 	lastY = ypos;
 
 	Context::cam.ProcessMouseMovement(xoffset, yoffset);
 }
-static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
-{
+static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {
 	Context::cam.ProcessMouseScroll(yoffset);
 }
-void processEvents()
-{
-}
+void processEvents() {}
 
-void handleInput(GLFWwindow *window)
-{
-	float deltaTime = 0.001;
+void handleInput(GLFWwindow *window) {
+	float deltaTime = 0.01;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		Context::cam.ProcessKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -71,40 +66,31 @@ void handleInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		Context::cam.ProcessKeyboard(RIGHT, deltaTime);
 
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
 		current = 1;
 	}
-	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
 		current = 2;
 	}
-	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
 		current = 3;
 	}
-	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
 		current = 4;
 	}
-	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
 		current = 5;
 	}
-	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
 		current = 6;
 	}
-	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
-	{
+	if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
 		current = 7;
 	}
 }
-GLFWwindow *InitWindow()
-{
+GLFWwindow *InitWindow() {
 	// Initialise GLFW
-	if (!glfwInit())
-	{
+	if (!glfwInit()) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		getchar();
 		return nullptr;
@@ -114,28 +100,26 @@ GLFWwindow *InitWindow()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,
-				   GL_TRUE); // To make MacOS happy; should not be needed
+	               GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	glfwSwapInterval(1);
 
 	// Open a window and create its OpenGL context
-	GLFWwindow *window =
-		glfwCreateWindow(Context::width, Context::height, "opengl-Red triangle", NULL, NULL);
-	if (window == NULL)
-	{
+	GLFWwindow *window = glfwCreateWindow(Context::width, Context::height,
+	                                      "opengl-Red triangle", NULL, NULL);
+	if (window == NULL) {
 		fprintf(
-			stderr,
-			"Failed to open GLFW window. If you have an Intel GPU, they are "
-			"not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
+		    stderr,
+		    "Failed to open GLFW window. If you have an Intel GPU, they are "
+		    "not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		getchar();
 		glfwTerminate();
 		return nullptr;
 	}
 	glfwMakeContextCurrent(window);
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Unable to laod GLAD" << std::endl;
 	}
 
@@ -151,12 +135,24 @@ GLFWwindow *InitWindow()
 	return window;
 }
 
-int main()
-{
+int main() {
 	GLFWwindow *window = InitWindow();
 	if (!window)
 		return -1;
 	Angel::init(Context::width, Context::height);
+
+	std::vector<Light> lights;
+	Light pointLight;
+	pointLight.position = glm::vec3(0.0f, 0.0f, 2.0f);
+	pointLight.ambient = glm::vec3(0.05f, 0.05f, 0.05f);
+	pointLight.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+	pointLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+	pointLight.isDirLight = false;
+	pointLight.isSpotlight = false;
+	pointLight.constant = 1.0f;
+	pointLight.linear = 0.09f;
+	pointLight.quadratic = 0.032f;
+	pointLight.direction = glm::vec3(0.0f);
 
 	// Initialize ImGUI
 	ImGui::CreateContext();
@@ -177,8 +173,7 @@ int main()
 	float circleRadius{400};
 	std::vector<Line> Lines;
 	Cube c;
-	while (glfwWindowShouldClose(window) == false)
-	{
+	while (glfwWindowShouldClose(window) == false) {
 		handleInput(window);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -188,11 +183,10 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		if (current == 1)
-		{
+		if (current == 1) {
 			ImGui::Begin(
-				"Line window",
-				&showLineWindow); // Pass a pointer to our bool variable
+			    "Line window",
+			    &showLineWindow); // Pass a pointer to our bool variable
 			ImGui::InputFloat("x0", &x0, 0.01, 2, "%.2f", 0);
 			ImGui::InputFloat("y0", &y0, 0.01, 2, "%.2f", 0);
 			ImGui::InputFloat("x1", &x1, 0.01, 2, "%.2f", 0);
@@ -213,75 +207,63 @@ int main()
 				y1 = 1.0f;
 			if (x1 > 1.0f)
 				x1 = 1.0f;
-			if (ImGui::Button("New line"))
-			{
+			if (ImGui::Button("New line")) {
 				Lines.push_back(Line(x0, y0, x1, y1, 10));
 			}
 			int c = 0;
-			for (auto &line : Lines)
-			{
+			for (auto &line : Lines) {
 				c++;
 				std::string tmp = "Line" + std::to_string(c);
 				char const *num_char = tmp.c_str();
 				ImGui::Begin(num_char,
-							 &showLineWindow); // Pass a pointer to our bool
-											   // variable (the window will have
-											   // a closing button that will
-											   // clear the bool when clicked)
+				             &showLineWindow); // Pass a pointer to our bool
+				                               // variable (the window will have
+				                               // a closing button that will
+				                               // clear the bool when clicked)
 
 				ImGui::ColorEdit3("color", line.color);
-				if (ImGui::Button("Delete"))
-				{
+				if (ImGui::Button("Delete")) {
 					Lines.erase(Lines.begin() + (c - 1));
 				}
-				if (ImGui::Button("Stop"))
-				{
+				if (ImGui::Button("Stop")) {
 					line.count = 0;
 					line.i = 0;
 					line.stuck = 0;
 					line.startLineDrawing = false;
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("Start"))
-				{
+				if (ImGui::Button("Start")) {
 					line.frameCount = 60;
 					line.startLineDrawing = true;
 					line.lineDraw = true;
 					line.lineAnimate = false;
 				}
-				if (line.startLineDrawing)
-				{
+				if (line.startLineDrawing) {
 					Angel::drawAxes();
-					if (ImGui::Button("Animate"))
-					{
+					if (ImGui::Button("Animate")) {
 						line.stuck = 0;
 						line.lineDraw = false;
 						line.lineAnimate = true;
 					}
 					ImGui::SameLine();
 					ImGui::SameLine();
-					if (ImGui::Button("Draw"))
-					{
+					if (ImGui::Button("Draw")) {
 						line.count = 0;
 						line.i = 0;
 						line.stuck = 0;
 						line.lineDraw = true;
 						line.lineAnimate = false;
 					}
-					if (line.lineDraw)
-					{
-						line.draw(
-							oglm::vec4(line.color[0], line.color[1], line.color[2], line.color[3]));
+					if (line.lineDraw) {
+						line.draw(oglm::vec4(line.color[0], line.color[1],
+						                     line.color[2], line.color[3]));
 					}
-					if (line.lineAnimate)
-					{
-						if (ImGui::Button("Pause Animation"))
-						{
+					if (line.lineAnimate) {
+						if (ImGui::Button("Pause Animation")) {
 							line.frameCount = 1000000;
 						}
 						ImGui::SameLine();
-						if (ImGui::Button("start Animation"))
-						{
+						if (ImGui::Button("start Animation")) {
 							line.frameCount = 60;
 						}
 						line.animate();
@@ -290,9 +272,7 @@ int main()
 				ImGui::End();
 			}
 			ImGui::End();
-		}
-		else if (current == 2)
-		{
+		} else if (current == 2) {
 			ImGui::Begin("Line window"); // Pass a pointer to our bool variable
 			ImGui::InputFloat("x0", &circleCenterX, 5, 2, "%.2f", 0);
 			ImGui::InputFloat("y0", &circleCenterY, 5, 2, "%.2f", 0);
@@ -301,10 +281,8 @@ int main()
 			Angel::drawAxes();
 			circle.animate();
 			ImGui::End();
-		}
-		else
-		{
-			c.draw();
+		} else {
+			c.draw(lights);
 		}
 
 		ImGui::Render();

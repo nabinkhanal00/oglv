@@ -21,11 +21,16 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 // returns the view matrix calculated using Euler Angles and the LookAt Matrix
 glm::mat4 Camera::GetViewMatrix()
 {
-	std::cout << "Position: " << Position.x << " " << Position.y << " " << Position.z << std::endl;
-	std::cout << "Up: " << Up.x << " " << Up.y << " " << Up.z << std::endl;
-	std::cout << "Front: " << Front.x << " " << Front.y << " " << Front.z << std::endl;
+	// std::cout << "Position: " << Position.x << " " << Position.y << " " << Position.z << std::endl;
+	// std::cout << "Up: " << Up.x << " " << Up.y << " " << Up.z << std::endl;
+	// std::cout << "Front: " << Front.x << " " << Front.y << " " << Front.z << std::endl;
 
 	return glm::lookAt(Position, Position + Front, Up);
+}
+
+glm::vec3 Camera::GetPosition()
+{
+	return Position;
 }
 
 // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
