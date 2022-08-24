@@ -104,12 +104,16 @@ void Cube::draw(Light light) {
 	shader.SetVec3("lightPos", light.position);
 	shader.SetVec3("viewPos", Context::cam.GetPosition());
 	shader.SetVec3("lightColor", light.color);
-	shader.SetVec3("ambient", light.ambient);
-	shader.SetVec3("diffuse", light.diffuse);
-	shader.SetVec3("specular", light.specular);
+        shader.SetFloat("ambientStrength", light.ambientStrength);
+        shader.SetFloat("specularStrength", light.specularStrength);
+        shader.SetFloat("diffuseStrength", light.diffuseStrength);
+        shader.SetInt("shininess", light.shininess);
+        // shader.SetVec3("ambient", light.ambient);
+        // shader.SetVec3("diffuse", light.diffuse);
+        // shader.SetVec3("specular", light.specular);
 
-	glBindVertexArray(m_vid);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindVertexArray(0);
-	shader.Unbind();
+        glBindVertexArray(m_vid);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        shader.Unbind();
 }
