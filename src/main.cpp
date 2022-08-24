@@ -1,19 +1,23 @@
 // Include GLFW
 
-#include <iostream>
 #include <Ellipse.hpp>
+#include <iostream>
 #include <thread>
+
 #include "Context.hpp"
 #include "Defines.hpp"
-#include "Line.hpp"
+
 #include "Circle.hpp"
 #include "Cube.hpp"
+#include "Line.hpp"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 
-// unsigned int Context::width = 1000;
-// unsigned int Context::height = 1000;
-
+const char *glsl_version = "#version 130";
 int current = 1;
+
 bool firstMouse = true;
 void framebuffer_size_callback(GLFWwindow *window, unsigned int width,
 							   unsigned int height)
@@ -141,10 +145,9 @@ GLFWwindow *InitWindow()
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	glfwSetCursorPosCallback(window, cursorPositionCallback);
+	// glfwSetCursorPosCallback(window, cursorPositionCallback);
 
-	glEnable(GL_DEPTH_TEST);
-
+	glfwSetScrollCallback(window, scrollCallback);
 	return window;
 }
 
@@ -155,44 +158,163 @@ int main()
 		return -1;
 	Angel::init(Context::width, Context::height);
 
-	Line l(-0.5, -0.3, 1, 0.8, 10);
+	// Initialize ImGUI
+	ImGui::CreateContext();
+	ImGuiIO &io = ImGui::GetIO();
+	(void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	Circle circle(Context::width / 2, Context::height / 2, 400, 10);
-	// Ellipse ellipse(static_cast<int>(Context::width / 2), static_cast<int>(Context::height / 2),
-	//                 400, 100, 10);
-	float angle = 4.0f;
+	bool showLineWindow = true;
+	// our state
+	// line
+	float x0{0}, y0{0}, x1{0.8}, y1{0.9};
 
+	// circle
+	float circleCenterX{float(Context::width) / 2};
+	float circleCenterY{float(Context::height) / 2};
+	float circleRadius{400};
+	std::vector<Line> Lines;
 	Cube c;
 	while (glfwWindowShouldClose(window) == false)
 	{
 		handleInput(window);
-		processEvents();
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// IMGUI
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
 		if (current == 1)
 		{
-			Angel::drawAxes();
-			l.animate();
+			ImGui::Begin(
+				"Line window",
+				&showLineWindow); // Pass a pointer to our bool variable
+			ImGui::InputFloat("x0", &x0, 0.01, 2, "%.2f", 0);
+			ImGui::InputFloat("y0", &y0, 0.01, 2, "%.2f", 0);
+			ImGui::InputFloat("x1", &x1, 0.01, 2, "%.2f", 0);
+			ImGui::InputFloat("y1", &y1, 0.01, 2, "%.2f", 0);
+			if (x0 < -1.0f)
+				x0 = -1.0f;
+			if (y0 < -1.0f)
+				y0 = -1.0f;
+			if (y1 < -1.0f)
+				y1 = -1.0f;
+			if (x1 < -1.0f)
+				x1 = -1.0f;
+			if (x0 > 1.0f)
+				x0 = 1.0f;
+			if (y0 > 1.0f)
+				y0 = 1.0f;
+			if (y1 > 1.0f)
+				y1 = 1.0f;
+			if (x1 > 1.0f)
+				x1 = 1.0f;
+			if (ImGui::Button("New line"))
+			{
+				Lines.push_back(Line(x0, y0, x1, y1, 10));
+			}
+			int c = 0;
+			for (auto &line : Lines)
+			{
+				c++;
+				std::string tmp = "Line" + std::to_string(c);
+				char const *num_char = tmp.c_str();
+				ImGui::Begin(num_char,
+							 &showLineWindow); // Pass a pointer to our bool
+											   // variable (the window will have
+											   // a closing button that will
+											   // clear the bool when clicked)
+
+				ImGui::ColorEdit3("color", line.color);
+				if (ImGui::Button("Delete"))
+				{
+					Lines.erase(Lines.begin() + (c - 1));
+				}
+				if (ImGui::Button("Stop"))
+				{
+					line.count = 0;
+					line.i = 0;
+					line.stuck = 0;
+					line.startLineDrawing = false;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Start"))
+				{
+					line.frameCount = 60;
+					line.startLineDrawing = true;
+					line.lineDraw = true;
+					line.lineAnimate = false;
+				}
+				if (line.startLineDrawing)
+				{
+					Angel::drawAxes();
+					if (ImGui::Button("Animate"))
+					{
+						line.stuck = 0;
+						line.lineDraw = false;
+						line.lineAnimate = true;
+					}
+					ImGui::SameLine();
+					ImGui::SameLine();
+					if (ImGui::Button("Draw"))
+					{
+						line.count = 0;
+						line.i = 0;
+						line.stuck = 0;
+						line.lineDraw = true;
+						line.lineAnimate = false;
+					}
+					if (line.lineDraw)
+					{
+						line.draw(
+							oglm::vec4(line.color[0], line.color[1], line.color[2], line.color[3]));
+					}
+					if (line.lineAnimate)
+					{
+						if (ImGui::Button("Pause Animation"))
+						{
+							line.frameCount = 1000000;
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("start Animation"))
+						{
+							line.frameCount = 60;
+						}
+						line.animate();
+					}
+				}
+				ImGui::End();
+			}
+			ImGui::End();
 		}
 		else if (current == 2)
 		{
+			ImGui::Begin("Line window"); // Pass a pointer to our bool variable
+			ImGui::InputFloat("x0", &circleCenterX, 5, 2, "%.2f", 0);
+			ImGui::InputFloat("y0", &circleCenterY, 5, 2, "%.2f", 0);
+			ImGui::InputFloat("radius", &circleRadius, 5, 2, "%.2f", 0);
+			Circle circle(circleCenterX, circleCenterY, circleRadius, 10);
 			Angel::drawAxes();
 			circle.animate();
-		}
-		else if (current == 3)
-		{
-			Angel::drawAxes();
-			// ellipse.animate();
+			ImGui::End();
 		}
 		else
 		{
 			c.draw();
 		}
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	glfwTerminate();
 
 	return 0;
